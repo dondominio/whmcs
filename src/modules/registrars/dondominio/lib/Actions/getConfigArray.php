@@ -2,11 +2,27 @@
 
 namespace WHMCS\Module\Registrar\Dondominio\Actions;
 
+use WHMCS\Database\Capsule;
+
 class getConfigArray extends Action
 {
     public function __invoke()
     {
+        // Get Custom Fields
         $customFields = $this->app->getService('whmcs')->getCustomFieldsByType('client');
+
+        // Try to get User and Password from Addon Module
+        if (Capsule::schema()->hasTable('mod_dondominio_settings')) {
+            $api_username = Capsule::table('mod_dondominio_settings')->where('key', 'api_username')->value('value');
+            $api_password = Capsule::table('mod_dondominio_settings')->where('key', 'api_password')->value('value');
+        } else {
+            $api_username = "";
+            $api_password = "";
+        }
+
+        if (!empty($api_password)) {
+            $api_password = base64_decode($api_password);
+        }
 
         return [
             "FriendlyName" => [
@@ -22,13 +38,15 @@ class getConfigArray extends Action
                 "FriendlyName" => "API Username",
                 "Type" => "text",
                 "Size" => "25",
-                "Description" => "Enter your API Username here"
+                "Description" => "Enter your API Username here",
+                "Default" => $api_username
             ],
             "apipasswd" => [
                 "FriendlyName" => "API Password",
                 "Type" => "password",
                 "Size" => "25",
-                "Description" =>"Enter your API Password here"
+                "Description" => "Enter your API Password here",
+                "Default" => $api_password
             ],
             //VAT Number custom field
             "vat" => [
