@@ -412,7 +412,9 @@ class App
      */
     public static function install()
     {
-        $currency = static::getService(static::WHMCS_SERVICE)->getCurrency('EUR');
+        $app = new static();
+
+        $currency = $app->getService('whmcs')->getCurrency('EUR');
 
         if (is_null($currency)) {
             throw new Exception('The DonDominio API works with Euros (EUR). Please, add this currency to your WHMCS configuration before enabling the Addon.');
