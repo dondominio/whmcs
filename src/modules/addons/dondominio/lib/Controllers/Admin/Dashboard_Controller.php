@@ -68,6 +68,7 @@ class Dashboard_Controller extends Controller
     public function view_Sidebar()
     {
         $links = [
+            'dashboard' => static::makeURL(),
             'tlds' => DomainPricings_Controller::makeURL(),
             'tlds_new' => DomainPricings_Controller::makeURL(DomainPricings_Controller::VIEW_AVAILABLE_TLDS),
             'domains' => Domains_Controller::makeURL(),

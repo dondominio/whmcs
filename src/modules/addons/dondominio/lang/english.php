@@ -34,6 +34,7 @@ $_ADDONLANG = array(
     'link_more_info' => 'More information',
 
     //Menu
+    'menu_dashboard' => 'Dashboard',
     'menu_tlds_update' => 'Price update',
     'menu_tlds_new' => 'Available TLDs',
     'menu_domains' => 'Manage domains',
