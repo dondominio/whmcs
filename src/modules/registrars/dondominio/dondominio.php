@@ -282,6 +282,93 @@ function dondominio_SaveContactDetails($params)
 }
 
 /**
+ * Check Domain Availability.
+ *
+ * Determine if a domain or group of domains are available for
+ * registration or transfer.
+ *
+ * @param array $params common module parameters
+ * @see https://developers.whmcs.com/domain-registrars/module-parameters/
+ *
+ * @see \WHMCS\Domains\DomainLookup\SearchResult
+ * @see \WHMCS\Domains\DomainLookup\ResultsList
+ *
+ * @throws Exception Upon domain availability check failure.
+ *
+ * @return \WHMCS\Domains\DomainLookup\ResultsList An ArrayObject based collection of \WHMCS\Domains\DomainLookup\SearchResult results
+ */
+function dondominio_CheckAvailability($params)
+{
+    try {
+        $app = new App($params);
+        $results = $app->dispatchAction(__FUNCTION__, $params);
+
+        return $results;
+    } catch (Exception $e) {
+        // BUILD UNKNOWN RESPONSE
+        $unknownDomain = new \WHMCS\Domains\DomainLookup\SearchResult($params['searchTerm'], $params['tlds'][0]);
+        $unknownDomain->setStatus(\WHMCS\Domains\DomainLookup\SearchResult::STATUS_UNKNOWN);
+
+        $results = new \WHMCS\Domains\DomainLookup\ResultsList();
+        $results->append($unknownDomain);
+
+        return $results;
+    }
+}
+
+/**
+ * Domain Suggestion Settings.
+ *
+ * Defines the settings relating to domain suggestions (optional).
+ * It follows the same convention as `getConfigArray`.
+ *
+ * @see https://developers.whmcs.com/domain-registrars/check-availability/
+ *
+ * @return array of Configuration Options
+ */
+function dondominio_DomainSuggestionOptions()
+{
+    try {
+        $app = new App();
+        $results = $app->dispatchAction(__FUNCTION__);
+
+        return $results;
+    } catch (Exception $e) {
+        return [
+            'success' => false,
+            'error' => $e->getMessage()
+        ];
+    }
+}
+
+/**
+ * Get Domain Suggestions.
+ *
+ * Provide domain suggestions based on the domain lookup term provided.
+ *
+ * @param array $params common module parameters
+ * @see https://developers.whmcs.com/domain-registrars/module-parameters/
+ *
+ * @see \WHMCS\Domains\DomainLookup\SearchResult
+ * @see \WHMCS\Domains\DomainLookup\ResultsList
+ *
+ * @throws Exception Upon domain suggestions check failure.
+ *
+ * @return \WHMCS\Domains\DomainLookup\ResultsList An ArrayObject based collection of \WHMCS\Domains\DomainLookup\SearchResult results
+ */
+function dondominio_GetDomainSuggestions($params)
+{
+    try {
+        $app = new App($params);
+        $results = $app->dispatchAction(__FUNCTION__, $params);
+
+        return $results;
+    } catch (Exception $e) {
+        return new \WHMCS\Domains\DomainLookup\ResultsList();
+    }
+}
+
+/**
  * Get registrar lock status.
  *
  * Also known as Domain Lock or Transfer Lock status.

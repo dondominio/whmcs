@@ -11,7 +11,7 @@ class ClientDispatcher implements Dispatcher_Interface
     public function getRegisteredControllers()
     {
         return [
-            Client_Controller::CONTROLLER_NAME => Client_Controller::class,
+            //
         ];
     }
 

@@ -301,4 +301,36 @@ class API_Service implements APIService_Interface
 
         return $this->parseResponse($response, ['domain' => $domain, 'params' => $params]);
     }
+
+    /**
+     * Get Domain Suggestions
+     *
+     * @see https://dev.dondominio.com/api/docs/sdk-php/#tool-domainsuggests
+     *
+     * @param string $query Text to check suggestions
+     * @param string $language Language suggestions
+     * @param array $tlds
+     *
+     * @return \Dondominio\API\Response\Response
+     */
+    public function getDomainSuggestions($query = '', $language = '', array $tlds = [])
+    {
+        $params = [];
+
+        if (!empty($query)) {
+            $params['query'] = $query;
+        }
+
+        if (!empty($language)) {
+            $params['language'] = $language;
+        }
+
+        if (!empty($tlds)) {
+            $params['tlds'] = implode(",", $tlds);
+        }
+
+        $response = $this->getApiConnection()->tool_domainSuggests($params);
+
+        return $this->parseResponse($response, $params);
+    }
 }

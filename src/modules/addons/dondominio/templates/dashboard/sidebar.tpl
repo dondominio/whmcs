@@ -9,7 +9,6 @@
     <li><a href="{$links.domains}">{$LANG.menu_domains}</a></li>
     <li><a href="{$links.transfer}">{$LANG.menu_transfer}</a></li>
     <li><a href="{$links.import}">{$LANG.menu_import}</a></li>
-    <li><a href="{$links.suggests}">{$LANG.menu_suggests}</a></li>
     <li><a href="{$links.whois}">{$LANG.menu_whois}</a></li>
     <li><a href="{$links.settings}">{$LANG.menu_settings}</a></li>
     <li class="divider">&nbsp;</li>

@@ -27,10 +27,6 @@
         </li>
 
         <li id='tab4' class='tab'>
-            <a href='javascript:;'>{$LANG.settings_suggests_title}</a>
-        </li>
-
-        <li id='tab5' class='tab'>
             <a href='javascript:;'>{$LANG.settings_whois_title}</a>
         </li>
     </ul>
@@ -288,75 +284,9 @@
     </div>
 </div>
 
-<!-- Domain Suggestions-->
 <div id='tab4box' class='tabbox'>
     <div id='tab_content'>
         <form method='post' action="#tab4box">
-        <input type="hidden" name="module" value="{$module_name}">
-        <input type="hidden" name="__c__" value="{$__c__}">
-        <input type="hidden" name="__a__" value="{$actions.savedomainsuggestions}">
-        <table class="form" width="100%" border='0' cellspacing="2" cellpadding="3">
-            <tbody>	
-                <tr>
-                    <td class='fieldlabel' style="width: 30%;">
-                        {$LANG.settings_suggests_enable}
-                    </td>
-
-                    <td class='fieldarea'>
-                        <input type='checkbox' name='suggests_enabled' {$suggests_enabled} />
-                    </td>
-                </tr>
-
-                <tr>
-                    <td class="fieldlabel">
-                        {$LANG.suggests_lang}
-                    </td>
-
-                    <td class="fieldarea">
-                        <select name="language">
-                            <option value="en" {$lang_selected.en}>{$LANG.lang_en}</option>
-                            <option value="es" {$lang_selected.es}>{$LANG.lang_es}</option>
-                            <option value="zh" {$lang_selected.zh}>{$LANG.lang_zh}</option>
-                            <option value="fr" {$lang_selected.fr}>{$LANG.lang_fr}</option>
-                            <option value="de" {$lang_selected.de}>{$LANG.lang_de}</option>
-                            <option value="kr" {$lang_selected.kr}>{$LANG.lang_kr}</option>
-                            <option value="pt" {$lang_selected.pt}>{$LANG.lang_pt}</option>
-                            <option value="tr" {$lang_selected.tr}>{$LANG.lang_tr}</option>
-                        </select>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td class="fieldlabel">
-                        {$LANG.suggests_tlds}
-                    </td>
-
-                    <td class="fieldarea">
-                        <select multiple="multiple" name="tlds[]" size=9>
-                            <option value="com" {$tlds_selected.com}>.com</option>
-                            <option value="net" {$tlds_selected.net}>.net</option>
-                            <option value="tv" {$tlds_selected.tv}>.tv</option>
-                            <option value="cc" {$tlds_selected.cc}>.cc</option>
-                            <option value="es" {$tlds_selected.es}>.es</option>
-                            <option value="org" {$tlds_selected.org}>.org</option>
-                            <option value="info" {$tlds_selected.info}>.info</option>
-                            <option value="biz" {$tlds_selected.biz}>.biz</option>
-                            <option value="eu" {$tlds_selected.eu}>.eu</option>
-                        </select>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <p style="text-align: center;">
-            <button action='submit' name='submit_button' id='settings_submit' class='btn'>{$LANG.btn_save}</button>
-        </p>
-        </form>
-    </div>
-</div>
-    
-<div id='tab5box' class='tabbox'>
-    <div id='tab_content'>
-        <form method='post' action="#tab5box">
         <input type="hidden" name="module" value="{$module_name}">
         <input type="hidden" name="__c__" value="{$__c__}">
         <input type="hidden" name="__a__" value="{$actions.savewhoisproxy}">

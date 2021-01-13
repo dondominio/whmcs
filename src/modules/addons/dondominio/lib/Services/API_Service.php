@@ -186,30 +186,6 @@ class API_Service extends AbstractService implements APIService_Interface
     }
 
     /**
-     * Get Domain Suggestions
-     *
-     * @see https://dev.dondominio.com/api/docs/sdk-php/#tool-domainsuggests
-     *
-     * @param string $text Text to check suggestions
-     *
-     * @return \Dondominio\API\Response\Response
-     */
-    public function getDomainSuggestions($text)
-    {
-        $settingsService = new Settings_Service();
-
-        $params = [
-            'query' => $text,
-            'language' => $settingsService->getSetting('suggests_language'),
-            'tlds' => $settingsService->getSetting('suggests_tlds')
-        ];
-
-        $response = $this->getApiConnection()->tool_domainSuggests($params);
-
-        return $this->parseResponse($response, $params);
-    }
-
-    /**
      * Get Account zones for TLD
      *
      * @see https://dev.dondominio.com/api/docs/sdk-php/#account-zones

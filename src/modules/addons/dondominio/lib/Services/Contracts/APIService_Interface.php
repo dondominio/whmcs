@@ -12,6 +12,5 @@ interface APIService_Interface
     public function updateContact($domain, $type, $ddid);
     public function transferDomain(stdClass $extDomain, $authCode, array $clientDetails);
     public function checkDomain($domain);
-    public function getDomainSuggestions($text);
     public function getAccountZones($params);
 }

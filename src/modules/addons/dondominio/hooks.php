@@ -3,7 +3,6 @@
  // This is a Hook Loader, only $hooks must be modifiable
 
 $hooks = [
-    'ClientAreaFooterOutput',
     'PreCronJob'
 ];
 

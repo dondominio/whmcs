@@ -14,12 +14,10 @@ class Settings_Controller extends Controller
     const DEFAULT_TEMPLATE_FOLDER = 'settings';
 
     const VIEW_INDEX = '';
-    const VIEW_DOMAIN_SUGGESTIONS = 'viewdomainsuggestions';
     const ACTION_SAVE_CREDENTIALS = 'savecredentials';
     const ACTION_SAVE_PRICE_ADJUSTMENT = 'savepriceadjustment';
     const ACTION_SAVE_AUTOMATIC_NOTIFICATIONS = 'saveautomaticnotifications';
     const ACTION_SYNC_TLDS = 'synctlds';
-    const ACTION_SAVE_DOMAIN_SUGGESTIONS = 'savedomainsuggestions';
     const ACTION_SAVE_WHOIS_PROXY = 'savewhoisproxy';
 
     /**
@@ -31,12 +29,10 @@ class Settings_Controller extends Controller
     {
         return [
             static::VIEW_INDEX => 'view_Index',
-            static::VIEW_DOMAIN_SUGGESTIONS => 'view_DomainSuggestionsEnabled',
             static::ACTION_SAVE_CREDENTIALS => 'action_SaveCredentials',
             static::ACTION_SAVE_PRICE_ADJUSTMENT => 'action_SavePriceAdjustment',
             static::ACTION_SAVE_AUTOMATIC_NOTIFICATIONS => 'action_SaveAutomaticNotifications',
             static::ACTION_SYNC_TLDS => 'action_SyncTlds',
-            static::ACTION_SAVE_DOMAIN_SUGGESTIONS => 'action_SaveDomainSuggestions',
             static::ACTION_SAVE_WHOIS_PROXY => 'action_SaveWhoisProxy'
         ];
     }
@@ -52,12 +48,6 @@ class Settings_Controller extends Controller
         $tlds = $this->getApp()->getService('pricing')->findPricingsNotInWatchlist();
         $watchlisted_tlds = $this->getApp()->getService('watchlist')->findWatchlistsOrderedByTld();
         $cacheStatus = $this->getApp()->getService('pricing')->getCacheStatus();
-
-        $suggests_tlds = explode( ',', $settings->get('suggests_tlds'));
-		
-		foreach ($suggests_tlds as $selected_tld) {
-			$tlds_selected[$selected_tld] = "selected=\"selected\"";
-        }
         
          // Actions
         $actions = [];
@@ -84,9 +74,6 @@ class Settings_Controller extends Controller
             'notifications_email' => $settings->get('notifications_email'),
             'notifications_new_tlds_checkbox' => $settings->get('notifications_new_tlds') == '1' ? "checked='checked'" : "",
             'notifications_prices_checkbox' => $settings->get('notifications_prices') == '1' ? "checked='checked'" : "",
-            'suggests_enabled' => $settings->get('suggests_enabled') ? "checked='checked'" : '',
-            'lang_selected' => [$settings->get('suggests_language') => 'selected=\"selected\"'],
-            'tlds_selected' => $tlds_selected,
             'whois_domain' => $settings->get('whois_domain'),
             'whois_ip' => $settings->get('whois_ip'),
             'actions' => $actions
@@ -113,23 +100,6 @@ class Settings_Controller extends Controller
         $params['watchlist_is_' . $settings->get('watchlist_mode')] = 'checked="checked"';
 
         return $this->view('index', $params);
-    }
-
-    /**
-     * Retrieves template for domain suggestions settings
-     *
-     * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
-     */
-    public function view_DomainSuggestionsEnabled()
-    {
-        $enabled = $this->getApp()->getService('settings')->getSetting('suggests_enabled');
-
-        $params = [
-            'enabled_status' => $enabled == 1 ? $this->getApp()->getLang('suggests_enabled') : $this->getApp()->getLang('suggests_disabled'),
-            'settings_link' => static::makeURL()
-        ];
-
-        return $this->view('domainsuggestions', $params);
     }
 
     /**
@@ -235,31 +205,6 @@ class Settings_Controller extends Controller
             }
 
             $this->getApp()->getService('pricing')->apiSync(true);
-
-            $this->getResponse()->setForceSuccess(true);
-        } catch (Exception $e) {
-            $this->getResponse()->addError($e->getMessage());
-        }
-
-        return $this->view_Index();
-    }
-
-    /**
-     * Action for save domain suggestions settings
-     *
-     * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
-     */
-    public function action_SaveDomainSuggestions()
-    {
-        $suggestsEnabled = $this->getRequest()->getParam('suggests_enabled');
-        $suggestsLanguage = $this->getRequest()->getParam('language');
-        $suggestsTlds = $this->getRequest()->getArrayParam('tlds');
-
-        try {
-            $settingsService = $this->getApp()->getService('settings');
-            $settingsService->setSetting('suggests_enabled', $suggestsEnabled == 'on' ? 1 : 0);
-            $settingsService->setSetting('suggests_language', $suggestsLanguage);
-            $settingsService->setSetting('suggests_tlds', implode(',', $suggestsTlds));
 
             $this->getResponse()->setForceSuccess(true);
         } catch (Exception $e) {

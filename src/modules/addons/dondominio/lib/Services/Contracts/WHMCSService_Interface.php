@@ -33,5 +33,4 @@ interface WHMCSService_Interface
     public function updateTldRegistrar($extension = '', $registrar = '');
     public function reorderTlds();
     public function insertDomainPricing(Pricing_Model $ddpricing);
-    public function getDomainSuggestions($text);
 }
