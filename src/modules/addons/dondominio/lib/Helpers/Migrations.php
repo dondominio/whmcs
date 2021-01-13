@@ -151,6 +151,10 @@ class Migrations
             if ($version < 1.6) {
                 static::upgrade16();
             }
+
+            if ($version < 2.0) {
+                static::upgrade20();
+            }
         } catch (Exception $e) {
             logModuleCall(App::NAME, __FUNCTION__, '', $e->getMessage());
 
@@ -213,5 +217,19 @@ class Migrations
                 $table->tinyInteger('ignore');
             });
         }
+    }
+
+     /**
+     * Upgrades database schema for version 2.0
+     *
+     * In version 2.0, suggests domains changed from addon to registrar
+     *
+     * @return void
+     */
+    public static function upgrade20()
+    {
+        Settings_Model::where('key', 'suggests_enabled')->delete();
+        Settings_Model::where('key', 'suggests_language')->delete();
+        Settings_Model::where('key', 'suggests_tlds')->delete();
     }
 }
