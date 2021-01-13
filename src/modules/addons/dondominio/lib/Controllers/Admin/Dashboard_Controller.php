@@ -2,6 +2,8 @@
 
 namespace WHMCS\Module\Addon\Dondominio\Controllers\Admin;
 
+use Exception;
+
 if (!defined("WHMCS")) {
     die("This file cannot be accessed directly");
 }

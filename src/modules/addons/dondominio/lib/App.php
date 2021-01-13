@@ -117,7 +117,7 @@ class App
      */
     public function getService($key)
     {
-        if (!array_key_exists($key, static::getServices())) {
+        if (!array_key_exists($key, $this->getServices())) {
             switch ($key) {
                 case 'pricing':
                     $this->setPricingService(new Pricing_Service());

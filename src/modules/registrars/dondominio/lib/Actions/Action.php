@@ -33,6 +33,15 @@ class Action
         return $this->params;
     }
 
+    public function getParam($key)
+    {
+        if (!array_key_exists($key, $this->params)) {
+            return null;
+        }
+
+        return $this->params[$key];
+    }
+
     public function getDomain()
     {
         return $this->domain;
