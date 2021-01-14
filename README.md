@@ -58,7 +58,6 @@ automatically update prices and domain status, and more.
 | Manage domains | Import domains to WHMCS from DonDominio |
 | Transfer domains | Transfer domains from other registrars to DonDominio |
 | Update contact | Update domain contact details |
-| Dommain suggestions | Enable domain suggestions for user recommendations |
 | Whois | Use DonDominio as WHOIS tool |
 | Watchlist | Enable automatic notifications for extensions changing prices |
 | Sync | Synchronization with DonDominio every day |
@@ -98,6 +97,8 @@ The plugin also provides support for managing domain contacts.
 | Remove Glue Record | Remove existing glue record |
 | Sync | Synchronize domain status |
 | Transfer Sync | Synchronize domain transfer status |
+| Check Availability | Check if Domain is available |
+| Get Domain Suggestions | Get domain suggestions for user recommendations |
 
 For documentation, more information, support, and guides, visit:
 
