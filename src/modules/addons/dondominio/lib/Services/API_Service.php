@@ -58,6 +58,21 @@ class API_Service extends AbstractService implements APIService_Interface
     }
 
     /**
+     * Performs a 'hello' action against API
+     * Checks if connection is OK
+     *
+     * @see https://dev.dondominio.com/api/docs/sdk-php/#tool-hello
+     *
+     * @return \Dondominio\API\Response\Response
+     */
+    public function doHello()
+    {
+        $response = $this->getApiConnection()->tool_hello();
+
+        return $this->parseResponse($response, []);
+    }
+
+    /**
      * Gets Domain Info
      *
      * @see https://dev.dondominio.com/api/docs/sdk-php/#domain-getinfo

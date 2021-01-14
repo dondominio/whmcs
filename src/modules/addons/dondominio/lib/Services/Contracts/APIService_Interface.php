@@ -7,6 +7,8 @@ use \stdClass;
 interface APIService_Interface
 {
     public function reload(array $apiOptions = []);
+    public function getApiConnection();
+    public function doHello();
     public function getDomainInfo($domain);
     public function getDomainList($page = null, $pageLength = null);
     public function updateContact($domain, $type, $ddid);

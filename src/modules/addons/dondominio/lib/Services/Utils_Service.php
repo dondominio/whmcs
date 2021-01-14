@@ -4,72 +4,61 @@ namespace WHMCS\Module\Addon\Dondominio\Services;
 
 use WHMCS\Module\Addon\Dondominio\App;
 use WHMCS\Module\Addon\Dondominio\Services\Contracts\UtilsService_Interface;
+use Exception;
 
 class Utils_Service extends AbstractService implements UtilsService_Interface
 {
-    public function addonIsOutdated()
+    public function getLatestVersion()
+    {
+        $json = file_get_contents('https://raw.githubusercontent.com/dondominio/whmcs/main/src/modules/addons/dondominio/version.json');
+
+        // Have we retrieved anything?
+        if (empty($json)) {
+            throw new Exception('Unable to retrieve latest addon version.');
+        }
+
+        $info = json_decode($json, true);
+
+        // Have we decoded the JSONs correctly?
+        if (!is_array($info)) {
+            throw new Exception('Retrieving latest version was unsuccessfully decoded.');
+        }
+
+        return $info['version'];
+    }
+
+    public function isLatestVersion()
     {
         $localVersion = $this->getApp()->getVersion();
 
         if ($localVersion == App::UNKNOWN_VERSION) {
-            return false;
+            throw new Exception('Unable to retrieve local version.');
         }
 
         if (empty($localVersion)) {
-            return false;
+            throw new Exception('Unable to retrieve local version. Version is empty.');
         }
 
-        $githubVersionInfo = file_get_contents('https://raw.githubusercontent.com/dondominio/whmcs-addon/master/version.json');
-
-        // Have we retrieved anything?
-        if (empty($githubVersionInfo)) {
-            return false;
-        }
-
-        $githubJson = json_decode($githubVersionInfo, true);
-
-        // Have we decoded the JSONs correctly?
-        if (!is_array($githubJson)) {
-            return false;
-        }
+        $latestVersion = $this->getLatestVersion();
 
         // Comparing the versions found on the JSONs
-        if (version_compare($localVersion, $githubJson['version']) < 0) {
-            return true;
-        }
-
-        return false;
+        return version_compare($localVersion, $latestVersion, '>=');
     }
 
-    public function pluginIsOutdated()
+    public function findRegistrarModule()
     {
-        $pluginDir = implode(DIRECTORY_SEPARATOR, [$this->getApp()->getDir(), '..', '..', 'registrars', 'dondominio', 'version.json']);
+        $registrarPath = implode(DIRECTORY_SEPARATOR, [ROOTDIR, 'modules', 'registrars', 'dondominio']);
 
-        if(!is_dir($pluginDir)) {
-            return false;
+        if (!is_dir($registrarPath)) {
+            throw new Exception(sprintf('Registrar folder (%s) not found.', $registrarPath));
         }
 
-        $localVersionInfo = @file_get_contents($pluginDir . DIRECTORY_SEPARATOR . 'version.json');
-        $githubVersionInfo = @file_get_contents('https://raw.githubusercontent.com/dondominio/whmcs-plugin/master/version.json');
+        $registrarFile = implode(DIRECTORY_SEPARATOR, [$registrarPath, 'dondominio.php']);
 
-        // Have we retrieved anything?
-        if (empty($localVersionInfo) || empty($githubVersionInfo)) {
-            return false;
+        if (!file_exists($registrarFile)) {
+            throw new Exception(sprintf('Registrar file (%s) not found.', $registrarFile));
         }
 
-        $localJson = json_decode($localVersionInfo, true);
-        $githubJson = json_decode($githubVersionInfo, true);
-
-        // Have we decoded the JSONs correctly?
-        if (!is_array($localJson) || !is_array($githubJson)) {
-            return false;
-        }
-
-        // Comparing versions found on the JSONs
-        if (version_compare($localJson['version'], $githubJson['version']) < 0) {
-            return $githubJson;
-        }
-
-        return false;
+        return true;
     }
 }

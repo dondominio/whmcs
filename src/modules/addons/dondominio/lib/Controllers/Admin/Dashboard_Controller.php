@@ -2,6 +2,7 @@
 
 namespace WHMCS\Module\Addon\Dondominio\Controllers\Admin;
 
+use WHMCS\Module\Addon\Dondominio\App;
 use Exception;
 
 if (!defined("WHMCS")) {
@@ -15,6 +16,7 @@ class Dashboard_Controller extends Controller
 
     const VIEW_INDEX = '';
     const VIEW_SIDEBAR = 'sidebar';
+    const PRINT_MOREINFO = 'moreapiinfo';
 
     /**
      * Gets available actions for Controller
@@ -25,7 +27,8 @@ class Dashboard_Controller extends Controller
     {
         return [
             static::VIEW_INDEX => 'view_Index',
-            static::VIEW_SIDEBAR => 'view_Sidebar'
+            static::VIEW_SIDEBAR => 'view_Sidebar',
+            static::PRINT_MOREINFO => 'print_MoreApiInfo'
         ];
     }
 
@@ -36,28 +39,15 @@ class Dashboard_Controller extends Controller
      */
     public function view_Index()
     {
-        $params = [];
-
-        $appVersion = $this->getApp()->getVersion();
-        $addonOutdated = $this->getApp()->getService('utils')->addonIsOutdated();
-        $pluginOutdated = $this->getApp()->getService('utils')->pluginIsOutdated();
+        $app = App::getInstance();
 
         $params = [
-            'version' => $appVersion,
-            'addon_outdated' => $addonOutdated,
-            'plugin_outdated' => $pluginOutdated,
-            'api_info' => ''
+            'version' => $app->getVersion(),
+            'checks' => $app->getMinimumRequirements(),
+            'links' => [
+                'more_api_info' => static::makeURL(static::PRINT_MOREINFO)
+            ]
         ];
-
-        try {
-            ob_start();
-            $this->getApp()->getService('api')->printApiInfo();
-            $params['api_info'] = nl2br(ob_get_contents());
-            ob_end_clean();
-        } catch (Exception $e) {
-            $params['api_info'] = $this->getApp()->getLang($e->getMessage());
-            $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
-        }
 
         return $this->view('index', $params);
     }
@@ -81,5 +71,20 @@ class Dashboard_Controller extends Controller
         ];
 
         return $this->view('sidebar', ['links' => $links]);
+    }
+
+    /**
+     * Retrieves More API Info
+     *
+     * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
+     */
+    public function print_MoreApiInfo()
+    {
+        ob_start();
+        $this->getApp()->getService('api')->printApiInfo();
+        $response = nl2br(ob_get_contents());
+        ob_end_clean();
+        echo $response;
+        exit();
     }
 }

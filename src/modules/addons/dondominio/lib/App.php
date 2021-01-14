@@ -442,4 +442,57 @@ class App
     {
         Migrations::upgrade($version);
     }
+
+    /**
+     * Returns an array of Minimum Requirements
+     * In that minimum requirements array, values means:
+     *  - null: unknown information
+     *  - true: check went successfully
+     *  - false: check went unsuccessfully
+     *
+     * @return array
+     */
+    public function getMinimumRequirements()
+    {
+        $checks = [
+            'version' => null,
+            'sdk' => null,
+            'api' => null,
+            'registrar'  => null
+        ];
+
+        // Check Latest Version
+        try {
+            $latestVersion = $this->getService('utils')->isLatestVersion();
+            $checks['version'] = $latestVersion ? 'OK' : 'KO';
+        } catch (Exception $e) {
+            $checks['version'] = $e->getMessage();
+        }
+
+        // Check SDK Intalled
+        // Then, check API Connection
+        try {
+            $this->getService('api')->getApiConnection();
+            $checks['sdk'] = 'OK';
+
+            try {
+                $this->getService('api')->doHello();
+                $checks['api'] = 'OK';
+            } catch (Exception $e) {
+                $checks['api'] = $e->getMessage();
+            }
+        } catch (Exception $e) {
+            $checks['sdk'] = $e->getMessage();
+        }
+
+        // Find Registrar Module
+        try {
+            $this->getService('utils')->findRegistrarModule();
+            $checks['registrar'] = 'OK';
+        } catch (Exception $e) {
+            $checks['registrar'] = $e->getMessage();
+        }
+
+        return $checks;
+    }
 }
