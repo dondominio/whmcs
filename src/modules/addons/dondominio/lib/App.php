@@ -32,10 +32,10 @@ class App
 
     protected static $instance;
 
-    protected array $dispatchers = [];
-    protected array $services = [];
-    protected array $whmcsVars = [];
-    protected array $lang = [];
+    protected $dispatchers = [];
+    protected $services = [];
+    protected $whmcsVars = [];
+    protected $lang = [];
     protected $moduleLink = '';
 
     /**
