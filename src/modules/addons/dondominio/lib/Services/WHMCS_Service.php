@@ -12,31 +12,6 @@ use Exception;
 
 class WHMCS_Service extends AbstractService implements WHMCSService_Interface
 {
-    protected $apiServiceForDomainSuggestions = null;
-
-    /**
-     * Gets API Service for Domain Suggestions (different user agent)
-     */
-    public function getApiServiceForDomainSuggestions()
-    {
-        if (is_null($this->apiServiceForDomainSuggestions)) {
-            $userAgent = [
-                'DomainSuggestionsAddonForWHMCS' => $this->getApp()->getVersion(),
-                'WHMCS' => $this->getApp()->getService('whmcs')->getConfiguration('version')
-            ];
-
-            $appApiHelper = $this->getApp()->getService('api')->getApiHelper();
-    
-            $this->apiServiceForDomainSuggestions = new API_Service([
-                'apiuser' => $appApiHelper->getApiOption('apiuser'),
-                'apipasswd' => $appApiHelper->getApiOption('apipasswd'),
-                'userAgent' => $userAgent
-            ]);
-        }
-
-        return $this->apiServiceForDomainSuggestions;
-    }
-
     /**
      * Get currency by code
      * 

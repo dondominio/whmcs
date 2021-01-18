@@ -15,7 +15,7 @@ class Whois_Service extends AbstractService implements WhoisService_Interface
     public function getApiServiceForWhois()
     {
         if (is_null($this->apiServiceForWhois)) {
-            $appApiHelper = $this->getApp()->getService('api')->getApiHelper();
+            $appApiHelper = $this->getApp()->getService('api')->getApi();
 
             $this->apiServiceForWhois = new API_Service([
                 'apiuser' => $appApiHelper->getApiOption('apiuser'),
