@@ -2,7 +2,7 @@
     <div class="dashboard-panel-item dashboard-panel-item-columns-2" style="position: absolute; left: 0%; top: 0px;">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title" style="touch-action: none;">Dondominio Modules Information</h3>
+                <h3 class="panel-title" style="touch-action: none;">{$LANG.dondominio_modules_information}</h3>
             </div>
             <div class="panel-body">
                 <div class="widget-content-padded">
@@ -14,8 +14,8 @@
                             <td>
                                 {if $checks.version eq 'OK'}
                                 {elseif $checks.version eq 'KO'}
-                                    <a class="btn btn-warning" href="{$links.dashboard}">Update</a>
-                                    There is a new version available!
+                                    <a class="btn btn-warning" href="{$links.update_modules}">{$LANG.update}</a>
+                                    {$LANG.new_version_available}
                                 {else}
                                     <input type="button" class=" btn btn-danger" value="ERROR" style="cursor: default;">
                                     {$checks.version}
@@ -71,7 +71,7 @@
     </div>
 </div>
 <br>
-<input id="get-more-api-info" type="button" class="btn btn-info" value="More Info" data-url="{$links.more_api_info}">
+<input id="get-more-api-info" type="button" class="btn btn-info" value="{$LANG.more_info}" data-url="{$links.more_api_info}">
 <div id="more-api-infobox" class='infobox hide'>
     <img id="more-api-infobox-loading" src="../assets/img/loadingsml.gif" style="width: 25px;">
     <div id="more-api-infobox-details"></div>

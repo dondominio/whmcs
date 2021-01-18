@@ -261,5 +261,32 @@ $_ADDONLANG = array(
     'tld_added_succesfully' => 'TLD añadido con éxito.',
     'imported_successfully' => 'importado con éxito.',
     'cant_upgrade_dondominio' => 'No se ha podido actualizar Dondominio Addon.',
-    'create_order_error' => 'Error al crear la orden.'
+    'create_order_error' => 'Error al crear la orden.',
+
+    /**
+     * MODULES DASHBOARD
+     */
+    'going_back_in' => 'Volviendo atrás en ',
+    'modules_updated_successfully' => 'Módulos actualizados con éxito',
+    'dondominio_modules_information' => 'Información de Módulos de Dondominio',
+    'new_version_available' => 'Hay una nueva versión disponible',
+    'update' => 'Actualizar',
+    'more_info' => 'Más Información',
+
+    /**
+     * UPDATE
+     */
+    'unable_to_retrieve_last_version' => 'Error al obtener la última versión disponible.',
+    'latest_version_decoded_unsuccessfully' => 'Error al decodificar la última versión obtenida.',
+    'unable_to_retrieve_local_version' => 'Error al obtener la versión local.',
+    'local_version_is_empty' => 'Error al obtener la versión local. La versión está vacía.',
+    'registrar_folder_not_found' => 'Carpeta del módulo Registrar no encontrada.',
+    'registrar_file_not_found' => 'Archivo del módulo Registrar no encontrado.',
+    'no_extension_found_for_decompressing' => 'No se han encontrado extensiones de compresión.',
+    'unable_to_retrieve_latest_json_info' => 'Error al Unable to retrieve latest info (json).',
+    'unable_to_download_latest_version' => 'Error al descargar la última versión.',
+    'couldnt_save_download' => 'Error al guardar la última versión.',
+    'unable_to_open_compressed_file' => 'Error al abrir el archivo comprimido.',
+    'unable_to_decompress' => 'Error al descomprimir el archivo.',
+    'decompress_method_not_found' => 'Método de compresión no implementado.',
 );

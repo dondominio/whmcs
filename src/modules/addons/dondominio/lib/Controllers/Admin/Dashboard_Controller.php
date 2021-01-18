@@ -17,6 +17,7 @@ class Dashboard_Controller extends Controller
     const VIEW_INDEX = '';
     const VIEW_SIDEBAR = 'sidebar';
     const PRINT_MOREINFO = 'moreapiinfo';
+    const UPDATE_MODULES = 'updatemodules';
 
     /**
      * Gets available actions for Controller
@@ -28,7 +29,8 @@ class Dashboard_Controller extends Controller
         return [
             static::VIEW_INDEX => 'view_Index',
             static::VIEW_SIDEBAR => 'view_Sidebar',
-            static::PRINT_MOREINFO => 'print_MoreApiInfo'
+            static::PRINT_MOREINFO => 'print_MoreApiInfo',
+            static::UPDATE_MODULES => 'update_Modules'
         ];
     }
 
@@ -45,7 +47,8 @@ class Dashboard_Controller extends Controller
             'version' => $app->getVersion(),
             'checks' => $app->getMinimumRequirements(),
             'links' => [
-                'more_api_info' => static::makeURL(static::PRINT_MOREINFO)
+                'more_api_info' => static::makeURL(static::PRINT_MOREINFO),
+                'update_modules' => static::makeURL(static::UPDATE_MODULES)
             ]
         ];
 
@@ -76,7 +79,7 @@ class Dashboard_Controller extends Controller
     /**
      * Retrieves More API Info
      *
-     * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
+     * @return void
      */
     public function print_MoreApiInfo()
     {
@@ -86,5 +89,34 @@ class Dashboard_Controller extends Controller
         ob_end_clean();
         echo $response;
         exit();
+    }
+
+    /**
+     * Downloads and install latest version of Dondominio Modules
+     *
+     * @return void
+     */
+    public function update_Modules()
+    {
+        try {
+            $app = App::getInstance();
+            $app->getService('utils')->updateModules();
+
+            $this->getResponse()->addSuccess(
+                sprintf($this->getApp()->getLang('modules_updated_successfully'))
+            );
+
+            $success = true;
+        } catch (Exception $e) {
+            $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
+
+            $success = false;
+        }
+
+        $params = [
+            'success' => $success
+        ];
+
+        return $this->view('update', $params);
     }
 }

@@ -261,5 +261,32 @@ $_ADDONLANG = array(
     'tld_added_succesfully' => 'TLD added succesfully.',
     'imported_successfully' => 'imported succesfully.',
     'cant_upgrade_dondominio' => 'Dondominio Addon upgrade was unsuccessfully',
-    'create_order_error' => 'Error while creating order.'
+    'create_order_error' => 'Error while creating order.',
+
+     /**
+     * MODULES DASHBOARD
+     */
+    'going_back_in' => 'Going back in ',
+    'modules_updated_successfully' => 'Modules updated succesfully.',
+    'dondominio_modules_information' => 'Dondominio Modules Information',
+    'new_version_available' => 'There is a new version available!',
+    'update' => 'Update',
+    'more_info' => 'More Info',
+
+    /**
+     * UPDATE
+     */
+    'unable_to_retrieve_last_version' => 'Unable to retrieve latest modules version.',
+    'latest_version_decoded_unsuccessfully' => 'Retrieving latest version was unsuccessfully decoded.',
+    'unable_to_retrieve_local_version' => 'Unable to retrieve local version.',
+    'local_version_is_empty' => 'Unable to retrieve local version. Version is empty.',
+    'registrar_folder_not_found' => 'Registrar folder not found.',
+    'registrar_file_not_found' => 'Registrar file not found',
+    'no_extension_found_for_decompressing' => 'No extension found for decompressing.',
+    'unable_to_retrieve_latest_json_info' => 'Unable to retrieve latest info (json).',
+    'unable_to_download_latest_version' => 'Unable to download latest version',
+    'couldnt_save_download' => 'Couldn\'t save download.',
+    'unable_to_open_compressed_file' => 'Unable to open compressed file.',
+    'unable_to_decompress' => 'Unable to decompress.',
+    'decompress_method_not_found' => 'Decompress method not implemented.',
 );

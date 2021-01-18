@@ -466,7 +466,7 @@ class App
             $latestVersion = $this->getService('utils')->isLatestVersion();
             $checks['version'] = $latestVersion ? 'OK' : 'KO';
         } catch (Exception $e) {
-            $checks['version'] = $e->getMessage();
+            $checks['version'] = $this->getLang($e->getMessage());
         }
 
         // Check SDK Intalled
@@ -479,10 +479,10 @@ class App
                 $this->getService('api')->doHello();
                 $checks['api'] = 'OK';
             } catch (Exception $e) {
-                $checks['api'] = $e->getMessage();
+                $checks['api'] = $this->getLang($e->getMessage());
             }
         } catch (Exception $e) {
-            $checks['sdk'] = $e->getMessage();
+            $checks['sdk'] = $this->getLang($e->getMessage());
         }
 
         // Find Registrar Module
@@ -490,7 +490,7 @@ class App
             $this->getService('utils')->findRegistrarModule();
             $checks['registrar'] = 'OK';
         } catch (Exception $e) {
-            $checks['registrar'] = $e->getMessage();
+            $checks['registrar'] = $this->getLang($e->getMessage());
         }
 
         return $checks;
