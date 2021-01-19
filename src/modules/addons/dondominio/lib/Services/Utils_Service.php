@@ -194,12 +194,12 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
             case 'phar':
                 // ERROR: RecursiveDirectoryIterator::__construct(): Unable to find the wrapper "phar" - did you forget to enable it when you configured PHP?
                 // Solution found in https://github.com/mageplaza/magento-2-geoip-library/issues/3
-                stream_wrapper_restore('phar');
+                @stream_wrapper_restore('phar');
 
                 $phar = new \PharData($downloadPath);
                 $extracted = $phar->extractTo($folder);
 
-                stream_wrapper_unregister('phar');
+                @stream_wrapper_unregister('phar');
 
                 if (!$extracted) {
                     throw new Exception('unable_to_decompress');
