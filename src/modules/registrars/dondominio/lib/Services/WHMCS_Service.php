@@ -4,7 +4,6 @@ namespace WHMCS\Module\Registrar\Dondominio\Services;
 
 use WHMCS\Database\Capsule;
 use Carbon\Carbon;
-use WHMCS\Config\Setting;
 use WHMCS\Domain\Domain;
 use WHMCS\Module\Registrar\Dondominio\App;
 use WHMCS\Module\Registrar\Dondominio\Services\Contracts\WHMCSService_Interface;
@@ -33,6 +32,39 @@ class WHMCS_Service implements WHMCSService_Interface
     }
 
     /**
+     * Makes a local API Call
+     *
+     * @see https://developers.whmcs.com/api/internal-api/
+     *
+     * @param string $command Command to execute
+     * @param array $values Array as parameters
+     * @param string $adminUser User
+     *
+     * @throws Exception if success went wrong
+     */
+    public function doLocalAPICall($command, array $values, $adminUser = null)
+    {
+        if (!function_exists('localAPI')) {
+            throw new Exception('Function localAPI not found. Are you sure you using WHMCS?');
+        }
+
+        $response = localAPI($command, $values, $adminUser);
+
+        if (!array_key_exists('result', $response)) {
+            throw new Exception('[LOCAL API ERROR] Function localAPI invalid response.');
+        }
+
+        if ($response['result'] == 'error') {
+            throw new Exception(
+                '[LOCAL API ERROR] ' .
+                (array_key_exists('message', $response) ? $response['message'] : 'Something went wrong with localAPI')
+            );
+        }
+
+        return $response;
+    }
+
+    /**
      * Return value from one row in `tblconfiguration`
      *
      * @param string $setting Setting to search 
@@ -40,7 +72,9 @@ class WHMCS_Service implements WHMCSService_Interface
      */
     public function getConfiguration($setting)
     {
-        return Setting::getValue($setting);
+        $response = $this->doLocalAPICall('GetConfigurationValue', ['setting' => $setting]);
+
+        return array_key_exists('value', $response) ? $response['value'] : null;
     }
 
     /**

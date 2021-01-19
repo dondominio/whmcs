@@ -3,7 +3,6 @@
 namespace WHMCS\Module\Addon\Dondominio\Services;
 
 use WHMCS\Domain\Domain;
-use WHMCS\Config\Setting;
 use WHMCS\Database\Capsule;
 use Carbon\Carbon;
 use WHMCS\Module\Addon\Dondominio\Services\Contracts\WHMCSService_Interface;
@@ -13,14 +12,63 @@ use Exception;
 class WHMCS_Service extends AbstractService implements WHMCSService_Interface
 {
     /**
+     * Makes a local API Call
+     *
+     * @see https://developers.whmcs.com/api/internal-api/
+     *
+     * @param string $command Command to execute
+     * @param array $values Array as parameters
+     * @param string $adminUser User
+     *
+     * @throws Exception if success went wrong
+     */
+    public function doLocalAPICall($command, array $values, $adminUser = null)
+    {
+        if (!function_exists('localAPI')) {
+            throw new Exception('Function localAPI not found. Are you sure you using WHMCS?');
+        }
+
+        $response = localAPI($command, $values, $adminUser);
+
+        if (!array_key_exists('result', $response)) {
+            throw new Exception('[LOCAL API ERROR] Function localAPI invalid response.');
+        }
+
+        if ($response['result'] == 'error') {
+            throw new Exception(
+                '[LOCAL API ERROR] ' .
+                (array_key_exists('message', $response) ? $response['message'] : 'Something went wrong with localAPI')
+            );
+        }
+
+        return $response;
+    }
+
+    /**
      * Get currency by code
      * 
      * @param string $currency Code of currency
-     * @return null|\stdClass Object representing a currency 
+     * @return null|array
      */
     public function getCurrency($currency)
     {
-        return Capsule::table('tblcurrencies')->where('code', $currency)->first();
+        $response = $this->doLocalAPICall('GetCurrencies', []);
+
+        if (!array_key_exists('currencies', $response)) {
+            throw new Exception('[LOCAL API ERROR] Currencies index not found.');
+        }
+
+        if (!array_key_exists('currency', $response['currencies'])) {
+            throw new Exception('[LOCAL API ERROR] Currency index not found.');
+        }
+
+        foreach ($response['currencies']['currency'] as $c) {
+            if ($currency == $c['code']) {
+                return $c;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -31,7 +79,9 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
      */
     public function getConfiguration($setting)
     {
-        return Setting::getValue($setting);
+        $response = $this->doLocalAPICall('GetConfigurationValue', ['setting' => $setting]);
+
+        return array_key_exists('value', $response) ? $response['value'] : null;
     }
 
     /**
@@ -339,7 +389,7 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
             throw new Exception('domains_eur_not_found');
         }
 
-        $pricing = $this->getPricing('domainrenew', $tld->id, $currency->id, 'msetupfee');
+        $pricing = $this->getPricing('domainrenew', $tld->id, $currency['id'], 'msetupfee');
 
         if (is_null($pricing)) {
             throw new Exception('domains_tld_price_not_found');
@@ -391,15 +441,13 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
                 throw new Exception('transfer_authcode_required');
             }
 
-            /*
-            * Get customer information from WHMCS internal API
-            */
-            $command = "getclientsdetails";
-            $values["clientid"] = $extDomain->userid;
-            $values["stats"] = true;
-            $values["responsetype"] = "json";
+            $params = [
+                'clientid' => $extDomain->userid,
+                'stats' => true,
+                'responsetype' => 'json'
+            ];
 
-            $clientDetails = localAPI($command, $values, '');
+            $clientDetails = $this->doLocalAPICall("GetClientsDetails", $params);
 
             if (!is_array($clientDetails)) {
                 throw new Exception('transfer_client_not_found');
@@ -732,7 +780,7 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
         Capsule::table('tblpricing')
             ->updateOrInsert([
                 'type' => 'domainregister',
-                'currency' => $currency->id,
+                'currency' => $currency['id'],
                 'relid' => $domainPricing->id
             ], [
                 'msetupfee' => $register[0],
@@ -752,7 +800,7 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
         Capsule::table('tblpricing')
             ->updateOrInsert([
                 'type' => 'domaintransfer',
-                'currency' => $currency->id,
+                'currency' => $currency['id'],
                 'relid' => $domainPricing->id
             ], [
                 'msetupfee' => $transfer[0],
@@ -772,7 +820,7 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
         Capsule::table('tblpricing')
             ->updateOrInsert([
                 'type' => 'domainrenew',
-                'currency' => $currency->id,
+                'currency' => $currency['id'],
                 'relid' => $domainPricing->id
             ], [
                 'msetupfee' => $renew[0],
