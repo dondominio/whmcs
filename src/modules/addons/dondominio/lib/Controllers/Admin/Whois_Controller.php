@@ -52,7 +52,7 @@ class Whois_Controller extends Controller
         $whoisService = $this->getApp()->getService('whois');
 
         $whoisItems = $whoisService->getWhoisItems();
-        $whoisServerFilePath = $whoisService->getWhoisServerFilePath();
+        $whoisServerFilePath = $whoisService->getCustomWhoisServerFilePath();
         $whoisServerFileIsWritable = is_writable($whoisServerFilePath);
 
         $params = [
@@ -166,13 +166,15 @@ class Whois_Controller extends Controller
         $whoisService = $this->getApp()->getService('whois');
         $response = $this->getResponse();
 
+        $file = $whoisService->getCustomWhoisServerFilePath();
+
         $response->addHeader('Content-Description: File Transfer');
-        $response->addHeader('Content-Disposition: attachment; filename="'.basename($whoisService->getWhoisServerFilePath()).'"');
+        $response->addHeader('Content-Disposition: attachment; filename="'.basename($file).'"');
         $response->addHeader('Expires: 0');
         $response->addHeader('Cache-Control: must-revalidate');
         $response->addHeader('Pragma: public');
-        $response->addHeader('Content-Length: ' . filesize($whoisService->getWhoisServerFilePath()));
+        $response->addHeader('Content-Length: ' . filesize($file));
 
-        $response->setContentType(Response::CONTENT_BINARY)->send(readfile($whoisService->getWhoisServerFilePath()), true);
+        $response->setContentType(Response::CONTENT_BINARY)->send(readfile($file), true);
     }
 }

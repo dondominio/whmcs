@@ -210,4 +210,14 @@ class Pricing_Service extends AbstractService implements PricingService_Interfac
 
         return $queryBuilder->count();
     }
+
+    /**
+     * Return all pricings in TLD format array
+     *
+     * @return array
+     */
+    public function findAllTldsAsArray()
+    {
+        return Pricing_Model::select('tld')->pluck('tld')->toArray();
+    }
 }
