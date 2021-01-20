@@ -53,8 +53,27 @@ class Settings_Service extends AbstractService implements SettingsService_Interf
         $preUsername = static::getSetting('api_username');
         $prePassword = static::getSetting('api_password');
 
+        // Save in DB
         static::setSetting('api_username', $username);
         static::setSetting('api_password', base64_encode($password));
+
+        // Save in Registrar Module
+        if ($this->getApp()->getService('utils')->isRegistrarModuleActive()) {
+            try {
+                $options = [
+                    'moduleType' => 'registrar',
+                    'moduleName' => 'dondominio',
+                    'parameters' => [
+                        'apiuser' => $username,
+                        'apipasswd' => $password
+                    ]
+                ];
+
+                $this->getApp()->getService('whmcs')->doLocalAPICall("UpdateModuleConfiguration", $options);
+            } catch (Exception $e) {
+                logActivityCall($e->getMessage());
+            }
+        }
 
         $this->getApp()->getService('api')->reload([
             'apiuser' => $username,
