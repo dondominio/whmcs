@@ -4,6 +4,7 @@ namespace WHMCS\Module\Addon\Dondominio\Services;
 
 use WHMCS\Module\Addon\Dondominio\App;
 use WHMCS\Module\Addon\Dondominio\Services\Contracts\UtilsService_Interface;
+use WHMCS\Module\Registrar;
 use Exception;
 
 class Utils_Service extends AbstractService implements UtilsService_Interface
@@ -246,5 +247,17 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
                 );
             }
         }
+    }
+
+    /**
+     * Retrieves if Registrar Module is active
+     * 
+     * @return bool
+     */
+    public function isRegistrarModuleActive()
+    {
+        $registrar = new Registrar();
+
+        return $registrar->isActive('dondominio');
     }
 }

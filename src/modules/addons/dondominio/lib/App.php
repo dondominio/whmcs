@@ -495,9 +495,7 @@ class App
 
         // Find Registrar Module
         try {
-            $registrar = new \WHMCS\Module\Registrar();
-
-            if ($registrar->isActive('dondominio')) {
+            if ($this->getService('utils')->isRegistrarModuleActive()) {
                 $this->getService('utils')->findRegistrarModule();
                 $checks['registrar']['success'] = true;
             } else {
