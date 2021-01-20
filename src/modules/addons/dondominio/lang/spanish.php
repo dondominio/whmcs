@@ -262,6 +262,8 @@ $_ADDONLANG = array(
     'imported_successfully' => 'importado con éxito.',
     'cant_upgrade_dondominio' => 'No se ha podido actualizar Dondominio Addon.',
     'create_order_error' => 'Error al crear la orden.',
+    'no_customer_selected' => 'No se ha seleccionado cliente.',
+    'created_by_whmcs_dondominio_addon' => 'Creado por el Módulo Addon de Dondominio',
 
     /**
      * MODULES DASHBOARD

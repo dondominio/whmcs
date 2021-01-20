@@ -487,6 +487,10 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
      */
     public function insertOrderWithUserId($userid)
     {
+        if (!is_numeric($userid) || $userid <= 0) {
+            throw new Exception('no_customer_selected');
+        }
+
         $insert = Capsule::table('tblorders')->insert([
             'ordernum' => 1,
             'userid' => $userid,
@@ -534,7 +538,7 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
         $domain->status = 'Active';
         $domain->nextduedate = $info->get("tsExpir");
         $domain->nextinvoicedate = $info->get("tsExpir");
-        $domain->additionalnotes = 'Created by DonDominio WHMCS Addon';
+        $domain->additionalnotes = $this->getApp()->getLang('created_by_whmcs_dondominio_addon');
         $domain->synced = 0;
 
         $domain->save();
