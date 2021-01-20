@@ -83,6 +83,7 @@
 </div>
 <br>
 <input id="get-more-api-info" type="button" class="btn btn-info" value="{$LANG.more_info}" data-url="{$links.more_api_info}">
+<a class="btn btn-warning" href="/admin/systemphpinfo.php" target="_blank">PHP Info <i class="fad fa-external-link-alt"></i></a>
 <div id="more-api-infobox" class='infobox hide'>
     <img id="more-api-infobox-loading" src="../assets/img/loadingsml.gif" style="width: 25px;">
     <div id="more-api-infobox-details"></div>
