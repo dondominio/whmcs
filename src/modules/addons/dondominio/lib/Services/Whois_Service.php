@@ -98,6 +98,10 @@ class Whois_Service extends AbstractService implements WhoisService_Interface
     public function getCustomWhoisServers($reload = false)
     {
         if (is_null($this->customWhoisServers) || $reload) {
+            if (!file_exists($this->getCustomWhoisServerFilePath())) {
+                touch($this->getCustomWhoisServerFilePath());
+            }
+
             $this->customWhoisServers = $this->parseWhoisServersJson($this->getCustomWhoisServerFilePath());
         }
 
