@@ -499,7 +499,7 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
             'amount' => '0.00',
             'invoiceid' => 0,
             'status' => 'Active',
-            'notes' => 'Created by DonDominio WHMCS Addon'
+            'notes' => $this->getApp()->getLang('created_by_whmcs_dondominio_addon')
         ]);
 
         if (!$insert) {
