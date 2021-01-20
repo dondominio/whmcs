@@ -3,7 +3,7 @@
 </span>
 
 <ul class="menu">
-    <li><a href="{$links.dashboard}">{$LANG.menu_dashboard}</a></li>
+    <li><a href="{$links.dashboard}">{$LANG.menu_status}</a></li>
     <li><a href="{$links.tlds}">{$LANG.menu_tlds_update}</a></li>
     <li><a href="{$links.tlds_new}">{$LANG.menu_tlds_new}</a></li>
     <li><a href="{$links.domains}">{$LANG.menu_domains}</a></li>

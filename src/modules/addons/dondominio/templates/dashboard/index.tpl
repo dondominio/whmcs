@@ -9,59 +9,70 @@
                     <table class="datatable">
                         <tbody>
                         <tr>
-                            <td style="width: 250px">Version</td>
+                            <td style="width: 250px">{$LANG.version}</td>
                             <td>{$version}</td>
                             <td>
-                                {if $checks.version eq 'OK'}
-                                {elseif $checks.version eq 'KO'}
-                                    <a class="btn btn-warning" href="{$links.update_modules}">{$LANG.update}</a>
-                                    {$LANG.new_version_available}
+                                {if !is_null($checks.version.success)}
+                                    {if $checks.version.success eq false}
+                                        <a class="btn btn-warning" href="{$links.update_modules}">{$LANG.update}</a>
+                                        {$checks.version.message}
+                                    {/if}
                                 {else}
-                                    <input type="button" class=" btn btn-danger" value="ERROR" style="cursor: default;">
-                                    {$checks.version}
+                                    <input type="button" class=" btn btn-danger" value="{$LANG.error}" style="cursor: default;">
+                                    {$checks.version.message}
                                 {/if}
                             </td>
                         </tr>
                         <tr>
-                            <td>SDK Found</td>
+                            <td>{$LANG.sdk_status}</td>
                             <td>
-                                {if $checks.sdk eq 'OK'}
-                                    OK
+                                {if $checks.sdk.success eq true}
+                                    {$LANG.ok}
                                 {else}
-                                    <input type="button" class=" btn btn-danger" value="ERROR" style="cursor: default;">
+                                    <input type="button" class=" btn btn-danger" value="{$LANG.error}" style="cursor: default;">
                                 {/if}
                             </td>
-                            <td>{if $checks.sdk neq 'OK'}{$checks.sdk}{/if}</td>
-                        </tr>
-                        <tr>
-                            <td>API Connection</td>
                             <td>
-                                {if $checks.api eq 'OK'}
-                                    OK
-                                {else}
-                                    <input type="button" class=" btn btn-danger" value="ERROR" style="cursor: default;">
+                                {if $checks.sdk.success eq false}
+                                    {$checks.sdk.message}
                                 {/if}
                             </td>
-                            <td>{if $checks.api neq 'OK'}{$checks.api}{/if}</td>
                         </tr>
                         <tr>
-                            <td colspan="3">Modules installed</td>
+                            <td>{$LANG.api_connection_status}</td>
+                            <td>
+                                {if $checks.api.success eq true}
+                                    {$LANG.ok}
+                                {else}
+                                    <input type="button" class=" btn btn-danger" value="{$LANG.error}" style="cursor: default;">
+                                {/if}
+                            </td>
+                            <td>
+                                {if $checks.api.success eq true}
+                                    {$checks.api.message}
+                                {/if}
+                            </td>
                         </tr>
                         <tr>
-                            <td><ul><li>Addon Module</li></ul></td>
-                            <td>OK</td>
+                            <td colspan="3">{$LANG.modules_installed}</td>
+                        </tr>
+                        <tr>
+                            <td><ul><li>{$LANG.addon_module}</li></ul></td>
+                            <td>{$LANG.ok}</td>
                             <td></td>
                         </tr>
                         <tr>
-                            <td><ul><li>Registrar Module</li></ul></td>
+                            <td><ul><li>{$LANG.registrar_module}</li></ul></td>
                             <td>
-                                {if $checks.registrar eq 'OK'}
-                                    OK
+                                {if $checks.registrar eq true}
+                                    {$LANG.ok}
                                 {else}
-                                    <input type="button" class=" btn btn-danger" value="ERROR" style="cursor: default;">
+                                    <input type="button" class=" btn btn-danger" value="{$LANG.error}" style="cursor: default;">
                                 {/if}
                             </td>
-                            <td>{if $checks.registrar neq 'OK'}{$checks.registrar}{/if}</td>
+                            <td>
+                                {$checks.registrar.message}
+                            </td>
                         </tr>
                         </tbody>
                     </table>

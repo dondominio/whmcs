@@ -452,45 +452,61 @@ class App
      *
      * @return array
      */
-    public function getMinimumRequirements()
+    public function getInformation()
     {
         $checks = [
-            'version' => null,
-            'sdk' => null,
-            'api' => null,
-            'registrar'  => null
+            'version' => ['success' => null, 'message' => null],
+            'sdk' => ['success' => null, 'message' => null],
+            'api' => ['success' => null, 'message' => null],
+            'registrar'  => ['success' => null, 'message' => null]
         ];
 
         // Check Latest Version
         try {
             $latestVersion = $this->getService('utils')->isLatestVersion();
-            $checks['version'] = $latestVersion ? 'OK' : 'KO';
+            $checks['version']['success'] = true;
+
+            if (!$latestVersion) {
+                $checks['version']['success'] = false;
+                $checks['version']['message'] = $this->getLang('new_version_available');
+            }
         } catch (Exception $e) {
-            $checks['version'] = $this->getLang($e->getMessage());
+            $checks['version']['success'] = null;
+            $checks['version']['message'] = $this->getLang($e->getMessage());
         }
 
-        // Check SDK Intalled
+        // Check SDK Installed
         // Then, check API Connection
         try {
             $this->getService('api')->getApiConnection();
-            $checks['sdk'] = 'OK';
+            $checks['sdk']['success'] = true;
 
             try {
                 $this->getService('api')->doHello();
-                $checks['api'] = 'OK';
+                $checks['api']['success'] = true;
             } catch (Exception $e) {
-                $checks['api'] = $this->getLang($e->getMessage());
+                $checks['api']['success'] = false;
+                $checks['api']['message'] = $this->getLang($e->getMessage());
             }
         } catch (Exception $e) {
-            $checks['sdk'] = $this->getLang($e->getMessage());
+            $checks['sdk']['success'] = false;
+            $checks['sdk']['message'] = $this->getLang($e->getMessage());
         }
 
         // Find Registrar Module
         try {
-            $this->getService('utils')->findRegistrarModule();
-            $checks['registrar'] = 'OK';
+            $registrar = new \WHMCS\Module\Registrar();
+
+            if ($registrar->isActive('dondominio')) {
+                $this->getService('utils')->findRegistrarModule();
+                $checks['registrar']['success'] = true;
+            } else {
+                $checks['registrar']['success'] = true;
+                $checks['registrar']['message'] = $this->getLang('registrar_not_activated');
+            }
         } catch (Exception $e) {
-            $checks['registrar'] = $this->getLang($e->getMessage());
+            $checks['registrar']['success'] = false;
+            $checks['registrar']['message'] = $this->getLang($e->getMessage());
         }
 
         return $checks;

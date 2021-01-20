@@ -34,7 +34,7 @@ $_ADDONLANG = array(
     'link_more_info' => 'Más información',
 
     //Menu
-    'menu_dashboard' => 'Inicio',
+    'menu_status' => 'Estado',
     'menu_tlds_update' => 'Actualizar tarifas',
     'menu_tlds_new' => 'TLDs disponibles',
     'menu_domains' => 'Gestión de dominios',
@@ -274,6 +274,12 @@ $_ADDONLANG = array(
     'more_info' => 'Más Información',
 
     /**
+     * GENERIC
+     */
+    'ok' => 'OK',
+    'error' => 'ERROR',
+
+    /**
      * UPDATE
      */
     'unable_to_retrieve_last_version' => 'Error al obtener la última versión disponible.',
@@ -289,4 +295,11 @@ $_ADDONLANG = array(
     'unable_to_open_compressed_file' => 'Error al abrir el archivo comprimido.',
     'unable_to_decompress' => 'Error al descomprimir el archivo.',
     'decompress_method_not_found' => 'Método de compresión no implementado.',
+    'registrar_not_activated' => 'Módulo de Registro no activado.',
+    'version' => 'Version',
+    'sdk_status' => 'Estado SDK',
+    'api_connection_status' => 'Estado de Conexión API',
+    'modules_installed' => 'Módulos instalados',
+    'addon_module' => 'Módulo Addon',
+    'registrar_module' => 'Módulo Registrador'
 );

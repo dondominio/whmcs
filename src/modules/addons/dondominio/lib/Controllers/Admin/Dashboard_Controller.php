@@ -45,7 +45,7 @@ class Dashboard_Controller extends Controller
 
         $params = [
             'version' => $app->getVersion(),
-            'checks' => $app->getMinimumRequirements(),
+            'checks' => $app->getInformation(),
             'links' => [
                 'more_api_info' => static::makeURL(static::PRINT_MOREINFO),
                 'update_modules' => static::makeURL(static::UPDATE_MODULES)
