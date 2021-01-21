@@ -11,6 +11,17 @@ class Whois_Service extends AbstractService implements WhoisService_Interface
     protected $customWhoisServers = null;
 
     protected $apiServiceForWhois = null;
+    protected $isWhmcsVersionLt7 = null;
+
+    public function isWHMCSVersionLte7()
+    {
+        if (is_null($this->isWhmcsVersionLt7)) {
+            $whmcsVersion = $this->getApp()->getService('whmcs')->getConfiguration('version');
+            $this->isWhmcsVersionLt7 = version_compare($whmcsVersion, '7.0.0', '<');
+        }
+
+        return $this->isWhmcsVersionLt7;
+    }
 
     /**
      * Gets API Service for Whois (different user agent)
@@ -43,9 +54,7 @@ class Whois_Service extends AbstractService implements WhoisService_Interface
             throw new Exception('ROOTDIR is not defined.');
         }
 
-        $whmcsVersion = $this->getApp()->getService('whmcs')->getConfiguration('version');
-
-        if (version_compare($whmcsVersion, '7.0.0', '<')) {
+        if ($this->isWhmcsVersionLte7()) {
             return implode(DIRECTORY_SEPARATOR, [ROOTDIR, 'includes', 'whoisservers.php']);
         }
 
@@ -60,13 +69,7 @@ class Whois_Service extends AbstractService implements WhoisService_Interface
     public function getDefaultWhoisServers()
     {
         if (is_null($this->defaultWhoisServers)) {
-            $whmcsVersion = $this->getApp()->getService('whmcs')->getConfiguration('version');
-
-            if (version_compare($whmcsVersion, '7.0.0', '<')) {
-                $this->defaultWhoisServers = @file($this->getDefaultWhoisServerFilePath());
-            } else {
-                $this->defaultWhoisServers = $this->parseWhoisServersJson($this->getDefaultWhoisServerFilePath());
-            }
+            $this->defaultWhoisServers = $this->parseWhoisServers($this->getDefaultWhoisServerFilePath());
         }
 
         return $this->defaultWhoisServers;
@@ -79,9 +82,7 @@ class Whois_Service extends AbstractService implements WhoisService_Interface
      */
     public function getCustomWhoisServerFilePath()
     {
-        $whmcsVersion = $this->getApp()->getService('whmcs')->getConfiguration('version');
-
-        if (version_compare($whmcsVersion, '7.0.0', '<')) {
+        if ($this->isWhmcsVersionLte7()) {
             return $this->getDefaultWhoisServerFilePath();
         }
 
@@ -102,7 +103,7 @@ class Whois_Service extends AbstractService implements WhoisService_Interface
                 touch($this->getCustomWhoisServerFilePath());
             }
 
-            $this->customWhoisServers = $this->parseWhoisServersJson($this->getCustomWhoisServerFilePath());
+            $this->customWhoisServers = $this->parseWhoisServers($this->getCustomWhoisServerFilePath());
         }
 
         return $this->customWhoisServers;
@@ -117,7 +118,11 @@ class Whois_Service extends AbstractService implements WhoisService_Interface
     {
         $whoisDomain = $this->getApp()->getService('settings')->getSetting('whois_domain');
 
-        $whoisServers = array_merge($this->getDefaultWhoisServers(), $this->getCustomWhoisServers());
+        if ($this->isWHMCSVersionLte7()) {
+            $whoisServers = $this->getCustomWhoisServers();
+        } else {
+            $whoisServers = array_merge($this->getDefaultWhoisServers(), $this->getCustomWhoisServers());
+        }
 
         usort($whoisServers, function($a, $b) {
             // Sort by "whois by dondominio"
@@ -171,9 +176,7 @@ class Whois_Service extends AbstractService implements WhoisService_Interface
      */
     public function getWhoisServersBackupPath()
     {
-        $whmcsVersion = $this->getApp()->getService('whmcs')->getConfiguration('version');
-
-        if (version_compare($whmcsVersion, '7.0.0', '<')) {
+        if ($this->isWhmcsVersionLte7()) {
             return implode(DIRECTORY_SEPARATOR, [$this->getApp()->getDir(), 'whois_backups', 'whoisservers.php']);
         }
 
@@ -221,12 +224,10 @@ class Whois_Service extends AbstractService implements WhoisService_Interface
 
         // SAVE NEW WHOIS SERVER INTO FILE
 
-        $whmcsVersion = $this->getApp()->getService('whmcs')->getConfiguration('version');
-
-        if (version_compare($whmcsVersion, '7.0.0', '>=')) {
-            $result = $this->setup7($tld, $domain, $route);
-        } else {
+        if ($this->isWhmcsVersionLte7()) {
             $result = $this->setupLegacy($tld, $domain, $route);
+        } else {
+            $result = $this->setup7($tld, $domain, $route);
         }
 
         if (!$result) {
@@ -281,29 +282,22 @@ class Whois_Service extends AbstractService implements WhoisService_Interface
      */
     protected function setupLegacy($new_tld, $host, $route)
     {
-        $file = $this->getCustomWhoisServers();
+        $new_file = [];
 
-        $found = false;
-
-        //Looking for the TLD in the file
-        foreach ($file as $whois_id => $whois_entry) {
-            [$tld, $server, $match] = explode('|', $whois_entry);
-            
-            //TLD found; modify its settings
-            if($tld == $new_tld) {
-                $file[$whois_id] = $tld . '|' . $host . $route . '/modules/addons/dondominio/whois/whoisproxy.php?domain=|HTTPREQUEST-DDAVAILABLE' . "\r\n";
-                $found = true;
-                break;
-            }
+        // Clean array
+        foreach ($this->getCustomWhoisServers() as $key => $value) {
+            $new_file[$key] = implode("|", [$value['extensions'], $value['uri'], $value['available']]);
         }
 
-        //TLD not found in current file; add it to the bottom
-        if (!$found){
-            $file[] = $new_tld . '|' . $host . $route . '/modules/addons/dondominio/whois/whoisproxy.php?domain=|HTTPREQUEST-DDAVAILABLE' . "\r\n";
-        }
+        // New Whois Server
+        $new_file[$new_tld] = implode("|", [$new_tld, $host . $route . '/modules/addons/dondominio/whois/whoisproxy.php?domain=', 'HTTPREQUEST-DDAVAILABLE']);
+
+        array_walk($new_file, function(&$line) {
+            $line = $line . "\r\n";
+        });
 
         //Save the resulting file
-        return @file_put_contents($this->getCustomWhoisServerFilePath(), implode( "", $file));
+        return @file_put_contents($this->getCustomWhoisServerFilePath(), $new_file);
     }
 
     /**
@@ -333,11 +327,66 @@ class Whois_Service extends AbstractService implements WhoisService_Interface
 
         $file_contents = @file_get_contents($file['tmp_name']);
 
-        if (!($json = json_decode($file_contents))) {
-            throw new Exception('import-error');
+        if ($this->isWHMCSVersionLte7()) {
+            // Should we add some checking?
+        } else {
+            if (!($json = json_decode($file_contents))) {
+                throw new Exception('import-error');
+            }
         }
 
         return move_uploaded_file($file['tmp_name'], $this->getCustomWhoisServerFilePath());
+    }
+
+    /**
+     * Parses WHOIS Servers file depend upon WHMCS Version
+     *
+     * @param string $path Path where is the file to parse
+     *
+     * @return array
+     */
+    public function parseWhoisServers($path)
+    {
+        if ($this->isWHMCSVersionLte7()) {
+            return $this->parseWhoisServersFile($path);
+        }
+
+        return $this->parseWhoisServersJson($path);
+    }
+
+    /**
+     * Parses WHPOS Servers File with the following structure:
+     * .com|whois.crsnic.net|No match for
+     * .org|whois.publicinterestregistry.net|NOT FOUND
+     * ...
+     *
+     * @param string $path Path where is the file to parse
+     *
+     * @return array
+     */
+    public function parseWhoisServersFile($path)
+    {
+        $pricings = $this->getApp()->getService('pricing')->findAllTldsAsArray();
+
+        $whois_servers = @file($path);
+
+        $new_whois_servers = [];
+
+        foreach ($whois_servers as $entry) {
+            list($tld, $uri, $available) = explode('|', $entry);
+
+            $found = in_array($tld, $pricings) || in_array("." . $tld, $pricings);
+
+            $new_whois_servers[$tld] = [
+                'extensions' => $tld,
+                'uri' => $uri,
+                'available' => trim($available),
+                'found_in_db' => $found,
+                'whois_by_dd' => strpos($uri, 'whoisproxy.php') !== false
+            ];
+        }
+
+        return $new_whois_servers;
     }
 
     /**

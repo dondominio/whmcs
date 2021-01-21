@@ -33,9 +33,7 @@
                                 {/if}
                             </td>
                             <td>
-                                {if $checks.sdk.success eq false}
-                                    {$checks.sdk.message}
-                                {/if}
+                                {$checks.sdk.message}
                             </td>
                         </tr>
                         <tr>
@@ -48,9 +46,7 @@
                                 {/if}
                             </td>
                             <td>
-                                {if $checks.api.success eq true}
-                                    {$checks.api.message}
-                                {/if}
+                                {$checks.api.message}
                             </td>
                         </tr>
                         <tr>
