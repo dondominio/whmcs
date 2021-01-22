@@ -127,7 +127,7 @@ class App
                         'apiuser' => $this->params['apiuser'],
                         'apipasswd' => $this->params['apipasswd'],
                         'userAgent' => [
-                            'PluginForWHMCS' => static::VERSION,
+                            'PluginForWHMCS' => $this->getVersion(),
                             'WHMCS' => $this->getService('whmcs')->getConfiguration('version')
                         ]
                     ], $this);
