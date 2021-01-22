@@ -34,8 +34,8 @@ $arguments->addFlag(['help', 'h'], 'This information');
 $arguments->parse();
 
 //¿Enable Silent mode?
-if($arguments->get('silent')){
-	Output::setSilent(true);
+if ($arguments->get('silent')) {
+    Output::setSilent(true);
 }
 
 //Set output file/method
@@ -44,34 +44,25 @@ Output::setOutput($arguments->get('output'));
 //Check required arguments
 //If an argument is missing, show help screen.
 //Also show help screen with --help (-h) flag.
-if(
-	(
-		!$arguments->get('username') ||
-		!$arguments->get('password') ||
-		!$arguments->get('uid') ||
-		$arguments->get('help')
-	) &&
-	!$arguments->get('version')
-){
-	$arguments->helpScreen();
-	
-	Output::line("");
-	
-	exit();
+$missingRequiredArguments = !$arguments->get('username') || !$arguments->get('password') || !$arguments->get('uid');
+
+if (($missingRequiredArguments || $arguments->get('help') && !$arguments->get('$version'))) {
+    $arguments->helpScreen();
+    Output::line("");
+    exit();
 }
 
 //Display version information
-if($arguments->get('version')){
-	Output::debug("Version information requested");
-	
-	Import_Service::displayVersion();
-	exit();
+if ($arguments->get('version')) {
+    Output::debug("Version information requested");
+    Import_Service::displayVersion();
+    exit();
 }
 
 //¿Is the "verbose" flag set?
 //If so, enable verbose mode
-if($arguments->get('verbose')){
-	Output::setDebug(true);
+if ($arguments->get('verbose')) {
+    Output::setDebug(true);
 }
 
 /*
@@ -83,8 +74,6 @@ $app = new App();
 
 //The DonDominio API Client
 $api = new API_Service([
-    'endpoint' => 'https://simple-api-test.dondominio.net',
-    'port' => 443,
     'apiuser' => $arguments->get('username'),
     'apipasswd' =>  $arguments->get('password'),
     'debug' => ($arguments->get('debug') && !$arguments->get('silent')) ? true : false,
@@ -97,9 +86,9 @@ $api = new API_Service([
 $app->setAPIService($api);
 
 $import = new Import_Service([
-	'clientId' => $arguments->get('uid'),			//Default WHMCS client ID
-	'dryrun' => $arguments->get('dry'),				//Dry run - makes no changes to database
-	'forceClientId' => $arguments->get('forceUID')	//Always use default WHMCS Client ID for all operations
+    'clientId' => $arguments->get('uid'),			//Default WHMCS client ID
+    'dryrun' => $arguments->get('dry'),				//Dry run - makes no changes to database
+    'forceClientId' => $arguments->get('forceUID')	//Always use default WHMCS Client ID for all operations
 ], $app);
 $app->setImportService($import);
 
