@@ -141,7 +141,7 @@ class WHMCS_Service implements WHMCSService_Interface
             'amount' => '0.00',
             'invoiceid' => 0,
             'status' => 'Active',
-            'notes' => 'Created automatically by DonDominio Registrar Module v' . App::VERSION . ' on ' . date('m-d-Y H:i:s')
+            'notes' => 'Created automatically by DonDominio Registrar Module v' .$this->getApp()->getVersion() . ' on ' . date('m-d-Y H:i:s')
         ]);
 
         if (!$insert) {
@@ -196,7 +196,7 @@ class WHMCS_Service implements WHMCSService_Interface
         $domain->status = 'Active';
         $domain->nextduedate = $response->get('tsExpir');
         $domain->nextinvoicedate = $response->get('tsExpir');
-        $domain->additionalnotes = 'Created automatically by DonDominio Registrar Module v' . App::VERSION . ' on ' . date('m-d-Y H:i:s');
+        $domain->additionalnotes = 'Created automatically by DonDominio Registrar Module v' . $this->getApp()->getVersion() . ' on ' . date('m-d-Y H:i:s');
         $domain->synced = 0;
 
         $domain->save();

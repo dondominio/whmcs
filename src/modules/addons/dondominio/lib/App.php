@@ -32,6 +32,7 @@ class App
 
     protected static $instance;
 
+    protected $version;
     protected $dispatchers = [];
     protected $services = [];
     protected $whmcsVars = [];
@@ -40,6 +41,10 @@ class App
 
     /**
      * Get App Instance
+     *
+     * @param array $vars
+     *
+     * @return self
      */
     public static function getInstance(array $vars = null)
     {
@@ -68,6 +73,8 @@ class App
 
     /**
      * Get App Name
+     *
+     * @return string
      */
     public function getName()
     {
@@ -382,27 +389,35 @@ class App
      *
      * @return string
      */
-    public static function getVersion()
+    public function getVersion()
     {
-        $versionFile = static::getVersionFilePath();
+        if (is_null($this->version)) {
+            try {
+                $versionFile = static::getVersionFilePath();
 
-        if (!file_exists($versionFile)) {
-            return static::UNKNOWN_VERSION;
+                if (!file_exists($versionFile)) {
+                    throw new Exception('Version File not exists.');
+                }
+
+                $json = @file_get_contents($versionFile);
+
+                if (empty($json)) {
+                    throw new Exception('Version json file is empty.');
+                }
+
+                $versionInfo = json_decode($json, true);
+
+                if (!is_array($versionInfo) || !array_key_exists('version', $versionInfo)) {
+                    throw new Exception('Version index not found in version json file.');
+                }
+
+                $this->version = $versionInfo['version'];
+            } catch (Exception $e) {
+                $this->version = static::UNKNOWN_VERSION;
+            }
         }
 
-        $json = @file_get_contents($versionFile);
-
-        if (empty($json)) {
-            return static::UNKNOWN_VERSION;
-        }
-
-        $versionInfo = json_decode($json, true);
-
-        if (!is_array($versionInfo) || !array_key_exists('version', $versionInfo)) {
-            return static::UNKNOWN_VERSION;
-        }
-
-        return $versionInfo['version'];
+        return $this->version;
     }
 
     /**

@@ -31,9 +31,11 @@ use Exception;
  */
 function dondominio_MetaData()
 {
+    $app = new App();
+
     return [
-        'DisplayName' => App::NAME,
-        'APIVersion' => App::VERSION
+        'DisplayName' => $app->getName(),
+        'APIVersion' => $app->getVersion()
     ];
 }
 

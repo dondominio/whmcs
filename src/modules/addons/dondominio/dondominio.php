@@ -39,7 +39,7 @@ function dondominio_config()
     return [
         "name" => "DonDominio Manager",
         "description" => "Advanced features from DonDominio.",
-        "version" => App::getVersion(),
+        "version" => App::getInstance()->getVersion(),
         "author" => "DonDominio",
         "language" => "english",
         "fields" => [],
@@ -124,8 +124,10 @@ function dondominio_upgrade($vars)
     try {
         App::upgrade($vars['version']);
     } catch (Exception $e) {
-        $key = 'cant_upgrade_dondominio';
-        logActivity(array_key_exists($key, $vars['_lang']) ? $vars['_lang'][$key] : $key);
+        if (function_exists('logActivity')) {
+            $key = 'cant_upgrade_dondominio';
+            logActivity(array_key_exists($key, $vars['_lang']) ? $vars['_lang'][$key] : $key);
+        }
         
         throw $e;
     }

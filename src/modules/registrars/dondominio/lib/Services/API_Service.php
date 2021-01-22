@@ -2,7 +2,6 @@
 
 namespace WHMCS\Module\Registrar\Dondominio\Services;
 
-use WHMCS\Module\Registrar\Dondominio\App;
 use WHMCS\Module\Registrar\Dondominio\Services\Contracts\APIService_Interface;
 use WHMCS\Module\Registrar\Dondominio\Helpers\API;
 use WHMCS\Module\Registrar\Dondominio\Cli\Output;
@@ -70,7 +69,7 @@ class API_Service implements APIService_Interface
     {
         // Call internal WHMCS function logModuleCall
         if (function_exists('logModuleCall')) {
-            logModuleCall(App::NAME, $response->getAction(), $params, $response->getRawResponse(),$response->getArray());
+            logModuleCall($this->getApp()->getName(), $response->getAction(), $params, $response->getRawResponse(),$response->getArray());
         }
 
         if (!$response->getSuccess()) {
@@ -86,8 +85,8 @@ class API_Service implements APIService_Interface
      * @return array Domain list
      */
     public function getDomainList()
-    {		
-		$domains = [];
+    {
+        $domains = [];
         
         try {
             do {				
