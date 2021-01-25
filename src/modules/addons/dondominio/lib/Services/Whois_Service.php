@@ -109,7 +109,203 @@ class Whois_Service extends AbstractService implements WhoisService_Interface
         return $this->customWhoisServers;
     }
 
+
     /**
+     * Adds Custom Whois Server to internal array
+     *
+     * @param string $tld Extension
+     * @param string $domain Host domain
+     * @param string $route Configured WHOIS Server
+     *
+     * @return void
+     */
+    protected function addCustomWhoisServer($tld, $url, $available)
+    {
+        $this->customWhoisServers[$tld] = [
+            'extensions' => $tld,
+            'uri' => $url,
+            'available' => $available,
+            'found_in_db' => null,
+            'whois_by_dd' => null
+        ];
+    }
+
+    /**
+     * Removes an entry from custom whois servers by key
+     *
+     * @param string $key Key to search
+     *
+     * @return void
+     */
+    protected function removeCustomWhoisServerByKey($key)
+    {
+        unset($this->customWhoisServers[$key]);
+    }
+
+    /**
+     * Get Whois Servers Backup Path
+     *
+     * @return string
+     */
+    public function getWhoisServersBackupPath()
+    {
+        if ($this->isWhmcsVersionLte7()) {
+            return implode(DIRECTORY_SEPARATOR, [$this->getApp()->getDir(), 'whois_backups', 'whoisservers.php']);
+        }
+
+        return implode(DIRECTORY_SEPARATOR, [$this->getApp()->getDir(), 'whois_backups', 'whois.json']);
+    }
+
+    /**
+     * Saves a TLD to use DD API for Whois
+     *
+     * @param string $tld The TLD to configure
+     *
+     * @throws Exception If TLD not found in API or WHOIS Servers File saving went bad
+     *
+     * @return bool
+     */
+    public function setup($tld)
+    {
+        // API CALL
+
+        $response = $this->getApp()->getService('api')->getAccountZones([
+            'tld' => substr($tld, 1)
+        ]);
+
+        $queryInfo = $response->get('queryInfo');
+
+        if ($queryInfo['total'] < 1) {
+            throw new Exception('new-tld-not-found');
+        }
+
+        // BACKUP WHOIS SERVERS FILE
+
+        $this->doWhoisBackup();
+
+        // BUILD NEW WHOIS SERVER
+
+        $url = $_SERVER['REQUEST_URI'];
+        $admin_section = strpos($url, '/admin');
+        $route = substr($url, 0, $admin_section);
+
+        $domain = $this->getApp()->getService('settings')->getSetting('whois_domain');
+
+        if (substr($domain, 0, 4) != 'http') {
+            $domain = 'http://' . $domain;
+        }
+
+        // CALCULATE WHOIS PROXY
+
+        $this->getCustomWhoisServers();
+
+        // ADD NEW ITEM
+
+        $this->addCustomWhoisServer(
+            $tld,
+            $domain . $route . '/modules/addons/dondominio/whois/whoisproxy.php?domain=',
+            $this->isWhmcsVersionLte7() ? 'HTTPREQUEST-DDAVAILABLE' : 'DDAvailable'
+        );
+
+        // SAVE NEW WHOIS SERVER INTO FILE
+
+       $result = $this->saveWhoisServersIntoFile();
+
+        if (!$result) {
+            throw new Exception('new-tld-error-permissions');
+        }
+
+        // RELOAD INTERNAL ARRAY
+
+        $this->getCustomWhoisServers(true);
+    }
+
+    /**
+     * Delete all WHOIS Servers in Dondominio
+     */
+    public function deleteWhoisServersByDondominio()
+    {
+        $this->doWhoisBackup();
+
+        foreach ($this->getCustomWhoisServers() as $key => $whoisServer) {
+            if ($whoisServer['whois_by_dd']) {
+                $this->removeCustomWhoisServerByKey($key);
+            }
+        }
+
+        return $this->saveWhoisServersIntoFile();
+    }
+
+    /**
+     * Saves Custom Whois Servers into file
+     *
+     * @return bool
+     */
+    protected function saveWhoisServersIntoFile()
+    {
+        if ($this->isWhmcsVersionLte7()) {
+            return $this->setupLegacy();
+        }
+
+        return $this->setup7();
+    }
+
+    /**
+     * Saves TLD in WHOIS Servers File
+     *
+     * @return bool
+     */
+    protected function setup7()
+    {
+        $new_file = [];
+
+        foreach ($this->getCustomWhoisServers() as $key => $value) {
+            $new_file[$key] = [
+                'extensions' => $value['extensions'],
+                'uri' => $value['uri'],
+                'available' => $value['available']
+            ];
+        }
+
+        return @file_put_contents($this->getCustomWhoisServerFilePath(), json_encode(array_values($new_file)));
+    }
+
+    /**
+     * Saves TLD in WHOIS Servers File (FOR LEGACY WHMCS VERSION <7)
+     *
+     * @return bool
+     */
+    protected function setupLegacy()
+    {
+        $new_file = [];
+
+        foreach ($this->getCustomWhoisServers() as $key => $value) {
+            $new_file[$key] = implode("|", [$value['extensions'], $value['uri'], $value['available']]);
+        }
+
+        array_walk($new_file, function(&$line) {
+            $line = $line . "\r\n";
+        });
+
+        //Save the resulting file
+        return @file_put_contents($this->getCustomWhoisServerFilePath(), $new_file);
+    }
+
+    /**
+     * Make a backup of the original whois servers file
+     * Creates a backup on the local directory of the original whois servers file for restoring it
+     * later, if needed.
+     *
+     * @return bool
+     */
+    public function doWhoisBackup()
+    {
+        $backupFile = $this->getWhoisServersBackupPath() . '.' . date('Y_m_d_H_i_s') . '.backup';
+
+        return copy($this->getCustomWhoisServerFilePath(), $backupFile);
+    }
+
+        /**
      * Get all Whois Servers to display in HTML
      *
      * @return array
@@ -167,151 +363,6 @@ class Whois_Service extends AbstractService implements WhoisService_Interface
         }
 
         return $whoisServers;
-    }
-
-    /**
-     * Get Whois Servers Backup Path
-     *
-     * @return string
-     */
-    public function getWhoisServersBackupPath()
-    {
-        if ($this->isWhmcsVersionLte7()) {
-            return implode(DIRECTORY_SEPARATOR, [$this->getApp()->getDir(), 'whois_backups', 'whoisservers.php']);
-        }
-
-        return implode(DIRECTORY_SEPARATOR, [$this->getApp()->getDir(), 'whois_backups', 'whois.json']);
-    }
-
-    /**
-     * Saves a TLD to use DD API for Whois
-     *
-     * @param string $tld The TLD to configure
-     *
-     * @throws Exception If TLD not found in API or WHOIS Servers File saving went bad
-     *
-     * @return bool
-     */
-    public function setup($tld)
-    {
-        // API CALL
-
-        $response = $this->getApp()->getService('api')->getAccountZones([
-            'tld' => substr($tld, 1)
-        ]);
-
-        $queryInfo = $response->get('queryInfo');
-
-        if ($queryInfo['total'] < 1) {
-            throw new Exception('new-tld-not-found');
-        }
-
-        // BACKUP WHOIS SERVERS FILE
-
-        $this->doWhoisBackup();
-
-        // BUILD NEW WHOIS SERVER
-
-        $url = $_SERVER['REQUEST_URI'];
-        $admin_section = strpos($url, '/admin');
-        $route = substr($url, 0, $admin_section);
-
-        $domain = $this->getApp()->getService('settings')->getSetting('whois_domain');
-
-        if (substr($domain, 0, 4) != 'http') {
-            $domain = 'http://' . $domain;
-        }
-
-        // SAVE NEW WHOIS SERVER INTO FILE
-
-        if ($this->isWhmcsVersionLte7()) {
-            $result = $this->setupLegacy($tld, $domain, $route);
-        } else {
-            $result = $this->setup7($tld, $domain, $route);
-        }
-
-        if (!$result) {
-            throw new Exception('new-tld-error-permissions');
-        }
-
-        // RELOAD INTERNAL ARRAY
-
-        $this->getCustomWhoisServers(true);
-    }
-
-    /**
-     * Saves TLD in WHOIS Servers File
-     *
-     * @param string $tld Extension
-     * @param string $domain Host domain
-     * @param string $route Configured WHOIS Server
-     *
-     * @return bool
-     */
-    protected function setup7($tld, $host, $whois_route)
-    {
-        $new_file = [];
-
-        // Clean array
-        foreach ($this->getCustomWhoisServers() as $key => $value) {
-            $new_file[$key] = [
-                'extensions' => $value['extensions'],
-                'uri' => $value['uri'],
-                'available' => $value['available']
-            ];
-        }
-
-        // New Whois Server
-        $new_file[$tld] = [
-            'extensions' => $tld,
-            'uri' => $host . $whois_route . '/modules/addons/dondominio/whoisproxy.php?domain=',
-            'available' => 'DDAvailable',
-        ];
-
-        return @file_put_contents($this->getCustomWhoisServerFilePath(), json_encode(array_values($new_file)));
-    }
-
-    /**
-     * Saves TLD in WHOIS Servers File (FOR LEGACY WHMCS VERSION <7)
-     *
-     * @param string $tld Extension
-     * @param string $domain Host domain
-     * @param string $route Configured WHOIS Server
-     *
-     * @return bool
-     */
-    protected function setupLegacy($new_tld, $host, $route)
-    {
-        $new_file = [];
-
-        // Clean array
-        foreach ($this->getCustomWhoisServers() as $key => $value) {
-            $new_file[$key] = implode("|", [$value['extensions'], $value['uri'], $value['available']]);
-        }
-
-        // New Whois Server
-        $new_file[$new_tld] = implode("|", [$new_tld, $host . $route . '/modules/addons/dondominio/whois/whoisproxy.php?domain=', 'HTTPREQUEST-DDAVAILABLE']);
-
-        array_walk($new_file, function(&$line) {
-            $line = $line . "\r\n";
-        });
-
-        //Save the resulting file
-        return @file_put_contents($this->getCustomWhoisServerFilePath(), $new_file);
-    }
-
-    /**
-     * Make a backup of the original whois servers file
-     * Creates a backup on the local directory of the original whois servers file for restoring it
-     * later, if needed.
-     *
-     * @return bool
-     */
-    public function doWhoisBackup()
-    {
-        $backupFile = $this->getWhoisServersBackupPath() . '.' . date('Y_m_d_H_i_s') . '.backup';
-
-        return copy($this->getCustomWhoisServerFilePath(), $backupFile);
     }
 
     /**

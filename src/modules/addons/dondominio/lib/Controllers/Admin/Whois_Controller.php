@@ -19,6 +19,7 @@ class Whois_Controller extends Controller
     const ACTION_SWITCH = 'switch';
     const ACTION_IMPORT = 'import';
     const ACTION_EXPORT = 'export';
+    const ACTION_DELETE = 'delete';
 
     /**
      * Gets available actions for Controller
@@ -32,7 +33,8 @@ class Whois_Controller extends Controller
             static::VIEW_IMPORT => 'view_Import',
             static::ACTION_SWITCH => 'action_Switch',
             static::ACTION_IMPORT => 'action_Import',
-            static::ACTION_EXPORT => 'action_Export'
+            static::ACTION_EXPORT => 'action_Export',
+            static::ACTION_DELETE => 'action_Delete'
         ];
     }
 
@@ -63,6 +65,7 @@ class Whois_Controller extends Controller
             'whois_items' => $whoisItems,
             'actions' => [
                 'switch' => static::ACTION_SWITCH,
+                'delete' => static::ACTION_DELETE
             ],
             'links' => [
                 'switch' => static::makeURL(static::ACTION_SWITCH, ['tld' => '']),
@@ -176,5 +179,23 @@ class Whois_Controller extends Controller
         $response->addHeader('Content-Length: ' . filesize($file));
 
         $response->setContentType(Response::CONTENT_BINARY)->send(readfile($file), true);
+    }
+
+    /**
+     * Action for whois server delete
+     *
+     * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
+     */
+    public function action_Delete()
+    {
+        try {
+            $this->getApp()->getService('whois')->deleteWhoisServersByDondominio();
+
+            $this->getResponse()->addSuccess($this->getApp()->getLang('whois_servers_deleted_ok'));
+        } catch (Exception $e) {
+            $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
+        }
+
+        return $this->view_Index();
     }
 }

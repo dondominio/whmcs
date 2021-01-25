@@ -425,7 +425,7 @@ class App
      *
      * @throws \Exception If currency EUR is not installed
      */
-    public static function install()
+    public function install()
     {
         $app = new static();
 
@@ -443,8 +443,17 @@ class App
      *
      * @return void
      */
-    public static function uninstall()
+    public function uninstall()
     {
+        // Try to delete Dondominio Whois Proxy
+        try {
+            $this->getService('whois')->deleteWhoisServersByDondominio();
+        } catch (Exception $e) {
+            if (function_exists('logActivity')) {
+                logActivity('Could\'nt delete MrDomain whois servers while uninstalling MrDomain Addon.');
+            }
+        }
+
         Migrations::uninstall();
     }
 
@@ -453,7 +462,7 @@ class App
      *
      * @return void
      */
-    public static function upgrade($version)
+    public function upgrade($version)
     {
         Migrations::upgrade($version);
     }

@@ -234,6 +234,7 @@ $_ADDONLANG = array(
     'servers_export' => 'Exportar lista de servidores',
     'servers_import' => 'Importar lista de servidores',
     'import_btn' => 'Importar archivo',
+    'servers_delete' => 'Eliminar lista de servidores de Dondominio',
 
     /**
      * MESSAGES
@@ -264,6 +265,7 @@ $_ADDONLANG = array(
     'create_order_error' => 'Error al crear la orden.',
     'no_customer_selected' => 'No se ha seleccionado cliente.',
     'created_by_whmcs_dondominio_addon' => 'Creado por el Módulo Addon de Dondominio',
+    'whois_servers_deleted_ok' => 'Los Servidores WHOIS de Dondominio se han eliminado satisfactoriamente',
 
     /**
      * MODULES DASHBOARD

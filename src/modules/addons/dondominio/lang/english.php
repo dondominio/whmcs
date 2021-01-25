@@ -234,6 +234,7 @@ $_ADDONLANG = array(
     'servers_export' => 'Export server list',
     'servers_import' => 'Import server list',
     'import_btn' => 'Import file',
+    'servers_delete' => 'Delete MrDomain server list',
 
     /**
      * MESSAGES
@@ -264,6 +265,7 @@ $_ADDONLANG = array(
     'create_order_error' => 'Error while creating order.',
     'no_customer_selected' => 'No customer selected',
     'created_by_whmcs_dondominio_addon' => 'Created by DonDominio WHMCS Addon',
+    'whois_servers_deleted_ok' => 'WHOIS Servers from MrDomain have been deleted successfully',
 
      /**
      * MODULES DASHBOARD

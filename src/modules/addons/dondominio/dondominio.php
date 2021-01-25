@@ -63,7 +63,7 @@ function dondominio_config()
 function dondominio_activate()
 {
     try {
-        App::install();
+        App::getInstance()->install();
 
         return [
             'status' => 'success',
@@ -93,7 +93,7 @@ function dondominio_activate()
 function dondominio_deactivate()
 {
     try {
-        App::uninstall();
+        App::getInstance()->uninstall();
 
         return [
             'status' => 'success',
@@ -122,13 +122,13 @@ function dondominio_deactivate()
 function dondominio_upgrade($vars)
 {
     try {
-        App::upgrade($vars['version']);
+        App::getInstance()->upgrade($vars['version']);
     } catch (Exception $e) {
         if (function_exists('logActivity')) {
             $key = 'cant_upgrade_dondominio';
             logActivity(array_key_exists($key, $vars['_lang']) ? $vars['_lang'][$key] : $key);
         }
-        
+
         throw $e;
     }
 }

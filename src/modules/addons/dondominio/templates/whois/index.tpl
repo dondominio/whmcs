@@ -1,5 +1,11 @@
 <a class='btn btn-default btn-sm' href='{$links.export}'>{$LANG.servers_export}</a>
 <a class='btn btn-default btn-sm' href='{$links.import}'>{$LANG.servers_import}</a>
+<form method='post' action='' style="display: inline-block">
+    <input type="hidden" name="module" value="{$module_name}">
+    <input type="hidden" name="__c__" value="{$__c__}">
+    <input type="hidden" name="__a__" value="{$actions.delete}">
+    <input type="submit" class="btn btn-default btn-sm" value="{$LANG.servers_delete}">
+</form>
 
 <div class='contexthelp'>
     <img src='images/icons/reports.png' border='0' align='absmiddle'>&nbsp;
