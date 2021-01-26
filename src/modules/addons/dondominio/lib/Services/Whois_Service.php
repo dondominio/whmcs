@@ -203,7 +203,7 @@ class Whois_Service extends AbstractService implements WhoisService_Interface
 
         $this->addCustomWhoisServer(
             $tld,
-            $domain . $route . '/modules/addons/dondominio/whois/whoisproxy.php?domain=',
+            $domain . $route . '/modules/addons/dondominio/whoisproxy.php?domain=',
             $this->isWhmcsVersionLte7() ? 'HTTPREQUEST-DDAVAILABLE' : 'DDAvailable'
         );
 
