@@ -169,10 +169,10 @@ class Migrations
      *
      * @return void
      */
-    public static function upgrade11()
+    protected static function upgrade11()
     {
-        if (!Capsule::schema()->hasColumn(Pricing_Model::getTableName(), 'authcode_required')) {
-            Capsule::schema()->table(Pricing_Model::getTableName(), function($table) {
+        if (!Capsule::schema()->hasColumn('mod_dondominio_pricing', 'authcode_required')) {
+            Capsule::schema()->table('mod_dondominio_pricing', function($table) {
                 $table->tinyInteger('authcode_required')->nullable();
             });
         }
@@ -185,10 +185,10 @@ class Migrations
      *
      * @return void
      */
-    public static function upgrade12()
+    protected static function upgrade12()
     {
-        if (!Capsule::schema()->hasTable(TldSettings_Model::getTableName())) {
-            Capsule::schema()->create(TldSettings_Model::getTableName(), function($table) {
+        if (!Capsule::schema()->hasTable('mod_dondominio_tld_settings')) {
+            Capsule::schema()->create('mod_dondominio_tld_settings', function($table) {
                 $table->integer('id', true)->autoIncrement();
                 $table->string('tld', 64)->unique('unique_tld');
                 $table->tinyInteger('ignore');
@@ -210,10 +210,10 @@ class Migrations
      *
      * @return void
      */
-    public static function upgrade16()
+    protected static function upgrade16()
     {
-        if (!Capsule::schema()->hasColumn(TldSettings_Model::getTableName(), 'ignore')) {
-            Capsule::schema()->table(TldSettings_Model::getTableName(), function($table) {
+        if (!Capsule::schema()->hasColumn('mod_dondominio_tld_settings', 'ignore')) {
+            Capsule::schema()->table('mod_dondominio_tld_settings', function($table) {
                 $table->tinyInteger('ignore');
             });
         }
@@ -226,10 +226,25 @@ class Migrations
      *
      * @return void
      */
-    public static function upgrade20()
+    protected static function upgrade20()
     {
         Settings_Model::where('key', 'suggests_enabled')->delete();
         Settings_Model::where('key', 'suggests_language')->delete();
         Settings_Model::where('key', 'suggests_tlds')->delete();
+
+        // Fix collations
+
+        $pdo = Capsule::connection()->getPdo();
+        $pdo->query('ALTER TABLE `mod_dondominio_pricing` CHANGE `tld` `tld` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL;');
+        $pdo->query('ALTER TABLE `mod_dondominio_pricing` CHANGE `register_range` `register_range` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL;');
+        $pdo->query('ALTER TABLE `mod_dondominio_pricing` CHANGE `transfer_range` `transfer_range` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL;');
+        $pdo->query('ALTER TABLE `mod_dondominio_pricing` CHANGE `renew_range` `renew_range` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL;');
+        $pdo->query('ALTER TABLE `mod_dondominio_settings` CHANGE `key` `key` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL;');
+        $pdo->query('ALTER TABLE `mod_dondominio_settings` CHANGE `value` `value` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL;');
+        $pdo->query('ALTER TABLE `mod_dondominio_tld_settings` CHANGE `tld` `tld` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL;');
+        $pdo->query('ALTER TABLE `mod_dondominio_tld_settings` CHANGE `register_increase_type` `register_increase_type` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL;');
+        $pdo->query('ALTER TABLE `mod_dondominio_tld_settings` CHANGE `renew_increase_type` `renew_increase_type` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL;');
+        $pdo->query('ALTER TABLE `mod_dondominio_tld_settings` CHANGE `transfer_increase_type` `transfer_increase_type` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL;');
+        $pdo->query('ALTER TABLE `mod_dondominio_watchlist` CHANGE `tld` `tld` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL;');
     }
 }
