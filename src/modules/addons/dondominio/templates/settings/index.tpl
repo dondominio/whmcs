@@ -1,9 +1,3 @@
-{if strlen($api_username) == 0 || strlen($api_password) == 0}
-<div class='infobox'>
-    {$LANG.settings_api_required}
-</div>
-{/if}
-
 <h2>{$LANG.settings_title}</h2>
 
 <br />
@@ -58,7 +52,7 @@
                         </td>
 
                         <td class='fieldarea'>
-                            <input type='text' name='api_password' value="{base64_decode($api_password)}" required="required" />
+                            <input type='text' name='api_password' value="{$api_password}" required="required" />
                             {$LANG.settings_api_password_info}
                         </td>
                     </tr>

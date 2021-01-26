@@ -55,6 +55,31 @@ class Settings_Controller extends Controller
             $actions[$key] = $key;
         }
 
+        $apiUsername = $settings->get('api_username');
+        $apiPassword = $settings->get('api_password');
+
+        if (!empty($apiPassword)) {
+            $apiPassword = base64_decode($apiPassword);
+        }
+
+        if (empty($apiUsername) || empty($apiUsername)) {
+            $this->getResponse()->addInfo($this->getApp()->getLang('settings_api_required'));
+
+            // Try to find in Registrar module if credentials not saved yet
+
+            $registrar = new \WHMCS\Module\Registrar();
+            $registrar->load('dondominio');
+            $registrarConfigArray = $registrar->getSettings();
+
+            if (empty($apiUsername) && array_key_exists('apiuser', $registrarConfigArray)) {
+                $apiUsername = $registrarConfigArray['apiuser'];
+            }
+
+            if (empty($apiPassword) && array_key_exists('apipasswd', $registrarConfigArray)) {
+                $apiPassword = $registrarConfigArray['apipasswd'];
+            }
+        }
+
         // PARAMS TO TEMPLATE
 
         $params = [
@@ -64,8 +89,8 @@ class Settings_Controller extends Controller
             'watchlisted_tlds' => $watchlisted_tlds,
             'last_update' => $cacheStatus->last_update,
             'total_tlds' => $cacheStatus->count,
-            'api_username' => $settings->get('api_username'),
-            'api_password' => $settings->get('api_password'),
+            'api_username' => $apiUsername,
+            'api_password' => $apiPassword,
             'prices_update_cron' => $settings->get('prices_autoupdate') == '1' ? "checked='checked'" : "",
             'register_increase' => $settings->get('register_increase'),
             'transfer_increase' => $settings->get('transfer_increase'),
