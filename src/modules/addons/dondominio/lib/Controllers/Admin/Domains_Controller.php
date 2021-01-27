@@ -262,8 +262,8 @@ class Domains_Controller extends Controller
                 'import_domains' => static::ACTION_IMPORT,
             ],
             'links' => [
-                'prev_page' => static::makeUrl(static::VIEW_TRANSFER, ['page' => ($page - 1)]),
-                'next_page' => static::makeUrl(static::VIEW_TRANSFER, ['page' => ($page + 1)])
+                'prev_page' => static::makeUrl(static::VIEW_IMPORT, ['page' => ($page - 1)]),
+                'next_page' => static::makeUrl(static::VIEW_IMPORT, ['page' => ($page + 1)])
             ]
         ];
 
