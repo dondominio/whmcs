@@ -1,106 +1,115 @@
-# DonDominio - WHMCS Integration Modules
+# Módulos de Integración WHMCS - DonDominio
 
-This project has all the developed integrations between DonDominio and WHMCS.
+Este proyecto contiene todos los módulos desarrollados entre DonDominio y WHMCS.
 
-1. Addon Module [(What is WHMCS Addon Module?)](https://developers.whmcs.com/addon-modules/) 
-2. Registrar Module [(What is WHMCS Registrar Module?)](https://docs.whmcs.com/Addon_Modules_Management)
+1. Módulo Addon [(¿Qué es un Módulo Addon? **(EN)**)](https://developers.whmcs.com/addon-modules/) 
+2. Módulo de Registrador [(¿Qué es un Módulo de Registrador? **(EN)**)](https://docs.whmcs.com/Addon_Modules_Management)
 
-## Status
+**If you desire to read this document in English, please, visit [README-en](README-en.md)**
+
+## Estado
 | Version |
-|:-----|
-| 2.0.0-beta |
+|:--------|
+| 2.0.0   |
 
-**\*THIS PROJECT IS STILL UNDER DEVELOPMENT, IF YOU CONSIDER TO USE THIS PLEASE REFER TO [WHMCS ADDON](https://github.com/dondominio/whmcs-addon)
-AND [WHMCS PLUGIN](https://github.com/dondominio/whmcs-plugin)**
+## Requerimientos
+| Name      | Version       |
+|:----------|:--------------|
+| WHMCS     | >= 7.0        |
+| PHP       | >= 7.0        |
+| php-curl  | habilitado    |
+| php-json  | habilitado    |
+| php-zip   | habilitado    |
 
-## Requirements
-| Name | Version |
-|:----|:-------|
-| WHMCS | >= 5.0 |
-| PHP | >= 5.6 |
-| php-curl | enabled |
-| php-json | enabled |
+## Instalación
+Este proyecto tiene más de un módulo de integración con WHMCS. Por favor, dirígase a la documentación para escoger qué módulos desea instalar.
 
+1. **Instalación sencilla**.
+La forma sencilla de instalación es, simplemente **arrastrar las carpetas `src/modules` y `src/includes` dentro de la carpeta raíz de WHMCS y aceptar todos los cambios.**
+2. **Instalación personalizada**.
+Si solo desea instalar un módulo en concreto, primero copie la carpeta `src/includes` en la carpeta raíz de WHMCS
+y después copie la carpeta `src/modules/xxx/dondominio` en `/path/to/whmcs/modules/xxx` donde `xxx` es el tipo de módulo (addons, registrars... etc).
+Por ejemplo, si solo desea instalar el módulo addon, la carpeta final sería `/path/to/whmcs/modules/addons/dondominio`.
 
-## Installation
-This project consists in more than one integration module with WHMCS. Please, refer to the index to choose which module
-you want to install.<br>
-1. **Easy Installation**.
-The regular way to install it is, simply **drag and drop the `src` folder in WHMCS root folder**.<br>
-2. **Customized Installation**.
-If you want to install one specific module, first copy `src/includes` into `includes` folder
-and then copy `src/modules/xxx/dondominio/` folder into `modules/xxx/` where `xxx` is the module type.
+Finalmente, si ha escogido la instalación sencilla o ha decidido instalar el módulo de registrador, debe realizar las siguientes instrucciones:
 
-Finally, if you decided to install registrar module, you must edit the `/includes/additionaldomainfields.php` file 
-included on your WHMCS 6 installation, or the `/resources/domains/dist.additionalfields.php` file included in your WHMCS 7 installation.
+>**WHMCS 6**
+>
+>Es necesario editar el fichero `/path/to/whmcs/includes/additionaldomainfields.php` incluido en la instalación de WHMCS 6
+>
+>Al final de este fichero, debe añadirse esta línea:
+>
+>```php
+>include(ROOTDIR . "/modules/registrars/dondominio/additionalfields.php");
+>```
 
-At the end of this file you need to add this line:
-```
-include(ROOTDIR . "/modules/registrars/dondominio/additionaldomainfields.php");
-```
+>**WHMCS 7.x y 8.x**
+>
+>Es necesario copiar el archivo `/path/to/whmcs/modules/registrars/dondominio/additionalfields.php` dentro de la carpeta `/path/to/whmcs/resources/domains`.
+>
+>Si este archivo ya existe, deberá cancelar la operación y añadir los campos manualmente siguiendo las instrucciones de
+>[WHMCS Additional Domain Fields](https://docs.whmcs.com/Additional_Domain_Fields).
+>
+>Si no está seguro de como hacerlo, por favor, consulte con nuestro equipo de soporte.
+>
+>Así mismo, es posible que si instala módulos de otros registradores, estos campos dejen de funcionar.
+>Por favor, asegúrese de que si instala otros módulos, éstos no interfieren con este archivo.
 
-**\*Please, note that all the modules share a common library (DonDominio API) that is `src/includes/dondominio-sdk/` folder.**
+**\*Por favor, tenga en cuenta que todos los módulos comparten una biblioteca en común (DonDominio SDK) que está en la carpeta `src/includes/dondominio/sdk`.**
 
-## Documentation
-### 1. Addon Module
+## Documentación
+### 1. Módulo Addon
 ---
 
-This addon for WHMCS will enable you to manage your domains in your DonDominio/MrDomain account
-directly within WHMCS's administration panel.
+Este addon para WHMCS habilita el poder gestionar los dominios de tu cuenta de DonDominio directamente en el panel de WHMCS.
 
-Import your domains from DonDominio/MrDomain, perform mass changes to them, add and configure TLDs,
-automatically update prices and domain status, and more.
+Importe sus dominios directamente desde DonDominio, realice cambios masivos, añada y configure TLDs, actualice automáticamente los precios y estados de dominios, y más.
 
-**Features**
-| Name | Description |
-|:-------|:-----------|
-| Manage extensions | Import extensions from DonDomain to manage extensions prices |
-| Manage domains | Import domains to WHMCS from DonDominio |
-| Transfer domains | Transfer domains from other registrars to DonDominio |
-| Update contact | Update domain contact details |
-| Whois | Use DonDominio as WHOIS tool |
-| Watchlist | Enable automatic notifications for extensions changing prices |
-| Sync | Synchronization with DonDominio every day |
+**Características**
+| Característica                | Descripción                                                                   |
+|:------------------------------|:------------------------------------------------------------------------------|
+| Gestionar extensiones         | Importar extensiones desde DonDominio para gestionar precios                  |
+| Gestionar dominios            | Importar dominios a WHMCS desde DonDominio                                    |
+| Transferir dominios          | Transferir dominios desde otros registradores a DonDominio                    |
+| Cambiar contacto              | Actualizar contacto de dominios                                               |
+| Whois                         | Usar DonDominio como herramienta WHOIS                                        |
+| Lista de TLDs en seguimiento  | Habilitar notificaciones automáticas para cambios de precios en extensiones   |
+| Sincronización                | Sincronización cada día con DonDominio                                        |
 
-For more information, documentation, support, and guides, visit:
+Para más información, documentación, soporte, y guías, visite [dev.dondominio.com/whmcs/docs/addon/](https://dev.dondominio.com/whmcs/docs/addon/)
 
-**(EN)** [dev.mrdomain.com/whmcs/docs/addon/](https://dev.mrdomain.com/whmcs/docs/addon/).<br>
-**(ES)** [dev.dondominio.com/whmcs/docs/addon/](https://dev.dondominio.com/whmcs/docs/addon/).
-
-### 2. Registrar Module
+### 2. Módulo de Registrador
 ---
 
-This is the WHMCS Registrar Plugin from DonDominio/MrDomain. Once installed on any WHMCS 5.x,
-6.x, or 7.x system, it will allow to register, renew, and transfer domains using the DonDominio/MrDomain
-API.
+Este es el Módulo de Registrador de DonDominio para WHMCS. Una vez instalado en cualquier WHMCS 7.x o 8.x,
+permitirá registrar, renovar y transferir dominios, aparte de muchás utilidades más, usando la API de DonDominio.
 
-The plugin also provides support for managing domain contacts.
+**Características**
+| Característica                        | Descripción                                                       |
+|:--------------------------------------|:------------------------------------------------------------------|
+| Herramienta para importar dominios    | Importar dominios desde DonDomio mediante herramienta CLI         |
+| Registrar dominios                    | Registrar dominios directamente en DonDominio                     |
+| Renovar dominios                      | Renovar dominios directamente en DonDominio                       |
+| Transferir dominios                   | Transferir dominios desde otros registradores a DonDominio        |
+| Obtener detalles de contacto          | Obtener detalles de contacto de dominio                           |
+| Cambiar detalles de contacto          | Actualizar contacto de dominio                                    |
+| Obtener bloqueo de dominio            | Obtener bloqueo de dominio                                        |
+| Cambiar bloqueo de dominio            | Actualizar bloqueo de dominio                                     |
+| Cambiar privacidad Whois de dominio   | Actualizar privacidad Whois de dominio                            |
+| Cambiar protección ID                 | Actualizar protección ID de dominio                               |
+| Obtener EPP Code (Auth code)          | Obtener EPP Code (Auth code) de dominio                           |
+| Obtener nameservers                   | Obtener nameservers de dominio                                    |
+| Cambiar nameservers                   | Actualizar nameservers de dominio                                 |
+| Crear Glue Record                     | Crear nuevo Glue Record                                           |
+| Cambiar Glue Record                   | Actualizar Glue Record existente                                  |
+| Eliminar Glue Record                  | Eliminar Glue Record existente                                    |
+| Sincronización de dominios            | Sincronizacón de estado de dominios                               |
+| Sincronización de transferencias      | Sincronización de estado de transferencia de dominios             |
+| Comprobar disponibilidad              | Comprobar si un dominio esta disponible                          |
+| Obtener sugerencias de dominios       | Obtener sugerencias de dominios para recomendaciones de usuario   |
 
-**Features**
-| Name | Description |
-|:-------|:-----------|
-| Import domains Tool | Import all DonDominio domains from CLI |
-| Register domain | Register domain directly into DonDominio |
-| Renew domain | Renew domain directly into DonDominio |
-| Transfer domain | Transfer domain from other registrar into DonDominio |
-| Get contact details | Retrieve domain contact details |
-| Update contact details | Update domain contact details |
-| Get registrar lock | Retrieve domain registrar lock |
-| Update registrar lock | Update domain registrar lock |
-| Update whois privacy | Update domain whois privacy |
-| Update ID protection | Update domain ID protection |
-| Get EPP Code (Auth code) | Retrieve domain EPP Code (Auth code) |
-| Get Nameservers | Retrieve domain nameservers |
-| Update Nameservers | Update domain nameservers |
-| Create Glue Record | Create new glue record |
-| Update Glue Record | Update existing glue record |
-| Remove Glue Record | Remove existing glue record |
-| Sync | Synchronize domain status |
-| Transfer Sync | Synchronize domain transfer status |
-| Check Availability | Check if Domain is available |
-| Get Domain Suggestions | Get domain suggestions for user recommendations |
+Para más información, documentación, soporte, y guías, visite [dev.dondominio.com/whmcs/docs/registrar/](https://dev.dondominio.com/whmcs/docs/registrar/)
 
-For documentation, more information, support, and guides, visit:
+## Changelog
 
-**(EN)** [dev.mrdomain.com/api/docs/sdk-php/](https://dev.mrdomain.com/api/docs/sdk-php/).<br>
-**(ES)** [dev.dondominio.com/whmcs/docs/plugin](https://dev.dondominio.com/whmcs/docs/plugin/).
+[Ver Historial de cambios](https://github.com/dondominio/whmcs/blob/main/CHANGELOG-es.md)
