@@ -115,4 +115,4 @@ For documentation, more information, support, and guides, visit: [dev.mrdomain.c
 
 ## Changelog
 
-[Visit Changelog](https://github.com/dondominio/whmcs/blob/main/CHANGELOG-en.md)
+[Visit Changelog](CHANGELOG-en.md)

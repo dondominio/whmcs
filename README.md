@@ -112,4 +112,4 @@ Para más información, documentación, soporte, y guías, visite [dev.dondomini
 
 ## Changelog
 
-[Ver Historial de cambios](https://github.com/dondominio/whmcs/blob/main/CHANGELOG-es.md)
+[Ver Historial de cambios](CHANGELOG-es.md)
