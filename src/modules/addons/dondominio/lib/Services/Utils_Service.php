@@ -235,9 +235,9 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
     protected function installModules($folder)
     {
         $modulesFoldersPath = [
-            implode(DIRECTORY_SEPARATOR, ['modules', 'addons', 'dondominio']),
+            implode(DIRECTORY_SEPARATOR, ['includes', 'dondominio']),
             implode(DIRECTORY_SEPARATOR, ['modules', 'registrars', 'dondominio']),
-            implode(DIRECTORY_SEPARATOR, ['includes', 'dondominio'])
+            implode(DIRECTORY_SEPARATOR, ['modules', 'addons', 'dondominio'])
         ];
 
         foreach ($modulesFoldersPath as $path) {
@@ -245,7 +245,9 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
             $destination = implode(DIRECTORY_SEPARATOR, [ROOTDIR, $path]);
 
             if (!is_dir($source) || !is_dir($destination) || !is_writable($source) || !is_writable($destination)) {
-                continue;
+                throw new Exception(
+                    sprintf('Error while copying %s into %s.', $source, $destination)
+                );
             }
 
             if (!$this->deleteDirectory($destination)) {
