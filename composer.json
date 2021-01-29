@@ -1,0 +1,30 @@
+{
+    "name": "dondominio/whmcs",
+    "description": "DonDominio - WHCMCS Modules Integration",
+    "version": "2.0.0",
+    "license": "proprietary",
+    "type": "project",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "files": [
+            "src/includes/dondominio/sdk/src/autoloader.php",
+            "src/modules/addons/dondominio/lib/autoloader.php",
+            "tests/constants.php",
+            "src/modules/registrars/dondominio/lib/autoloader.php",
+            "../vendor/autoload.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Dondominio\\WHMCS\\Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "php": ">=7.4",
+        "phpunit/phpunit": "~9.0"
+    },
+    "scripts": {
+        "test": "phpunit"
+    }
+}
