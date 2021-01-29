@@ -55,6 +55,8 @@ class Settings_Controller extends Controller
             $actions[$key] = $key;
         }
 
+        // API Username/Password
+
         $apiUsername = $settings->get('api_username');
         $apiPassword = $settings->get('api_password');
 
@@ -80,6 +82,14 @@ class Settings_Controller extends Controller
             }
         }
 
+        // WHOIS Placeholders
+
+        $protocol = array_key_exists('HTTP_X_FORWARDED_PROTO', $_SERVER) ? $_SERVER['HTTP_X_FORWARDED_PROTO'] : $_SERVER['REQUEST_SCHEME'];
+        $domain = array_key_exists('HTTP_X_FORWARDED_HOST', $_SERVER) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $_SERVER['SERVER_NAME'];
+        $whoisDomainPlaceholder = (!empty($protocol) ? $protocol . '://' : '') . $domain;
+
+        $whoisIpPlaceholder = array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['SERVER_ADDR'];
+
         // PARAMS TO TEMPLATE
 
         $params = [
@@ -101,6 +111,8 @@ class Settings_Controller extends Controller
             'notifications_prices_checkbox' => $settings->get('notifications_prices') == '1' ? "checked='checked'" : "",
             'whois_domain' => $settings->get('whois_domain'),
             'whois_ip' => $settings->get('whois_ip'),
+            'whois_domain_placeholder' => $whoisDomainPlaceholder,
+            'whois_ip_placeholder' => $whoisIpPlaceholder,
             'actions' => $actions
         ];
 

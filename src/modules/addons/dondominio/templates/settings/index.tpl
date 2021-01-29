@@ -292,7 +292,7 @@
                     </td>
 
                     <td class='fieldarea'>
-                        <input type='text' name='domain' value='{$whois_domain}' size='35'><br />{$lang.config_domain_info}
+                        <input type='text' name='domain' value='{$whois_domain}' size='35' placeholder={$whois_domain_placeholder}><br />{$lang.config_domain_info}
                     </td>
                 </tr>
 
@@ -302,7 +302,7 @@
                     </td>
 
                     <td class='fieldarea'>
-                        <input type='text' name='ip' value='{$whois_ip}' size='35'><br />{$lang.config_ip_info}
+                        <input type='text' name='ip' value='{$whois_ip}' size='35' placeholder={$whois_ip_placeholder}><br />{$lang.config_ip_info}
                         <span class='help'>{$LANG.settings_whois_ip_info}</span>
                     </td>
                 </tr>

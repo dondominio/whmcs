@@ -192,7 +192,8 @@ class Whois_Service extends AbstractService implements WhoisService_Interface
         $domain = $this->getApp()->getService('settings')->getSetting('whois_domain');
 
         if (substr($domain, 0, 4) != 'http') {
-            $domain = 'http://' . $domain;
+            $protocol = array_key_exists('HTTP_X_FORWARDED_PROTO', $_SERVER) ? $_SERVER['HTTP_X_FORWARDED_PROTO'] : $_SERVER['REQUEST_SCHEME'];
+            $domain = !empty($protocol) ? $protocol . '://' . $domain : $domain;
         }
 
         // CALCULATE WHOIS PROXY
