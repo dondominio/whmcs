@@ -198,6 +198,7 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
                 @stream_wrapper_restore('phar');
 
                 $phar = new \PharData($downloadPath);
+
                 $extracted = $phar->extractTo($folder);
 
                 @stream_wrapper_unregister('phar');
@@ -212,14 +213,20 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
             break;
         }
 
-        // Return inside folder
-        $folder .= DIRECTORY_SEPARATOR . 'whmcs-repo-init';
+        $rdi = new \RecursiveDirectoryIterator($folder, \FilesystemIterator::SKIP_DOTS);
+        $element = $rdi->current();
 
-        return $folder;
+        if (is_null($element)) {
+            throw new Exception('unable_to_decompress');
+        }
+
+        return $element->getPathName() . DIRECTORY_SEPARATOR . 'src';
     }
 
     /**
      * Moves files to specified directories to install the modules
+     *
+     * @param string $folder Path where installation folder is
      *
      * @throws Exception if module moving failed
      *
@@ -230,23 +237,59 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
         $modulesFoldersPath = [
             implode(DIRECTORY_SEPARATOR, ['modules', 'addons', 'dondominio']),
             implode(DIRECTORY_SEPARATOR, ['modules', 'registrars', 'dondominio']),
-            implode(DIRECTORY_SEPARATOR, ['includes', 'dondomino'])
+            implode(DIRECTORY_SEPARATOR, ['includes', 'dondominio'])
         ];
 
         foreach ($modulesFoldersPath as $path) {
             $source = implode(DIRECTORY_SEPARATOR, [$folder, $path]);
             $destination = implode(DIRECTORY_SEPARATOR, [ROOTDIR, $path]);
 
-            if (!is_dir($source) || !is_dir($destination)) {
+            if (!is_dir($source) || !is_dir($destination) || !is_writable($source) || !is_writable($destination)) {
                 continue;
+            }
+
+            if (!$this->deleteDirectory($destination)) {
+                throw new Exception(
+                    sprintf('Error while copying %s into %s.', $source, $destination)
+                );
             }
 
             if (!rename($source, $destination)) {
                 throw new Exception(
-                    sprintf('Error while copying %s into %s', $source, $destination)
+                    sprintf('Error while copying %s into %s. You MUST download the modules and install again.', $source, $destination)
                 );
             }
         }
+    }
+
+    /**
+     * Deletes a directory and its contents
+     *
+     * @param string Path of directory
+     *
+     * @return bool
+     */
+    protected function deleteDirectory($dir)
+    {
+        if (!file_exists($dir)) {
+            return true;
+        }
+
+        if (!is_dir($dir)) {
+            return unlink($dir);
+        }
+
+        foreach (scandir($dir) as $item) {
+            if ($item == '.' || $item == '..') {
+                continue;
+            }
+
+            if (!$this->deleteDirectory($dir . DIRECTORY_SEPARATOR . $item)) {
+                return false;
+            }
+        }
+
+        return rmdir($dir);
     }
 
     /**
