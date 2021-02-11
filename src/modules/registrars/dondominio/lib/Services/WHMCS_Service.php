@@ -219,11 +219,14 @@ class WHMCS_Service implements WHMCSService_Interface
      * Retrieve custom fields from DDBB by type
      * 
      * @param string $type Type of custom fields
+     * @see https://developers.whmcs.com/advanced/upgrade-to-whmcs-8/
      * @return array
      */
     public function getCustomFieldsByType($type)
     {
-        return Capsule::table('tblcustomfields')->where('type', $type)->orderBy('fieldname')->pluck('fieldname');
+        $customFields = Capsule::table('tblcustomfields')->where('type', $type)->orderBy('fieldname')->pluck('fieldname');
+
+        return is_array($customFields) ? $customFields : $customFields->all();
     }
 
     /**

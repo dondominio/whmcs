@@ -212,11 +212,14 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
     /**
      * Retrieves a list of Domain Pricings (Tlds)
      *
+     * @see https://developers.whmcs.com/advanced/upgrade-to-whmcs-8/
      * @return array Array of Domain Pricing like ['id' => 'extension']
      */
     public function getDomainPricingsForSelect()
     {
-        return Capsule::table('tbldomainpricing')->orderBy('extension', 'ASC')->pluck('extension', 'extension');
+        $domainPricings = Capsule::table('tbldomainpricing')->orderBy('extension', 'ASC')->pluck('extension', 'extension');
+
+        return is_array($domainPricings) ? $domainPricings : $domainPricings->all();
     }
 
     /**

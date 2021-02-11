@@ -6,6 +6,13 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.
 
 ## [Pendiente por lanzar]
 
+## [2.0.1] - 2020-02-11
+Esta versión está basada en los cambios propuestos de [documentación de actualización a WHMCS8](https://developers.whmcs.com/advanced/upgrade-to-whmcs-8/) y arregla los problemas relacionados con la actualización de Laravel (métodos `plug` y `get`).
+
+### Fixed
+- Módulo Registrador: Selector para VAT Number en Configuración ahora funciona correctamente.
+- Módulo Addon: Filtro de TLDS en Gestión de Dominios ahora funciona correctamente.
+
 ## [2.0.0] - 2020-01-31
 Este es un lanzamiento de cambio de versión mayor del proyecto Integración de Módulos Dondominio - WHMCS. Hemos analizado y verificado toda la funcionalidad desde cero para crear un producto mejor, más rápido y más mantenible. Hemos desarrollado todas las funcionalidades para que sean 100% compatible con WHMCS 7 y 8, así como lo hemos actualizado con las nuevas buenas prácticas que introduce la guía del desarrollador de WHMCS 7.
 
