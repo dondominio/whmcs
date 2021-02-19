@@ -164,7 +164,7 @@ class Action
                 'ownerContactPhone' => $this->params['fullphonenumber'],
                 'ownerContactAddress' => $this->params['address1'] . "\r\n" . $this->params['address2'],
                 'ownerContactPostalCode' => $this->params['postcode'],
-                'ownerContactCity' => $this->sparams['city'],
+                'ownerContactCity' => $this->params['city'],
                 'ownerContactState' => $this->params['state'],
                 'ownerContactCountry' => $this->params['country']
             ];
