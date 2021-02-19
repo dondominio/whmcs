@@ -6,6 +6,10 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.
 
 ## [Pendiente por lanzar]
 
+## [2.0.3] - 2020-02-19
+### Arreglado
+- Arreglado typo al parsear los datos de contacto. Ahora importar y transferir dominios funciona como se espera.
+
 ## [2.0.2] - 2020-02-19
 ### Arreglado
 - Añadida prevención contra tablas con colaciones no recomendadas. [Ver WHMCS Database Collations](https://docs.whmcs.com/Database_Collations)

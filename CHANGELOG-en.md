@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.3] - 2020-02-19
+### Fixed
+- Fixed typo in parsing owner contact data. Now import & transfer domains works as expected.
+
 ## [2.0.2] - 2020-02-19
 ### Fixed
 - Added prevention against tables with non-recommended collations. [See WHMCS Database Collations](https://docs.whmcs.com/Database_Collations)
