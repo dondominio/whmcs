@@ -6,10 +6,14 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.
 
 ## [Pendiente por lanzar]
 
+## [2.0.2] - 2020-02-19
+### Arreglado
+- Añadida prevención contra tablas con colaciones no recomendadas. [Ver WHMCS Database Collations](https://docs.whmcs.com/Database_Collations)
+
 ## [2.0.1] - 2020-02-11
 Esta versión está basada en los cambios propuestos de [documentación de actualización a WHMCS8](https://developers.whmcs.com/advanced/upgrade-to-whmcs-8/) y arregla los problemas relacionados con la actualización de Laravel (métodos `plug` y `get`).
 
-### Fixed
+### Arreglado
 - Módulo Registrador: Selector para VAT Number en Configuración ahora funciona correctamente.
 - Módulo Addon: Filtro de TLDS en Gestión de Dominios ahora funciona correctamente.
 

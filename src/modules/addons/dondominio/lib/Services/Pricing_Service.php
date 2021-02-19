@@ -32,7 +32,7 @@ class Pricing_Service extends AbstractService implements PricingService_Interfac
     public function findPricingsInDomainPricings()
     {
         return Pricing_Model::select()
-            ->whereRaw('tld IN (SELECT extension FROM tbldomainpricing WHERE autoreg = "dondominio" AND extension = tld)')
+            ->whereRaw('tld IN (SELECT extension COLLATE utf8_unicode_ci FROM tbldomainpricing WHERE autoreg = "dondominio" AND extension = tld)')
             ->get();
     }
 
@@ -169,7 +169,7 @@ class Pricing_Service extends AbstractService implements PricingService_Interfac
     public function getAvailableTlds(array $filters = [], $offset = null, $limit = null)
     {
         $queryBuilder = Pricing_Model::select();
-        $queryBuilder->whereRaw('tld NOT IN (SELECT extension FROM tbldomainpricing)');
+        $queryBuilder->whereRaw('tld NOT IN (SELECT extension COLLATE utf8_unicode_ci FROM tbldomainpricing)');
 
         if (array_key_exists('tld', $filters) && strlen($filters['tld']) > 0) {
             $queryBuilder->where('tld', 'like', '%' . $filters['tld'] . '%');
@@ -200,7 +200,7 @@ class Pricing_Service extends AbstractService implements PricingService_Interfac
     public function getAvailableTldsCount(array $filters)
     {
         $queryBuilder = Pricing_Model::select();
-        $queryBuilder->whereRaw('tld NOT IN (SELECT extension FROM tbldomainpricing)');
+        $queryBuilder->whereRaw('tld NOT IN (SELECT extension COLLATE utf8_unicode_ci FROM tbldomainpricing)');
 
         if (array_key_exists('tld', $filters) && strlen($filters['tld']) > 0) {
             $queryBuilder->where('tld', 'like', '%' . $filters['tld'] . '%');

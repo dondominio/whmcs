@@ -190,7 +190,7 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
         return  Capsule::selectOne('
             SELECT *, (
                 SELECT
-                    value
+                    value COLLATE utf8_unicode_ci
                 FROM tblcustomfieldsvalues
                 WHERE
                     relid = C.id

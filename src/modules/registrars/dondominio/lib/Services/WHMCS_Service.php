@@ -251,7 +251,7 @@ class WHMCS_Service implements WHMCSService_Interface
     {
         $result = Capsule::selectOne('
             SELECT
-                value
+                value COLLATE utf8_unicode_ci
             FROM tblcustomfieldsvalues
             WHERE
                 fieldid = (SELECT id FROM tblcustomfields WHERE fieldname = ?)
