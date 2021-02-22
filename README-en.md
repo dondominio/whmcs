@@ -8,7 +8,7 @@ This project has all the developed integrations between MrDomain and WHMCS.
 ## Status
 | Version |
 |:--------|
-| 2.0.3   |
+| 2.0.4   |
 
 ## Requirements
 | Name      | Version   |

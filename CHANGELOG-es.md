@@ -6,6 +6,10 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.
 
 ## [Pendiente por lanzar]
 
+## [2.0.4] - 2020-02-22
+### Arreglado
+- El actualizador de módulos ahora hace una comprobación más exhaustiva de permisos antes de actualizar.
+
 ## [2.0.3] - 2020-02-19
 ### Arreglado
 - Arreglado typo al parsear los datos de contacto. Ahora importar y transferir dominios funciona como se espera.

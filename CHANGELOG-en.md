@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.4] - 2020-02-22
+### Fixed
+- The module updater now does a more extensive permission check before updating.
+
 ## [2.0.3] - 2020-02-19
 ### Fixed
 - Fixed typo in parsing owner contact data. Now import & transfer domains works as expected.
