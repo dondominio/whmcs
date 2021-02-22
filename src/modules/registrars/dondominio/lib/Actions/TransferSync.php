@@ -6,7 +6,7 @@ class TransferSync extends Action
 {
     public function __invoke()
     {
-        $response = $this->api->getDomainInfo($this->domain, 'status');
+        $response =  $this->app->getService('api')->getDomainInfo($this->domain, 'status');
 
         $status = $response->get('status');
 

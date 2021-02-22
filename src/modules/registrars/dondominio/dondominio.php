@@ -597,6 +597,7 @@ function dondominio_Sync($params)
  * @param array $params common module parameters
  *
  * @see https://developers.whmcs.com/domain-registrars/module-parameters/
+ * @see https://developers.whmcs.com/domain-registrars/domain-syncing/
  *
  * @return array
  */
