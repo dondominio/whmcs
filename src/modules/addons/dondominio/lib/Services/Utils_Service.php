@@ -65,13 +65,13 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
      */
     public function findRegistrarModule()
     {
-        $registrarPath = implode(DIRECTORY_SEPARATOR, [ROOTDIR, 'modules', 'registrars', 'dondominio']);
+        $registrarPath = static::buildPath([ROOTDIR, 'modules', 'registrars', 'dondominio']);
 
         if (!is_dir($registrarPath)) {
             throw new Exception('registrar_folder_not_found');
         }
 
-        $registrarFile = implode(DIRECTORY_SEPARATOR, [$registrarPath, 'dondominio.php']);
+        $registrarFile = static::buildPath([$registrarPath, 'dondominio.php']);
 
         if (!file_exists($registrarFile)) {
             throw new Exception('registrar_file_not_found');
@@ -226,30 +226,30 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
     /**
      * Moves files to specified directories to install the modules
      *
-     * @param string $folder Path where the installation folder is
+     * @param string $downloadFolder Path where the installation folder is
      *
      * @throws Exception if module moving failed
      *
      * @return void
      */
-    protected function installModules($folder)
+    protected function installModules($downloadFolder)
     {
         $modulesFoldersPath = [
-            implode(DIRECTORY_SEPARATOR, ['includes', 'dondominio']),
-            implode(DIRECTORY_SEPARATOR, ['modules', 'registrars', 'dondominio']),
-            implode(DIRECTORY_SEPARATOR, ['modules', 'addons', 'dondominio'])
+            static::buildPath(['includes', 'dondominio']),
+            static::buildPath(['modules', 'registrars', 'dondominio']),
+            static::buildPath(['modules', 'addons', 'dondominio'])
         ];
 
         // Check Permissions
-        $this->checkPermissions($folder, $modulesFoldersPath);
+        $this->checkPermissions($downloadFolder, $modulesFoldersPath);
 
         // Install it
         foreach ($modulesFoldersPath as $path) {
-            $source = implode(DIRECTORY_SEPARATOR, [$folder, $path]);
-            $destination = implode(DIRECTORY_SEPARATOR, [ROOTDIR, $path]);
+            $source = static::buildPath([$downloadFolder, $path]);
+            $destination = static::buildPath([ROOTDIR, $path]);
 
             // we need to delete folder and all its contents before rename
-            if (!$this->scanDirectoryToDelete($destination, true)) {
+            if (!$this->deleteDirectory($destination)) {
                 throw new Exception(
                     sprintf('Error while deleting %s. You MUST download the modules and copy them manually in WHMCS root folder.', $destination)
                 );
@@ -265,79 +265,103 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
 
     /**
      * Check permissions on files and directories
+     * Final destination directory could not exist and that's ok
      *
-     * @param string $folder Folder where we downloaded new version
+     * @param string $downloadFolder Folder where we downloaded new version
      * @param array $modulesFoldersPath relative paths to check
      *
      * @throws \Exception If permission fails
      *
      * @return void
      */
-    public function checkPermissions($folder, $modulesFoldersPath)
+    public function checkPermissions($downloadFolder, $modulesFoldersPath)
     {
-        $pathsToCheck = [];
-
-        // Check module folders and its parents
+        // Check modules parents
         foreach ($modulesFoldersPath as $path) {
-            $source = implode(DIRECTORY_SEPARATOR, [$folder, $path]);
-            $destination = implode(DIRECTORY_SEPARATOR, [ROOTDIR, $path]);
+            $sourceParent = dirname(static::buildPath([$downloadFolder, $path]));
+            $destinationParent = dirname(static::buildPath([ROOTDIR, $path]));
 
-            $pathsToCheck[] = dirname($source);
-            $pathsToCheck[] = $source;
-            $pathsToCheck[] = dirname($destination);
-            $pathsToCheck[] = $destination;
-        }
-
-        foreach ($pathsToCheck as $path) {
-            if (!is_dir($path)) {
-                throw new \Exception(sprintf('Error: %s is not a directory.', $path));
-            }
-
-            if (!is_writable($path)) {
-                throw new \Exception(sprintf('Error: no write permission in %s. You need to enable write permission.', $path));
-            }
-
-            if (!is_readable($path)) {
-                throw new \Exception(sprintf('Error: no read permission in %s. You need to enable read permission.', $path));
-            }
+            $this->hasPermission($sourceParent, false);
+            $this->hasPermission($destinationParent, false);
         }
 
         // Check permissions inside modules
         foreach ($modulesFoldersPath as $path) {
-            $source = implode(DIRECTORY_SEPARATOR, [$folder, $path]);
-            $this->scanDirectoryToDelete($source, false);
+            $source = static::buildPath([$downloadFolder, $path]);
+            $this->hasPermission($source, true);
 
-            $destination = implode(DIRECTORY_SEPARATOR, [ROOTDIR, $path]);
-            $this->scanDirectoryToDelete($destination, false);
+            $destination = static::buildPath([ROOTDIR, $path]);
+
+            if (file_exists($destination)) {
+                $this->hasPermission($destination, true);
+            }
         }
     }
 
     /**
-     * Scans a directory to check permissions and delete it if necessary
+     * Evaluates permission on path
      *
-     * @param string $dir Path of directory
-     * @param bool $delete If true, tries to delete directory
+     * @param string $path Path to evaluate
+     * @param bool $recursive if evaluation is recursive
      *
-     * @throws \Exception if permission failed
+     * @throws Exception If no permission
      *
-     * @return bool If directory ($dir) is been deleted
+     * @return bool
      */
-    protected function scanDirectoryToDelete($dir, $delete = false)
+    protected function hasPermission($path, $recursive = false)
     {
-        if (!file_exists($dir)) {
-            throw new \Exception(sprintf('Error: %s file or dir does not exists', $dir));
+        if (is_link($path)) {
+            return true;
         }
 
-        if (!is_writable($dir)) {
-            throw new \Exception(sprintf('Error: no write permission in %s. You need to enable write permission.', $dir));
+        if (!file_exists($path)) {
+            throw new Exception(sprintf('Error: %s not exists.', $path));
         }
 
-        if (!is_readable($dir)) {
-            throw new \Exception(sprintf('Error: no read permission in %s. You need to enable read permission.', $dir));
+        if (!is_writable($path)) {
+            throw new \Exception(sprintf('Error: no write permission in %s. You need to enable write permission.', $path));
+        }
+
+        if (!is_readable($path)) {
+            throw new \Exception(sprintf('Error: no read permission in %s. You need to enable read permission.', $path));
+        }
+
+        if (!is_dir($path) || !$recursive) {
+            return true;
+        }
+
+        if (!is_dir($path)) {
+            throw new Exception(sprintf('Error: %s is not a directory.', $path));
+        }
+
+        foreach (scandir($path) as $item) {
+            if ($item == '.' || $item == '..') {
+                continue;
+            }
+
+            if (!$this->hasPermission($path . DIRECTORY_SEPARATOR . $item, $recursive)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Deletes a directory and its contents
+     *
+     * @param string Path of directory
+     *
+     * @return bool
+     */
+    protected function deleteDirectory($dir)
+    {
+        if (!is_link($dir) && !file_exists($dir)) {
+            return true;
         }
 
         if (!is_dir($dir)) {
-            return $delete ? unlink($dir) : true;
+            return unlink($dir);
         }
 
         foreach (scandir($dir) as $item) {
@@ -345,12 +369,12 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
                 continue;
             }
 
-            if (!$this->scanDirectoryToDelete($dir . DIRECTORY_SEPARATOR . $item, $delete)) {
+            if (!$this->deleteDirectory($dir . DIRECTORY_SEPARATOR . $item)) {
                 return false;
             }
         }
 
-        return $delete ? rmdir($dir) : true;
+        return rmdir($dir);
     }
 
     /**
@@ -363,5 +387,18 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
         $registrar = new Registrar();
 
         return $registrar->isActive('dondominio');
+    }
+
+    /**
+     * Path builder
+     *
+     * @param array $arr Elements to glue
+     * @param bool $is_dir If we are building directory
+     *
+     * @return string
+     */
+    public static function buildPath($arr)
+    {
+        return implode(DIRECTORY_SEPARATOR, $arr);
     }
 }

@@ -1,6 +1,6 @@
-<span class="header">
+<div class="sidebar-header">
     <img src="https://www.dondominio.com/images/favicon_appletouch.png" class="absmiddle" width="16" height="16" /> DonDominio Manager
-</span>
+</div>
 
 <ul class="menu">
     <li><a href="{$links.dashboard}">{$LANG.menu_status}</a></li>
