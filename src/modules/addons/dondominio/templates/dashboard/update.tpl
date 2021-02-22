@@ -14,6 +14,6 @@ let countdown = function() {
 
 setTimeout(countdown, 1000);
 </script>
-{/if}
 <br>
 {$LANG.going_back_in} <span id="countdown">5</span>.
+{/if}

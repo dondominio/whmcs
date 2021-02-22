@@ -226,7 +226,7 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
     /**
      * Moves files to specified directories to install the modules
      *
-     * @param string $folder Path where installation folder is
+     * @param string $folder Path where the installation folder is
      *
      * @throws Exception if module moving failed
      *
@@ -240,45 +240,104 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
             implode(DIRECTORY_SEPARATOR, ['modules', 'addons', 'dondominio'])
         ];
 
+        // Check Permissions
+        $this->checkPermissions($folder, $modulesFoldersPath);
+
+        // Install it
         foreach ($modulesFoldersPath as $path) {
             $source = implode(DIRECTORY_SEPARATOR, [$folder, $path]);
             $destination = implode(DIRECTORY_SEPARATOR, [ROOTDIR, $path]);
 
-            if (!is_dir($source) || !is_dir($destination) || !is_writable($source) || !is_writable($destination)) {
+            // we need to delete folder and all its contents before rename
+            if (!$this->scanDirectoryToDelete($destination, true)) {
                 throw new Exception(
-                    sprintf('Error while copying %s into %s.', $source, $destination)
-                );
-            }
-
-            if (!$this->deleteDirectory($destination)) {
-                throw new Exception(
-                    sprintf('Error while copying %s into %s.', $source, $destination)
+                    sprintf('Error while deleting %s. You MUST download the modules and copy them manually in WHMCS root folder.', $destination)
                 );
             }
 
             if (!rename($source, $destination)) {
                 throw new Exception(
-                    sprintf('Error while copying %s into %s. You MUST download the modules and install again.', $source, $destination)
+                    sprintf('Error while copying %s into %s. You MUST download the modules and copy them manually in WHMCS root folder.', $source, $destination)
                 );
             }
         }
     }
 
     /**
-     * Deletes a directory and its contents
+     * Check permissions on files and directories
      *
-     * @param string Path of directory
+     * @param string $folder Folder where we downloaded new version
+     * @param array $modulesFoldersPath relative paths to check
      *
-     * @return bool
+     * @throws \Exception If permission fails
+     *
+     * @return void
      */
-    protected function deleteDirectory($dir)
+    public function checkPermissions($folder, $modulesFoldersPath)
+    {
+        $pathsToCheck = [];
+
+        // Check module folders and its parents
+        foreach ($modulesFoldersPath as $path) {
+            $source = implode(DIRECTORY_SEPARATOR, [$folder, $path]);
+            $destination = implode(DIRECTORY_SEPARATOR, [ROOTDIR, $path]);
+
+            $pathsToCheck[] = dirname($source);
+            $pathsToCheck[] = $source;
+            $pathsToCheck[] = dirname($destination);
+            $pathsToCheck[] = $destination;
+        }
+
+        foreach ($pathsToCheck as $path) {
+            if (!is_dir($path)) {
+                throw new \Exception(sprintf('Error: %s is not a directory.', $path));
+            }
+
+            if (!is_writable($path)) {
+                throw new \Exception(sprintf('Error: no write permission in %s. You need to enable write permission.', $path));
+            }
+
+            if (!is_readable($path)) {
+                throw new \Exception(sprintf('Error: no read permission in %s. You need to enable read permission.', $path));
+            }
+        }
+
+        // Check permissions inside modules
+        foreach ($modulesFoldersPath as $path) {
+            $source = implode(DIRECTORY_SEPARATOR, [$folder, $path]);
+            $this->scanDirectoryToDelete($source, false);
+
+            $destination = implode(DIRECTORY_SEPARATOR, [ROOTDIR, $path]);
+            $this->scanDirectoryToDelete($destination, false);
+        }
+    }
+
+    /**
+     * Scans a directory to check permissions and delete it if necessary
+     *
+     * @param string $dir Path of directory
+     * @param bool $delete If true, tries to delete directory
+     *
+     * @throws \Exception if permission failed
+     *
+     * @return bool If directory ($dir) is been deleted
+     */
+    protected function scanDirectoryToDelete($dir, $delete = false)
     {
         if (!file_exists($dir)) {
-            return true;
+            throw new \Exception(sprintf('Error: %s file or dir does not exists', $dir));
+        }
+
+        if (!is_writable($dir)) {
+            throw new \Exception(sprintf('Error: no write permission in %s. You need to enable write permission.', $dir));
+        }
+
+        if (!is_readable($dir)) {
+            throw new \Exception(sprintf('Error: no read permission in %s. You need to enable read permission.', $dir));
         }
 
         if (!is_dir($dir)) {
-            return unlink($dir);
+            return $delete ? unlink($dir) : true;
         }
 
         foreach (scandir($dir) as $item) {
@@ -286,12 +345,12 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
                 continue;
             }
 
-            if (!$this->deleteDirectory($dir . DIRECTORY_SEPARATOR . $item)) {
+            if (!$this->scanDirectoryToDelete($dir . DIRECTORY_SEPARATOR . $item, $delete)) {
                 return false;
             }
         }
 
-        return rmdir($dir);
+        return $delete ? rmdir($dir) : true;
     }
 
     /**
