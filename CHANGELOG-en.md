@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.0] - 2020-02-23
+### Changed
+- New Updater system. Update system now includes backups, robust permissions checking, rollback, etc
+
 ## [2.0.5] - 2020-02-22
 ### Fixed
 - Transfer sync fixed. [More Info](https://developers.whmcs.com/domain-registrars/domain-syncing/)

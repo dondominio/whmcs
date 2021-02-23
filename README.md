@@ -10,7 +10,7 @@ Este proyecto contiene todos los módulos desarrollados entre DonDominio y WHMCS
 ## Estado
 | Version |
 |:--------|
-| 2.0.5   |
+| 2.1.0   |
 
 ## Requerimientos
 | Name      | Version       |

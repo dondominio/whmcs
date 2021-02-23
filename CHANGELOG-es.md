@@ -6,6 +6,10 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.
 
 ## [Pendiente por lanzar]
 
+## [2.1.0] - 2020-02-23
+### Cambiado
+- Nuevo sistema de actualizaciones. Ahora es más robusto, incluyendo copias de seguridad, comprobación de permisos, rollbacks, etc.
+
 ## [2.0.5] - 2020-02-22
 ### Arreglado
 - Sincronización de transferencias de dominios arreglada. [Más Info](https://developers.whmcs.com/domain-registrars/domain-syncing/)
