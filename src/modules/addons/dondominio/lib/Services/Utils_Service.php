@@ -228,7 +228,7 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
      *
      * @param string $downloadFolder Path where the installation folder is
      *
-     * @throws Exception if module moving failed
+     * @throws Exception if modules update failed
      *
      * @return void
      */
@@ -240,24 +240,154 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
             static::buildPath(['modules', 'addons', 'dondominio'])
         ];
 
-        // Check Permissions
-        $this->checkPermissions($downloadFolder, $modulesFoldersPath);
+        $this->checkPermissions($modulesFoldersPath, $downloadFolder);
 
-        // Install it
+        $backupsReference = uniqid() . '0';
+        $downloadsReference = uniqid() . '1';
+
+        try {
+            $this->doBackups($modulesFoldersPath, $backupsReference);
+            $this->moveDownloads($modulesFoldersPath, $downloadFolder, $downloadsReference);
+            $this->replaceModules($modulesFoldersPath, $downloadsReference);
+            $this->deleteDirectories($modulesFoldersPath, $backupsReference);
+        } catch (\Throwable $e) {
+            $this->deleteDirectories($modulesFoldersPath, $downloadsReference);
+            $this->recoveryBackups($modulesFoldersPath, $backupsReference);
+            throw $e;
+        }
+    }
+
+    /**
+     * Moves directories from downloadFolder to temporal destination inside WHMCS
+     *
+     * @param array $modulesFoldersPath relative paths to move
+     * @param string $downloadFolder Path of source
+     * @param string $rnd Random string for reference
+     *
+     * @throws Exception If rename went bad
+     *
+     * @return void
+     */
+    protected function moveDownloads($modulesFoldersPath, $downloadFolder, $rnd)
+    {
         foreach ($modulesFoldersPath as $path) {
             $source = static::buildPath([$downloadFolder, $path]);
+            $destination = static::buildPath([ROOTDIR, $path . '_' . $rnd]);
+
+            if (!rename($source, $destination)) {
+                $error = error_get_last();
+                throw new Exception(
+                    sprintf('Error while copying %s into %s: %s', $source, $destination, $error['message'])
+                );
+            }
+        }
+    }
+
+    /**
+     * Makes backup of original content
+     *
+     * @param array $modulesFoldersPath relative paths to move
+     * @param string $rnd Random string for reference
+     *
+     * @throws Exception If backup creation went bad
+     *
+     * @return void
+     */
+    protected function doBackups($modulesFoldersPath, $rnd)
+    {
+        foreach ($modulesFoldersPath as $path) {
+            $source = static::buildPath([ROOTDIR, $path]);
+            $destination = static::buildPath([ROOTDIR, $path . '_' . $rnd]);
+
+            if (!file_exists($source) && !is_link($source)) {
+                continue;
+            }
+
+            if (!rename($source, $destination)) {
+                $error = error_get_last();
+                throw new Exception(
+                    sprintf('Error while doing backup of %s: %s', $source, $error['message'])
+                );
+            }
+        }
+    }
+
+    /**
+     * Deletes modules and replaces it with the downloaded ones
+     * Before this function, we need to make sure about priviliges calling $this->checkPermissions()
+     *
+     * @param array $modulesFoldersPath relative paths to move
+     * @param string $rnd Random string for reference
+     *
+     * @throws Exception if deletion or rename went bad
+     *
+     * @return void
+     */
+    protected function replaceModules($modulesFoldersPath, $rnd)
+    {
+        foreach ($modulesFoldersPath as $path) {
+            $source = static::buildPath([ROOTDIR, $path . '_' . $rnd]);
             $destination = static::buildPath([ROOTDIR, $path]);
 
-            // we need to delete folder and all its contents before rename
-            if (!$this->deleteDirectory($destination)) {
+            if (!rename($source, $destination)) {
+                $error = error_get_last();
                 throw new Exception(
-                    sprintf('Error while deleting %s. You MUST download the modules and copy them manually in WHMCS root folder.', $destination)
+                    sprintf('Error while copying %s into %s: %s. You MUST download the modules and copy them manually in WHMCS root folder.',
+                    $source, $destination, $error['message'])
+                );
+            }
+        }
+    }
+
+    /**
+     * Removes temporary folders
+     *
+     * @param array $modulesFoldersPath relative paths to move
+     * @param string $rnd Random string for reference
+     *
+     * @return void
+     */
+    protected function deleteDirectories($modulesFoldersPath, $rnd)
+    {
+         foreach ($modulesFoldersPath as $path) {
+            $directory = static::buildPath([ROOTDIR, $path . '_' . $rnd]);
+            $this->deleteDirectory($directory);
+        }
+    }
+
+    /**
+     * Deletes installed content and recoveries old content
+     *
+     * @param array $modulesFoldersPath relative paths to move
+     * @param string $rnd Random string for reference
+     *
+     * @return void
+     */
+    protected function recoveryBackups($modulesFoldersPath, $rnd)
+    {
+        foreach ($modulesFoldersPath as $path) {
+            $source = static::buildPath([ROOTDIR, $path . '_' . $rnd]);
+            $destination = static::buildPath([ROOTDIR, $path]);
+
+            // If backup doesn't exist and is required
+            // we already threw Exception in $this->doBackup()
+            if (!file_exists($source) && !is_link($source)) {
+                continue;
+            }
+
+            if (!$this->deleteDirectory($destination)) {
+                $error = error_get_last();
+                throw new Exception(
+                    sprintf('Error while deleting %s: %s. You MUST download the modules and copy them manually in WHMCS root folder.',
+                    $destination, $error['message'])
                 );
             }
 
             if (!rename($source, $destination)) {
+                $error = error_get_last();
                 throw new Exception(
-                    sprintf('Error while copying %s into %s. You MUST download the modules and copy them manually in WHMCS root folder.', $source, $destination)
+                    sprintf('Error while copying %s into %s: %s. You MUST download the modules and copy them manually in WHMCS root folder.',
+                    $source, $destination, $error['message'])
                 );
             }
         }
@@ -267,14 +397,14 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
      * Check permissions on files and directories
      * Final destination directory could not exist and that's ok
      *
-     * @param string $downloadFolder Folder where we downloaded new version
      * @param array $modulesFoldersPath relative paths to check
+     * @param string $downloadFolder Folder where we downloaded new version
      *
      * @throws \Exception If permission fails
      *
      * @return void
      */
-    public function checkPermissions($downloadFolder, $modulesFoldersPath)
+    protected function checkPermissions($modulesFoldersPath, $downloadFolder)
     {
         // Check modules parents
         foreach ($modulesFoldersPath as $path) {
@@ -360,7 +490,7 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
             return true;
         }
 
-        if (!is_dir($dir)) {
+        if (!is_dir($dir) || is_link($dir)) {
             return unlink($dir);
         }
 
