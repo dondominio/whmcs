@@ -6,6 +6,10 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.
 
 ## [Pendiente por lanzar]
 
+## [2.1.1] - 2020-02-26
+### Arreglado
+- Consistencia en base de datos con campos no nulables.
+
 ## [2.1.0] - 2020-02-23
 ### Cambiado
 - Nuevo sistema de actualizaciones. Ahora es más robusto, incluyendo copias de seguridad, comprobación de permisos, rollbacks, etc.
