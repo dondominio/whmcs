@@ -140,20 +140,24 @@ class Migrations
     public static function upgrade($version)
     {
         try {
-            if ($version < 1.1) {
+            if (version_compare($version, '1.1', '<')) {
                 static::upgrade11();
             }
         
-            if ($version < 1.2) {
+            if (version_compare($version, '1.2', '<')) {
                 static::upgrade12();
             }
         
-            if ($version < 1.6) {
+            if (version_compare($version, '1.6', '<')) {
                 static::upgrade16();
             }
 
-            if ($version < 2.0) {
+            if (version_compare($version, '2.0', '<')) {
                 static::upgrade20();
+            }
+
+            if (version_compare($version, '2.1.1', '<')) {
+                static::upgrade211();
             }
         } catch (Exception $e) {
             logModuleCall(App::NAME, __FUNCTION__, '', $e->getMessage());
@@ -235,16 +239,38 @@ class Migrations
         // Fix collations
 
         $pdo = Capsule::connection()->getPdo();
-        $pdo->query('ALTER TABLE `mod_dondominio_pricing` CHANGE `tld` `tld` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL;');
+        $pdo->query('ALTER TABLE `mod_dondominio_pricing` CHANGE `tld` `tld` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;');
         $pdo->query('ALTER TABLE `mod_dondominio_pricing` CHANGE `register_range` `register_range` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL;');
         $pdo->query('ALTER TABLE `mod_dondominio_pricing` CHANGE `transfer_range` `transfer_range` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL;');
         $pdo->query('ALTER TABLE `mod_dondominio_pricing` CHANGE `renew_range` `renew_range` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL;');
-        $pdo->query('ALTER TABLE `mod_dondominio_settings` CHANGE `key` `key` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL;');
+        $pdo->query('ALTER TABLE `mod_dondominio_settings` CHANGE `key` `key` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;');
         $pdo->query('ALTER TABLE `mod_dondominio_settings` CHANGE `value` `value` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL;');
-        $pdo->query('ALTER TABLE `mod_dondominio_tld_settings` CHANGE `tld` `tld` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL;');
-        $pdo->query('ALTER TABLE `mod_dondominio_tld_settings` CHANGE `register_increase_type` `register_increase_type` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL;');
-        $pdo->query('ALTER TABLE `mod_dondominio_tld_settings` CHANGE `renew_increase_type` `renew_increase_type` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL;');
-        $pdo->query('ALTER TABLE `mod_dondominio_tld_settings` CHANGE `transfer_increase_type` `transfer_increase_type` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL;');
-        $pdo->query('ALTER TABLE `mod_dondominio_watchlist` CHANGE `tld` `tld` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL;');
+        $pdo->query('ALTER TABLE `mod_dondominio_tld_settings` CHANGE `tld` `tld` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;');
+        $pdo->query('ALTER TABLE `mod_dondominio_tld_settings` CHANGE `register_increase_type` `register_increase_type` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;');
+        $pdo->query('ALTER TABLE `mod_dondominio_tld_settings` CHANGE `renew_increase_type` `renew_increase_type` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;');
+        $pdo->query('ALTER TABLE `mod_dondominio_tld_settings` CHANGE `transfer_increase_type` `transfer_increase_type` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;');
+        $pdo->query('ALTER TABLE `mod_dondominio_watchlist` CHANGE `tld` `tld` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;');
+    }
+
+     /**
+     * Upgrades database schema for version 2.1.1
+     *
+     * In version 2.1.1, we need to revert not nullable fields
+     *
+     * @return void
+     */
+    protected static function upgrade211()
+    {
+        $pdo = Capsule::connection()->getPdo();
+
+        // Fix not nulls
+
+        $pdo->query('ALTER TABLE `mod_dondominio_pricing` CHANGE `tld` `tld` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;');
+        $pdo->query('ALTER TABLE `mod_dondominio_settings` CHANGE `key` `key` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;');
+        $pdo->query('ALTER TABLE `mod_dondominio_tld_settings` CHANGE `tld` `tld` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;');
+        $pdo->query('ALTER TABLE `mod_dondominio_tld_settings` CHANGE `register_increase_type` `register_increase_type` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;');
+        $pdo->query('ALTER TABLE `mod_dondominio_tld_settings` CHANGE `renew_increase_type` `renew_increase_type` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;');
+        $pdo->query('ALTER TABLE `mod_dondominio_tld_settings` CHANGE `transfer_increase_type` `transfer_increase_type` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;');
+        $pdo->query('ALTER TABLE `mod_dondominio_watchlist` CHANGE `tld` `tld` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;');
     }
 }
