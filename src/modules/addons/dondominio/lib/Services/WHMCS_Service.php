@@ -11,6 +11,9 @@ use Exception;
 
 class WHMCS_Service extends AbstractService implements WHMCSService_Interface
 {
+
+    const NOT_FOUND_DOMAIN_API_CODE = 2008;
+
     /**
      * Makes a local API Call
      *
@@ -307,19 +310,32 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
      */
     public function syncDomain(Domain $domain)
     {
-        $info = $this->getApp()->getService('api')->getDomainInfo($domain->domain);
-
         $status = 'Pending';
+
+        try {
+            $info = $this->getApp()->getService('api')->getDomainInfo($domain->domain);
+        } catch (\Throwable $e){
+            if ((int) $e->getCode() === static::NOT_FOUND_DOMAIN_API_CODE){
+                $this->setNotFoundDomainStatus($domain);
+                return;
+            }
+            
+            throw $e;
+        }
 
         $mapStatus = [
             'Active' => [
                 'active',
-                'renewed'
+                'renewed',
             ],
             'Expired' => [
+                'expired-pendingdelete',
+            ],
+            'Grace' => [
                 'expired-renewgrace',
+            ],
+            'Redemption' => [
                 'expired-redemption',
-                'expired-pendingdelete'
             ]
         ];
 
@@ -333,6 +349,31 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
         $domain->expirydate = $info->get("tsExpir");
         $domain->status = $status;
 
+        $domain->save();
+    }
+
+    /**
+     * Set status to a domain not found with the API
+     *
+     * @param \WHMCS\Domain\Domain
+     *
+     * @return void
+     */
+    private function setNotFoundDomainStatus(Domain $domain)
+    {
+        $isExpired = $domain->expirydate->isPast();
+        $status = ($isExpired) ? 'Expired' : $domain->status;
+
+        $previousTransferredAwayStatus = [
+            'Active',
+            'Transferred Away',
+        ];
+
+        if (!$isExpired && in_array($status, $previousTransferredAwayStatus)){
+            $status = 'Transferred Away';
+        }
+
+        $domain->status = $status;
         $domain->save();
     }
 
