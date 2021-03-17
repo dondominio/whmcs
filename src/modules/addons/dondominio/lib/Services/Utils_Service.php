@@ -531,4 +531,19 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
     {
         return implode(DIRECTORY_SEPARATOR, $arr);
     }
+
+    /**
+     * Returns WHMCS version
+     *
+     * @return string
+     */
+    public function getWHMCSVersion()
+    {
+        if(isset($GLOBALS['CONFIG']['Version'])){
+            return $GLOBALS['CONFIG']['Version'];
+        }
+
+        return '';
+    }
+
 }

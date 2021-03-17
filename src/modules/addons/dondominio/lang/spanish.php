@@ -276,6 +276,7 @@ $_ADDONLANG = array(
     'new_version_available' => 'Hay una nueva versión disponible',
     'update' => 'Actualizar',
     'more_info' => 'Más Información',
+    'check_credentials' => 'Credenciales API',
 
     /**
      * GENERIC
@@ -300,10 +301,13 @@ $_ADDONLANG = array(
     'unable_to_decompress' => 'Error al descomprimir el archivo.',
     'decompress_method_not_found' => 'Método de compresión no implementado.',
     'registrar_not_activated' => 'Módulo de Registro no activado.',
-    'version' => 'Version',
+    'version' => 'Versión',
+    'whmcs_version' => 'Versión WHMCS',
+    'changelog_link' => 'https://github.com/dondominio/whmcs/blob/main/CHANGELOG-es.md',
+    'new_version_changelog' => 'Consulta los cambios de la nueva versión',
     'sdk_status' => 'Estado SDK',
     'api_connection_status' => 'Estado de Conexión API',
     'modules_installed' => 'Módulos instalados',
     'addon_module' => 'Módulo Addon',
-    'registrar_module' => 'Módulo Registrador'
+    'registrar_module' => 'Módulo Registrador',
 );
