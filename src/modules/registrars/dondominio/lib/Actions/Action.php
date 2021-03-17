@@ -152,7 +152,7 @@ class Action
 
         // Owner Contact
 
-        if (empty($params['ownerContact'])) {
+        if (empty($this->params['ownerContact'])) {
             $ownerContactFields = [
                 'ownerContactType' => $ownerContactType,
                 'ownerContactFirstName' => $this->params['firstname'],
@@ -176,7 +176,7 @@ class Action
 
         // Admin Contact
 
-        if (empty($params['adminContact'])) {
+        if (empty($this->params['adminContact'])) {
             if (array_key_exists('Administrative Document Number', $this->params['additionalfields'])) {
                 $adminContactType = 'individual';
                 $adminContactIdentNumber = $this->params['additionalfields']['Administrative Document Number'];
@@ -209,13 +209,13 @@ class Action
 
         // Tech Contact
 
-        if (!empty($params['techContact'])) {
+        if (!empty($this->params['techContact'])) {
             $fields['techContactID'] = $this->params['techContact'];
         }
 
         // Billing Contact
 
-        if (!empty($params['billingContact'])) {
+        if (!empty($this->params['billingContact'])) {
             $fields['billingContactID'] = $this->params['billingContact'];
         }
 
