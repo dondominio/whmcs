@@ -12,6 +12,6 @@ interface WHMCSService_Interface
     public function createDomain($orderId, $clientId, $response);
     public function findClientByEmail($email);
     public function getCustomFieldsByType($type);
-    public function getCustomFieldsByFieldName($fieldname);
+    public function getCustomFieldByFieldName($fieldname);
     public function getCustomFieldsValueByEmail($fieldname, $email);
 }

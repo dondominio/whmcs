@@ -271,13 +271,21 @@ class Action
             }
         }
 
-        if (empty($vatNumber)) {
-            $vatNumber = $this->params['additionalfields']['VAT Number'];
-        }
+        // Search by Custom Field
 
-        // @legacy code
         if (empty($vatNumber) && !empty($this->params['vat'])) {
-            $vatNumberCustomField = $this->app->getService('whmcs')->getCustomFieldsByFieldName($this->params['vat']);
+            $vatNumberCustomField = $this->app->getService('whmcs')->getCustomFieldByFieldName($this->params['vat']);
+
+            // Try to find custom field through old select version
+            // Compatibility with 2.0.x and 2.1.x versions
+            if (is_null($vatNumberCustomField)) {
+                $customFields = $this->app->getService('whmcs')->getCustomFieldsByType('client');
+                $select = array_merge([""], $customFields);
+
+                if (array_key_exists($this->params['vat'], $select)) {
+                    $vatNumberCustomField = $this->app->getService('whmcs')->getCustomFieldByFieldName($select[$this->params['vat']]);
+                }
+            }
 
             if (is_object($vatNumberCustomField)) {
                 foreach ($this->params['customfields'] as $customField) {
@@ -288,16 +296,9 @@ class Action
                 }
 
                 if (empty($vatNumber)) {
-                    $vatNumber = $this->params['customfields'][($vatNumberCustomField->id - 1)]['value'];
+                    $vatNumber = $this->params['customfields' . ($vatNumberCustomField->id - 1)];
                 }
             }
-        }
-
-        // New way to get Vat Number
-        $vatNumberIndex = 'customfields' . $this->params['vat'];
-
-        if (empty($varNumber) && array_key_exists($vatNumberIndex, $params)) {
-            $vatNumber = $this->params[$vatNumberIndex];
         }
 
         return $vatNumber;
