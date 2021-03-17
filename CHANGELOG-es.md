@@ -6,6 +6,15 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.
 
 ## [Pendiente por lanzar]
 
+## [2.1.2] - 2020-03-17
+### Fixed
+- Ahora las tablas configuradas con row_format compact funcionan correctamente
+- Las operaciones relacionadas con Vat Number funcionan correctamente
+
+### Changed
+- Estados de dominio más específicos
+- Más información en la pestaña de estado del Addon
+
 ## [2.1.1] - 2020-02-26
 ### Arreglado
 - Consistencia en base de datos con campos no nulables.
