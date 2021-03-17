@@ -235,7 +235,7 @@ class WHMCS_Service implements WHMCSService_Interface
      * @param string $type Type of custom fields
      * @return array
      */
-    public function getCustomFieldsByFieldName($fieldname)
+    public function getCustomFieldByFieldName($fieldname)
     {
         return Capsule::table('tblcustomfields')->where('fieldname', $fieldname)->first();
     }

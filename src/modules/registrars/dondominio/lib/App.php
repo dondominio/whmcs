@@ -12,7 +12,7 @@ use Exception;
 
 class App
 {
-    const NAME = 'dondominio';
+    const NAME = 'Dondominio';
     const UNKNOWN_VERSION = 'unknown';
 
     protected $version;

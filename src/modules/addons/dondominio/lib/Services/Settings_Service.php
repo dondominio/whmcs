@@ -58,6 +58,7 @@ class Settings_Service extends AbstractService implements SettingsService_Interf
         static::setSetting('api_password', base64_encode($password));
 
         // Save in Registrar Module
+        /*
         if ($this->getApp()->getService('utils')->isRegistrarModuleActive()) {
             try {
                 $options = [
@@ -74,6 +75,7 @@ class Settings_Service extends AbstractService implements SettingsService_Interf
                 logActivityCall($e->getMessage());
             }
         }
+        */
 
         $this->getApp()->getService('api')->reload([
             'apiuser' => $username,

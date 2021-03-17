@@ -158,6 +158,15 @@
                         {if $domain.status eq 'Fraud'}
                             {assign var='status_class' value="fraud"}
                         {/if}
+                        {if $domain.status eq 'Transferred Away'}
+                            {assign var='status_class' value="transferred-away"}
+                        {/if}
+                        {if $domain.status eq 'Grace'}
+                            {assign var='status_class' value="grace"}
+                        {/if}
+                        {if $domain.status eq 'Redemption'}
+                            {assign var='status_class' value="redemption"}
+                        {/if}
 
                         {if strlen($status_class) gt 0}
                             <div style='text-align: center;' class='label {$status_class}'>{$domain.status}</div>

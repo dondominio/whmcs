@@ -44,11 +44,13 @@ class Dashboard_Controller extends Controller
         $app = App::getInstance();
 
         $params = [
+            'whmcs_version' => $app->getService('utils')->getWHMCSVersion(),
             'version' => $app->getVersion(),
             'checks' => $app->getInformation(),
             'links' => [
                 'more_api_info' => static::makeURL(static::PRINT_MOREINFO),
-                'update_modules' => static::makeURL(static::UPDATE_MODULES)
+                'update_modules' => static::makeURL(static::UPDATE_MODULES),
+                'settings' => Settings_Controller::makeURL(),
             ]
         ];
 

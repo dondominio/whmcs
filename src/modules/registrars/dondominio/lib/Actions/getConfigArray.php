@@ -52,7 +52,7 @@ class getConfigArray extends Action
             "vat" => [
                 "FriendlyName" => "VAT Number Field",
                 "Type" => "dropdown",
-                "Options" => array_merge([""], $customFields),
+                "Options" => "," . implode(",", $customFields),
                 "Description" => "Custom field containing the VAT Number for your customers"
             ],
             //FOACONTACT	
