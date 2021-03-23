@@ -9,11 +9,16 @@ class RegisterDomain extends Action
     public function __invoke()
     {
         $check = $this->app->getService('api')->checkDomain($this->domain);
+        $premiumEnabled = (bool) $this->getParam('premiumEnabled');
 
         $domains = $check->get('domains');
 
         if (!$domains[0]['available']) {
             throw new Exception('Domain already taken');
+        }
+
+        if (!$premiumEnabled && $domains[0]['premium'] ) {
+            throw new Exception('Cannot register premium domains');
         }
 
         $fields = [];
@@ -29,6 +34,9 @@ class RegisterDomain extends Action
 
         // Period
         $fields['period'] = intval($this->params['regperiod']);
+
+        // Premium
+        $fields['premium'] = (bool) $domains[0]['premium'];
 
         try {
             $this->app->getService('api')->createDomain($this->domain, $fields);
