@@ -227,7 +227,7 @@ $_ADDONLANG = array(
     'info_path_whois' => 'Tu fichero de Whois está aquí',
     'info_path_moreinfo' => 'Documentación',
     'info_whois_domain' => 'Antes de usar el Proxy de Whois configure el dominio en la pantalla de configuración.',
-    'info_whois_Settings' => 'Haga click aquí para acceder a la configuración',
+    'info_whois_settings' => 'Haga click aquí para acceder a la configuración',
 
     /**
      * IMPORT/EXPORT

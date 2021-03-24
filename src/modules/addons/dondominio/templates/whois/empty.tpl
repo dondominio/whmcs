@@ -3,5 +3,5 @@
 </div>
 <p>{$LANG.info_whois_domain}</p>
 <p>
-    <strong><a href='{$links.settings_index}#tab5box'>{$LANG.info_whois_settings}</a></strong>
+    <strong><a href='{$links.settings_index}#tab4box'>{$LANG.info_whois_settings}</a></strong>
 </p>
