@@ -42,6 +42,7 @@ $_ADDONLANG = array(
     'menu_transfer' => 'Transfer domains',
     'menu_whois' => 'Whois Proxy',
     'menu_settings' => 'Settings',
+    'menu_deleted' => 'History of deleted domains',
     'menu_help' => 'Help & Documentation',
 
     //Filter
@@ -310,4 +311,12 @@ $_ADDONLANG = array(
     'modules_installed' => 'Modules Installed',
     'addon_module' => 'Addon Module',
     'registrar_module' => 'Registrar Module',
+
+    /**
+     * DELETED DOMAINS
+     */
+    'deleted_domains_title' => 'Deleted domain list',
+    'deleted_domains_ts' => 'Delete date',
+    'deleted_domains_info' => 'Info',
+
 );

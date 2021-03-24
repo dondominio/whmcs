@@ -71,6 +71,7 @@ class Dashboard_Controller extends Controller
             'domains' => Domains_Controller::makeURL(),
             'transfer' => Domains_Controller::makeURL(Domains_Controller::VIEW_TRANSFER),
             'import' => Domains_Controller::makeURL(Domains_Controller::VIEW_IMPORT),
+            'deleted' => Domains_Controller::makeURL(Domains_Controller::VIEW_DELETED),
             'whois' => Whois_Controller::makeURL(Whois_controller::VIEW_INDEX),
             'settings' => Settings_Controller::makeURL(),
         ];

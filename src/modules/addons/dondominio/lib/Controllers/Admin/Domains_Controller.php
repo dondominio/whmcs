@@ -16,6 +16,7 @@ class Domains_Controller extends Controller
     const VIEW_INDEX = '';
     const VIEW_TRANSFER = 'viewtransfer';
     const VIEW_IMPORT = 'viewimport';
+    const VIEW_DELETED = 'viewdeleted';
 
     const ACTION_SYNC = 'sync';
     const ACTION_SWITCH_REGISTRAR = 'switchregistrar';
@@ -35,6 +36,7 @@ class Domains_Controller extends Controller
             static::VIEW_INDEX => 'view_Index',
             static::VIEW_TRANSFER => 'view_Transfer',
             static::VIEW_IMPORT => 'view_Import',
+            static::VIEW_DELETED => 'view_Deleted',
             static::ACTION_SYNC => 'action_Sync',
             static::ACTION_SWITCH_REGISTRAR => 'action_SwitchRegistrar',
             static::ACTION_UPDATE_PRICE => 'action_UpdatePrice',
@@ -275,6 +277,67 @@ class Domains_Controller extends Controller
         $params['pagination_select'] = $paginationSelect;
 
         return $this->view('import', $params);
+    }
+
+    /**
+     * Retrieves template for deleted domains history view
+     *
+     * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
+     */
+    public function view_Deleted()
+    {
+        $page = $this->getRequest()->getParam('page', 1);
+        $whmcsService = $this->getApp()->getService('whmcs');
+        $limit = $whmcsService->getConfiguration('NumRecordstoDisplay');
+
+        $domains = [];
+        $totalRecords = 0;
+
+        try {
+            $response = $this->getApp()->getService('api')->getListDeleted($page, $limit);
+
+            $domains = $response->get('domains');
+            $totalRecords = $response->get("queryInfo")['total'];
+        } catch (\Throwable $e){
+            $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
+        }
+
+        $total_pages = ceil($totalRecords / $limit);
+
+        if ($total_pages == 0) {
+            $total_pages = 1;
+        }
+
+        if ($page > $total_pages) {
+            $page = $total_pages;
+        }
+
+        $params = [
+            'module_name' => $this->getApp()->getName(),
+            '__c__' => static::CONTROLLER_NAME,
+            'domains' => $domains,
+            'pagination' => [
+                'page' => $page,
+                'limit' => $limit,
+                'total' => $totalRecords,
+                'total_pages' => $total_pages
+            ],
+            'actions' => [
+                'view_deleted' => static::VIEW_DELETED,            ],
+            'links' => [
+                'prev_page' => static::makeUrl(static::VIEW_DELETED, ['page' => ($page - 1)]),
+                'next_page' => static::makeUrl(static::VIEW_DELETED, ['page' => ($page + 1)])
+            ]
+        ];
+
+        $paginationSelect = [];
+        for ($i = 1; $i <= $total_pages; $i++) {
+            $paginationSelect[$i] = $i;
+        }
+
+        $params['pagination_select'] = $paginationSelect;
+
+        return $this->view('deleted', $params);
     }
 
     /**

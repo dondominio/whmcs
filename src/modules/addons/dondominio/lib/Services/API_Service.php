@@ -216,6 +216,33 @@ class API_Service extends AbstractService implements APIService_Interface
         return $this->parseResponse($response, $params);
     }
 
+    /**
+     * Gets deleted domains list
+     *
+     * @see https://dev.dondominio.com/api/docs/api/#list-deleted-domain-listdeleted
+     *
+     * @param int $page Offset where query starts
+     * @param int $pageLength Limit where query ends
+     *
+     * @return \Dondominio\API\Response\Response
+     */
+    public function getListDeleted($page = null, $pageLength = null)
+    {
+        $params = [];
+
+        if(!is_null($page)){
+            $params['page'] = $page;
+        }
+
+        if(!is_null($page)){
+            $params['pageLength'] = $pageLength;
+        }
+
+        $response = $this->getApiConnection()->domain_listDeleted($params);
+
+        return $this->parseResponse($response, $params);
+    }
+
     public function printApiInfo()
     {
         $this->getApiConnection()->info();

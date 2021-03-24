@@ -11,6 +11,7 @@
     <li><a href="{$links.import}">{$LANG.menu_import}</a></li>
     <li><a href="{$links.whois}">{$LANG.menu_whois}</a></li>
     <li><a href="{$links.settings}">{$LANG.menu_settings}</a></li>
+    <li><a href="{$links.deleted}">{$LANG.menu_deleted}</a></li>
     <li class="divider">&nbsp;</li>
     <li><a href="https://docs.dondominio.com/" target="_api">{$LANG.menu_help}</a></li>
 </ul>
