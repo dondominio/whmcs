@@ -16,15 +16,15 @@
 
 <p>
 <ul class='nav nav-tabs admin-tabs' role='tablist'>
-    <li>
-        <a href='#tab1' role='tab' data-toggle='tab' id='tabLink1'>
+    <li class="active">
+        <a href="#tab1" role="tab" data-toggle="tab" id="tabLink1" aria-expanded="true">
             {$LANG.new_tld}
         </a>
     </li>
 </ul>
 
 <div class='tab-content admin-tabs'>
-    <div class='tab-pane' id='tab1'>
+    <div class='tab-pane active' id='tab1'>
         <form method='post' action=''>
             <input type="hidden" name="module" value="{$module_name}">
             <input type="hidden" name="__c__" value="{$__c__}">

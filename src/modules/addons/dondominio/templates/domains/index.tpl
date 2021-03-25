@@ -8,7 +8,7 @@
 
 <div id='tabs'>
     <ul class='nav nav-tabs admin-tabs' role='tablist'>
-        <li id='tab0' class='tab'>
+        <li id='tab0' class='tab tabselected'>
             <a href='javascript:;'>{$LANG.filter_title}</a>
         </li>
     </ul>
@@ -279,9 +279,7 @@ function toggleadvsearch() {
 }
 
 $(document).ready(function() {
-    $(".tabbox").css("display","none");
-    
-    var selectedTab;
+    var selectedTab = $("#tab0").attr("id");
     
     $(".tab").click(function() {
         var elid = $(this).attr("id");
