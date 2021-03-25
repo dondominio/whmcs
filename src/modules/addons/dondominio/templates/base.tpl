@@ -1,3 +1,5 @@
+<link rel="stylesheet" type="text/css" href="{$css_path}style.css" />
+
 {if count($RESPONSE->errors) gt 0 or $RESPONSE->force_errors}
 <div class='errorbox'>
     <span class='title'>

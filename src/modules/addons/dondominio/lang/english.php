@@ -34,15 +34,10 @@ $_ADDONLANG = array(
     'link_more_info' => 'More information',
 
     //Menu
-    'menu_status' => 'Status',
-    'menu_tlds_update' => 'Price update',
-    'menu_tlds_new' => 'Available TLDs',
+    'menu_status' => 'Admin',
+    'menu_tlds_update' => 'Manage TLDs',
     'menu_domains' => 'Manage domains',
-    'menu_import' => 'Import domains',
-    'menu_transfer' => 'Transfer domains',
     'menu_whois' => 'Whois Proxy',
-    'menu_settings' => 'Settings',
-    'menu_deleted' => 'History of deleted domains',
     'menu_help' => 'Help & Documentation',
 
     //Filter
@@ -226,8 +221,7 @@ $_ADDONLANG = array(
      */
     'info_path_whois' => 'Yor Whois servers file is located here',
     'info_path_moreinfo' => 'Documentation',
-    'info_whois_domain' => 'Before using the Whois Proxy, configure it on the settings screen.',
-    'info_whois_settings' => 'Click here to access the settings screen',
+    'info_whois_domain' => 'Before using the Whois Proxy, configure it.',
 
     /**
      * IMPORT/EXPORT
@@ -271,6 +265,7 @@ $_ADDONLANG = array(
      /**
      * MODULES DASHBOARD
      */
+    'status_title' => 'Status',
     'going_back_in' => 'Going back in ',
     'modules_updated_successfully' => 'Modules updated succesfully.',
     'dondominio_modules_information' => 'Dondominio Modules Information',
@@ -278,6 +273,8 @@ $_ADDONLANG = array(
     'update' => 'Update',
     'more_info' => 'More Info',
     'check_credentials' => 'API credentials',
+    'check_api_status' => 'Check Status',
+    'success_api_conection' => 'Correct connection with DonDominio API',
 
     /**
      * GENERIC
@@ -319,4 +316,10 @@ $_ADDONLANG = array(
     'deleted_domains_ts' => 'Delete date',
     'deleted_domains_info' => 'Info',
 
+    /**
+     * PREMIUM DOMAINS
+     */
+    'premium_domains' => 'Premium Domains',
+    'enable' => 'Enable',
+    'disable' => 'Disabled',
 );

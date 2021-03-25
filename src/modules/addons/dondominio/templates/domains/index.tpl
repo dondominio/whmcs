@@ -1,3 +1,5 @@
+{include file='../nav.tpl'}
+
 <h2>{$LANG.domains_title}</h2>
 
 <p>{$LANG.domains_info}</p>

@@ -238,6 +238,16 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
     }
 
     /**
+     * Return the status of premium domains
+     *
+     * @return bool if premium domains are enabled
+     */
+    public function isPremiumDomainEnable()
+    {
+        return (bool) Capsule::table('tblconfiguration')->where(['setting' => 'PremiumDomains'])->value('value');
+    }
+
+    /**
      * Inserts pricing in tblpricing table
      *
      * @param string $type Type (domainregister, domaintransfer, domainrenew...)

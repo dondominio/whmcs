@@ -6,9 +6,12 @@ use WHMCS\Module\Addon\Dondominio\App;
 use WHMCS\Module\Addon\Dondominio\Services\Contracts\UtilsService_Interface;
 use WHMCS\Module\Registrar;
 use Exception;
+use DateTime;
 
 class Utils_Service extends AbstractService implements UtilsService_Interface
 {
+    const UPDATE_VERSION_HOUR_INTERVAL = 6;
+
     /**
      * Retrieves latest version number from github
      *
@@ -43,6 +46,7 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
     public function isLatestVersion()
     {
         $localVersion = $this->getApp()->getVersion();
+        $settingsService = $this->getApp()->getService('settings');
 
         if ($localVersion == App::UNKNOWN_VERSION) {
             throw new Exception('unable_to_retrieve_local_version');
@@ -52,7 +56,19 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
             throw new Exception('local_version_is_empty');
         }
 
-        $latestVersion = $this->getLatestVersion();
+        $versionUpdate = $settingsService->getTsSetting('last_version_ts_update');
+
+        $versionUpdate->modify(sprintf('+%d hours', static::UPDATE_VERSION_HOUR_INTERVAL));
+        $now = new DateTime();
+
+        if ($versionUpdate < $now){
+            $latestVersion = $this->getLatestVersion();
+
+            $settingsService->setSetting('last_version', $latestVersion);
+            $settingsService->setSetting('last_version_ts_update', new \DateTime());
+        }
+
+        $latestVersion = $settingsService->getSetting('last_version');
 
         // Comparing the versions found on the JSONs
         return version_compare($localVersion, $latestVersion, '>=');

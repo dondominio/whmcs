@@ -260,6 +260,7 @@ class Settings_Controller extends Controller
     {
         $whoisDomain = $this->getRequest()->getParam('domain');
         $whoisIp = $this->getRequest()->getParam('ip');
+        $redirect = $this->getRequest()->getParam('redirect');
 
         try {
             $settingsService = $this->getApp()->getService('settings');
@@ -271,6 +272,24 @@ class Settings_Controller extends Controller
             $this->getResponse()->addError($e->getMessage());
         }
 
+        if ($redirect === 'whois'){
+            return (new Whois_Controller())->view_Index();
+        }
+
         return $this->view_Index();
+    }
+
+    /**
+     * Searchs and returns a template
+     * 
+     * @param string $view View in format "folder.file" or "file"
+     * @param array $params Params to pass to template
+     * 
+     * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
+     */
+    public function view($view, array $params = [])
+    {
+        $params['nav']= Dashboard_Controller::getNavArray();          
+        return parent::view($view, $params);
     }
 }

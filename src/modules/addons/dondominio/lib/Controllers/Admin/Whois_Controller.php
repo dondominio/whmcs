@@ -101,10 +101,22 @@ class Whois_Controller extends Controller
      */
     public function view_Empty()
     {
+        $settings = $this->getApp()->getService('settings')->findSettingsAsKeyValue();
+
+        $protocol = array_key_exists('HTTP_X_FORWARDED_PROTO', $_SERVER) ? $_SERVER['HTTP_X_FORWARDED_PROTO'] : $_SERVER['REQUEST_SCHEME'];
+        $domain = array_key_exists('HTTP_X_FORWARDED_HOST', $_SERVER) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $_SERVER['SERVER_NAME'];
+        $whoisDomainPlaceholder = (!empty($protocol) ? $protocol . '://' : '') . $domain;
+
+        $whoisIpPlaceholder = array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['SERVER_ADDR'];
+
         $params = [
-            'links' => [
-                'settings_index' => Settings_Controller::makeURL(Settings_Controller::VIEW_INDEX)
-            ]
+            'module_name' => $this->getApp()->getName(),
+            'settings_controller' => Settings_Controller::CONTROLLER_NAME,
+            'save_whois_action' => Settings_Controller::ACTION_SAVE_WHOIS_PROXY,
+            'whois_domain' => $settings->get('whois_domain'),
+            'whois_ip' => $settings->get('whois_ip'),
+            'whois_domain_placeholder' => $whoisDomainPlaceholder,
+            'whois_ip_placeholder' => $whoisIpPlaceholder,
         ];
 
         return $this->view('empty', $params);

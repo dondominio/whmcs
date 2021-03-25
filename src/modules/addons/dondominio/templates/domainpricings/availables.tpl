@@ -1,3 +1,5 @@
+{include file='../nav.tpl'}
+
 <h2>{$LANG.tld_new_title}</h2>
 
 <p>{$LANG.tld_new_info}</p>

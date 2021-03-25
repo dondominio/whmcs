@@ -34,15 +34,10 @@ $_ADDONLANG = array(
     'link_more_info' => 'Más información',
 
     //Menu
-    'menu_status' => 'Estado',
-    'menu_tlds_update' => 'Actualizar tarifas',
-    'menu_tlds_new' => 'TLDs disponibles',
+    'menu_status' => 'Administracion',
+    'menu_tlds_update' => 'Gestión de TLDs',
     'menu_domains' => 'Gestión de dominios',
-    'menu_import' => 'Importar dominios',
-    'menu_transfer' => 'Transferir dominios',
     'menu_whois' => 'Proxy Whois',
-    'menu_settings' => 'Configuración',
-    'menu_deleted' => 'Historial de dominios eliminados',
     'menu_help' => 'Ayuda y documentación',
 
     //Filter
@@ -226,8 +221,7 @@ $_ADDONLANG = array(
      */
     'info_path_whois' => 'Tu fichero de Whois está aquí',
     'info_path_moreinfo' => 'Documentación',
-    'info_whois_domain' => 'Antes de usar el Proxy de Whois configure el dominio en la pantalla de configuración.',
-    'info_whois_settings' => 'Haga click aquí para acceder a la configuración',
+    'info_whois_domain' => 'Antes de usar el Proxy de Whois configure el dominio.',
 
     /**
      * IMPORT/EXPORT
@@ -271,6 +265,7 @@ $_ADDONLANG = array(
     /**
      * MODULES DASHBOARD
      */
+    'status_title' => 'Estado',
     'going_back_in' => 'Volviendo atrás en ',
     'modules_updated_successfully' => 'Módulos actualizados con éxito',
     'dondominio_modules_information' => 'Información de Módulos de Dondominio',
@@ -278,6 +273,8 @@ $_ADDONLANG = array(
     'update' => 'Actualizar',
     'more_info' => 'Más Información',
     'check_credentials' => 'Credenciales API',
+    'check_api_status' => 'Consultar Estado',
+    'success_api_conection' => 'Conexión correcta con la API de DonDominio',
 
     /**
      * GENERIC
@@ -315,7 +312,14 @@ $_ADDONLANG = array(
     /**
      * DELETED DOMAINS
      */
-    'deleted_domains_title' => 'Lista de dominios eliminados',
+    'deleted_domains_title' => 'Dominios Borrados',
     'deleted_domains_ts' => 'Fecha de eliminacion',
-    'deleted_domains_info' => 'Informacion',
+    'deleted_domains_info' => 'Información',
+
+    /**
+     * PREMIUM DOMAINS
+     */
+    'premium_domains' => 'Dominios Premium',
+    'enable' => 'Activados',
+    'disable' => 'Desavtivados',
 );

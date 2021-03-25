@@ -1,3 +1,5 @@
+{include file='../nav.tpl'}
+
 <h2>{$LANG.settings_title}</h2>
 
 <br />

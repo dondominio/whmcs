@@ -3,6 +3,7 @@
 namespace WHMCS\Module\Addon\Dondominio\Controllers\Admin;
 
 use Exception;
+use WHMCS\Module\Addon\Dondominio\App;
 
 if (!defined("WHMCS")) {
     die("This file cannot be accessed directly");
@@ -613,5 +614,44 @@ class Domains_Controller extends Controller
         }
 
         return $this->view_Import();
+    }
+
+    /**
+     * Searchs and returns a template
+     * 
+     * @param string $view View in format "folder.file" or "file"
+     * @param array $params Params to pass to template
+     * 
+     * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
+     */
+    public function view($view, array $params = [])
+    {
+        $app = App::getInstance();
+        $action = $this->getRequest()->getParam('__a__', '');
+
+        $params['nav'] = [
+            [
+                'title' => $app->getLang('domains_title'),
+                'link' => static::makeURL(static::VIEW_INDEX),
+                'selected' => static::VIEW_INDEX === $action
+            ],
+            [
+                'title' => $app->getLang('transfer_title'),
+                'link' => static::makeURL(static::VIEW_TRANSFER),
+                'selected' => static::VIEW_TRANSFER === $action
+            ],
+            [
+                'title' => $app->getLang('import_title'),
+                'link' => static::makeURL(static::VIEW_IMPORT),
+                'selected' => static::VIEW_IMPORT === $action
+            ],
+            [
+                'title' => $app->getLang('deleted_domains_title'),
+                'link' => static::makeURL(static::VIEW_DELETED),
+                'selected' => static::VIEW_DELETED === $action
+            ],
+        ];   
+
+        return parent::view($view, $params);
     }
 }

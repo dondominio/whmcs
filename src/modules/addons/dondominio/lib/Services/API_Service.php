@@ -270,7 +270,36 @@ class API_Service extends AbstractService implements APIService_Interface
             throw new Exception($response->getErrorCodeMsg(), $response->getErrorCode());
         }
 
+        $this->getApp()->getService('settings')->setSetting('api_conexion', 1);
+
         return $response;
+    }
+
+    /**
+     * Check if API conexion is ok
+     *
+     * @return bool
+     */
+    public function checkConnection($checkApi)
+    {
+        $settingService = $this->getApp()->getService('settings');
+
+        if ($checkApi){
+
+            try {
+                $this->doHello();
+            } catch (\Exception $e) {
+                $settingService->setSetting('api_conexion', 0);
+                throw $e;
+            }
+
+            $settingService->setSetting('api_conexion', 1);
+            return true;
+        }
+
+        $apiConexion = $settingService->getSetting('api_conexion');
+
+        return (bool) $apiConexion;
     }
 
     /**

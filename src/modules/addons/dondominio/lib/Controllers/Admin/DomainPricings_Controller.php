@@ -4,6 +4,7 @@ namespace WHMCS\Module\Addon\Dondominio\Controllers\Admin;
 
 use WHMCS\Module\Addon\Dondominio\Models\TldSettings_Model;
 use Exception;
+use WHMCS\Module\Addon\Dondominio\App;
 
 if(!defined("WHMCS")){
 	die("This file cannot be accessed directly");
@@ -378,5 +379,35 @@ class DomainPricings_Controller extends Controller
         }
 
         return $this->view_Settings();
+    }
+
+     /**
+     * Searchs and returns a template
+     * 
+     * @param string $view View in format "folder.file" or "file"
+     * @param array $params Params to pass to template
+     * 
+     * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
+     */
+    public function view($view, array $params = [])
+    {
+        $app = App::getInstance();
+        $action = $this->getRequest()->getParam('__a__', '');
+
+        $params['nav'] = [
+            [
+                'title' => $app->getLang('tld_title'),
+                'link' => static::makeURL(static::VIEW_INDEX),
+                'selected' => static::VIEW_INDEX === $action || static::VIEW_SETTINGS === $action,
+            ],
+            [
+                'title' => $app->getLang('tld_new_title'),
+                'link' => static::makeURL(static::VIEW_AVAILABLE_TLDS),
+                'selected' => static::VIEW_AVAILABLE_TLDS === $action,
+
+            ],
+        ];
+
+        return parent::view($view, $params);
     }
 }

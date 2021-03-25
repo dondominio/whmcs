@@ -476,7 +476,7 @@ class App
      *
      * @return array
      */
-    public function getInformation()
+    public function getInformation($checkApi = true)
     {
         $checks = [
             'version' => ['success' => null, 'message' => null],
@@ -506,8 +506,7 @@ class App
             $checks['sdk']['success'] = true;
 
             try {
-                $this->getService('api')->doHello();
-                $checks['api']['success'] = true;
+                $checks['api']['success'] = $this->getService('api')->checkConnection($checkApi);
             } catch (Exception $e) {
                 $checks['api']['success'] = false;
                 $checks['api']['message'] = $this->getLang($e->getMessage());
