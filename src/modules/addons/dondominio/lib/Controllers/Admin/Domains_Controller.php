@@ -212,6 +212,8 @@ class Domains_Controller extends Controller
     public function view_Import()
     {
         $page = $this->getRequest()->getParam('page', 1);
+        $word = $this->getRequest()->getParam('domain', '');
+        $tld = $this->getRequest()->getParam('tld', '');
 
         // GET DOMAINS BY PAGINATION
 
@@ -223,7 +225,7 @@ class Domains_Controller extends Controller
         $totalRecords = 0;
 
         try {
-            $domainsInfo = $this->getApp()->getService('api')->getDomainList($page, $limit);
+            $domainsInfo = $this->getApp()->getService('api')->getDomainList($page, $limit, $word, $tld);
 
             $domains = $domainsInfo->get("domains");
             $totalRecords = $domainsInfo->get("queryInfo")['total'];
@@ -267,6 +269,10 @@ class Domains_Controller extends Controller
             'links' => [
                 'prev_page' => static::makeUrl(static::VIEW_IMPORT, ['page' => ($page - 1)]),
                 'next_page' => static::makeUrl(static::VIEW_IMPORT, ['page' => ($page + 1)])
+            ],
+            'filters' => [
+                'domain' => $word,
+                'tld' => $tld,
             ]
         ];
 
@@ -324,7 +330,8 @@ class Domains_Controller extends Controller
                 'total_pages' => $total_pages
             ],
             'actions' => [
-                'view_deleted' => static::VIEW_DELETED,            ],
+                'view_deleted' => static::VIEW_DELETED,            
+            ],
             'links' => [
                 'prev_page' => static::makeUrl(static::VIEW_DELETED, ['page' => ($page - 1)]),
                 'next_page' => static::makeUrl(static::VIEW_DELETED, ['page' => ($page + 1)])

@@ -100,7 +100,7 @@ class API_Service extends AbstractService implements APIService_Interface
      *
      * @return \Dondominio\API\Response\Response
      */
-    public function getDomainList($page = null, $pageLength = null)
+    public function getDomainList($page = null, $pageLength = null, $word = null, $tld = null)
     {
         $params = [];
 
@@ -110,6 +110,14 @@ class API_Service extends AbstractService implements APIService_Interface
 
         if (!is_null($pageLength)) {
             $params['pageLength'] = $pageLength;
+        }
+
+        if (!empty($pageLength)) {
+            $params['word'] = $word;
+        }
+
+        if (!empty($pageLength)) {
+            $params['tld'] = $tld;
         }
 
         $response = $this->getApiConnection()->domain_list($params);
