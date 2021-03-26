@@ -6,14 +6,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.3] - 2020-03-26
+### Changed
+- The registrar supports premium domains.
+- Optimization in the query of new versions of the module.
+- Interactive query of the connection with the API.
+- Improved navigation within the Addon.
+- List of deleted domains.
+- Filters for importing domains.
+
 ## [2.1.2] - 2020-03-17
 ### Fixed
-- Now tables configured with row_format compact works as expected
-- Operations with domains that involve Vat Number, now works correctly
+- Now tables configured with row_format compact works as expected.
+- Operations with domains that involve Vat Number, now works correctly.
 
 ### Changed
-- More specific domain states
-- More information in Addon status tab
+- More specific domain states.
+- More information in Addon status tab.
 
 ## [2.1.1] - 2020-02-26
 ### Fixed
