@@ -281,6 +281,7 @@ $_ADDONLANG = array(
      */
     'ok' => 'OK',
     'error' => 'ERROR',
+    'close' => 'Cerrar',
 
     /**
      * UPDATE

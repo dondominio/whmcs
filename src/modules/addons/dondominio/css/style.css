@@ -1,3 +1,9 @@
 .navbar-selected {
     color: #333 !important;
 }
+
+.title-icon {
+    vertical-align: middle;
+    margin-right: 5px;
+    cursor: pointer;
+  }

@@ -1,10 +1,23 @@
 {include file='../nav.tpl'}
 
-<h2>{$LANG.domains_title}</h2>
+<h2>{$LANG.domains_title} <i class="fad fa-question-circle title-icon" data-toggle="modal" data-target="#domains"></i></h2>
 
-<p>{$LANG.domains_info}</p>
-
-<p>{$LANG.info_too_much_requests}</p>
+<div class="modal" id="domains" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5  class="modal-title" >{$LANG.domains_title}</h5>
+            </div>
+            <div class="modal-body">
+                <p>{$LANG.domains_info}</p>
+                <p>{$LANG.info_too_much_requests}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">{$LANG.close}</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div id='tabs'>
     <ul class='nav nav-tabs admin-tabs' role='tablist'>
@@ -13,7 +26,6 @@
         </li>
     </ul>
 </div>
-
 <div id='tab0box' class='tabbox'>
     <div id='tab_content'>
         <form action='' method='get'>
