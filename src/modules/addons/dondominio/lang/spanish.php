@@ -35,7 +35,7 @@ $_ADDONLANG = array(
 
     //Menu
     'menu_status' => 'Administracion',
-    'menu_tlds_update' => 'Gestión de TLDs',
+    'menu_tlds_update' => 'TLDs y Tarifas',
     'menu_domains' => 'Gestión de dominios',
     'menu_whois' => 'Proxy Whois',
     'menu_help' => 'Ayuda y documentación',
@@ -227,7 +227,7 @@ $_ADDONLANG = array(
      * IMPORT/EXPORT
      */	
     'servers_export' => 'Exportar lista de servidores',
-    'servers_import' => 'Importar lista de servidores',
+    'servers_import' => 'Importar',
     'import_btn' => 'Importar archivo',
     'servers_delete' => 'Eliminar lista de servidores de Dondominio',
 
@@ -322,4 +322,9 @@ $_ADDONLANG = array(
     'premium_domains' => 'Dominios Premium',
     'enable' => 'Activados',
     'disable' => 'Desavtivados',
+
+    /**
+     * WHOIS
+     */
+    'change_selected_whois' => 'Cambiar Seleccionados a DonDominio',
 );

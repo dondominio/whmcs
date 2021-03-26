@@ -1,7 +1,11 @@
+{include file='../nav.tpl'}
+
+{if $need_config eq true}
 <div class='infobox'>
     <span class='title'>{$LANG.error_whois_domain_empty}</span>
 </div>
 <p>{$LANG.info_whois_domain}</p>
+{/if}
 
 <div id='tab_content'>
     <form method='post' action="">

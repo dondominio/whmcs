@@ -35,7 +35,7 @@ $_ADDONLANG = array(
 
     //Menu
     'menu_status' => 'Admin',
-    'menu_tlds_update' => 'Manage TLDs',
+    'menu_tlds_update' => 'TLDs and Price',
     'menu_domains' => 'Manage domains',
     'menu_whois' => 'Whois Proxy',
     'menu_help' => 'Help & Documentation',
@@ -227,7 +227,7 @@ $_ADDONLANG = array(
      * IMPORT/EXPORT
      */	
     'servers_export' => 'Export server list',
-    'servers_import' => 'Import server list',
+    'servers_import' => 'Import',
     'import_btn' => 'Import file',
     'servers_delete' => 'Delete MrDomain server list',
 
@@ -322,4 +322,9 @@ $_ADDONLANG = array(
     'premium_domains' => 'Premium Domains',
     'enable' => 'Enable',
     'disable' => 'Disabled',
+
+    /**
+     * WHOIS
+     */
+    'change_selected_whois' => 'Change selected to DonDominio',
 );

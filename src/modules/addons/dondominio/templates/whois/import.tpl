@@ -1,3 +1,5 @@
+{include file='../nav.tpl'}
+
 <form action='{$links.import}' method='post' enctype='multipart/form-data'>
     <input type='file' name='whoisservers' />
 
