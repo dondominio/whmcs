@@ -251,6 +251,34 @@ class API_Service extends AbstractService implements APIService_Interface
         return $this->parseResponse($response, $params);
     }
 
+    /**
+     * Gets history of a domain
+     *
+     * @see https://dev.dondominio.com/api/docs/api/#get-history-domain-gethistory
+     *
+     * @param string $domain Domain from which you want to obtain the history
+     * @param int $page Offset where query starts
+     * @param int $pageLength Limit where query ends
+     *
+     * @return \Dondominio\API\Response\Response
+     */
+    public function getDomainHistory($domain, $page = null, $pageLength = null)
+    {
+        $params = [];
+
+        if(!is_null($page)){
+            $params['page'] = $page;
+        }
+
+        if(!is_null($page)){
+            $params['pageLength'] = $pageLength;
+        }
+
+        $response = $this->getApiConnection()->domain_getHistory($domain, $params);
+
+        return $this->parseResponse($response, $params);
+    }
+
     public function printApiInfo()
     {
         $this->getApiConnection()->info();

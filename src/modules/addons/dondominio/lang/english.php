@@ -333,4 +333,15 @@ $_ADDONLANG = array(
      * WHOIS
      */
     'change_selected_whois' => 'Change selected to DonDominio',
+
+    /**
+     * DOMAIN HISTORY
+     */
+    'history_title' => 'Domain history',
+    'log_message' => 'Log message',
+    'log_date' => 'Date',
+    'log_ip' => 'IP',
+    'log_user' => 'User',
+    'log_title' => 'Title',
+    'log_message' => 'Message',
 );

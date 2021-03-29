@@ -20,6 +20,7 @@ class Domains_Controller extends Controller
     const VIEW_IMPORT = 'viewimport';
     const VIEW_DELETED = 'viewdeleted';
     const VIEW_GETINFO = 'viewgetinfo';
+    const VIEW_HISTORY = 'viewhistory';
 
     const ACTION_SYNC = 'sync';
     const ACTION_SWITCH_REGISTRAR = 'switchregistrar';
@@ -41,6 +42,7 @@ class Domains_Controller extends Controller
             static::VIEW_IMPORT => 'view_Import',
             static::VIEW_DELETED => 'view_Deleted',
             static::VIEW_GETINFO => 'view_GetInfo',
+            static::VIEW_HISTORY => 'view_History',
             static::ACTION_SYNC => 'action_Sync',
             static::ACTION_SWITCH_REGISTRAR => 'action_SwitchRegistrar',
             static::ACTION_UPDATE_PRICE => 'action_UpdatePrice',
@@ -131,6 +133,7 @@ class Domains_Controller extends Controller
             'links' => [
                 'sync_domain' => static::makeUrl(static::ACTION_SYNC),
                 'get_info' => static::makeUrl(static::VIEW_GETINFO),
+                'domain_history' => static::makeUrl(static::VIEW_HISTORY),
                 'prev_page' => static::makeUrl(static::VIEW_INDEX, ['page' => ($page - 1)]),
                 'next_page' => static::makeUrl(static::VIEW_INDEX, ['page' => ($page + 1)])
             ]
@@ -379,6 +382,67 @@ class Domains_Controller extends Controller
 
         $response->setContentType(Response::CONTENT_JSON);
         $response->send(json_encode($params), true);
+    }
+
+    /**
+     *  Retrieves template for Domain history
+     *
+     * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
+     */
+    public function view_History()
+    {
+        $domain = $this->getRequest()->getParam('domain');
+        $page = $this->getRequest()->getParam('page', 1);
+        $whmcsService = $this->getApp()->getService('whmcs');
+        $limit = $whmcsService->getConfiguration('NumRecordstoDisplay');
+
+        try {
+            $response = $this->getApp()->getService('api')->getDomainHistory($domain, $page, $limit);
+
+            $history = $response->get('history');
+            $totalRecords = $response->get("queryInfo")['total'];
+        } catch (\Throwable $e){
+            $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
+        }
+
+        $total_pages = ceil($totalRecords / $limit);
+
+        if ($total_pages == 0) {
+            $total_pages = 1;
+        }
+
+        if ($page > $total_pages) {
+            $page = $total_pages;
+        }
+
+        $params = [
+            'module_name' => $this->getApp()->getName(),
+            'domain_name' => $domain,
+            '__c__' => static::CONTROLLER_NAME,
+            'history' => $history,
+            'pagination' => [
+                'page' => $page,
+                'limit' => $limit,
+                'total' => $totalRecords,
+                'total_pages' => $total_pages
+            ],
+            'actions' => [
+                'view_deleted' => static::VIEW_DELETED,
+            ],
+            'links' => [
+                'prev_page' => static::makeUrl(static::VIEW_DELETED, ['page' => ($page - 1)]),
+                'next_page' => static::makeUrl(static::VIEW_DELETED, ['page' => ($page + 1)])
+            ]
+        ];
+
+        $paginationSelect = [];
+        for ($i = 1; $i <= $total_pages; $i++) {
+            $paginationSelect[$i] = $i;
+        }
+
+        $params['pagination_select'] = $paginationSelect;
+
+        return $this->view('history', $params);
     }
 
     /**
