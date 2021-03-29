@@ -194,16 +194,20 @@
                     </td>
 
                     <td>
+                        {if $domain.registrar eq $module_name}
                         <a href='#' data-getinfo="{$domain.domain}" data-getinfo-link="{$links.get_info}&domain={$domain.domain}"><img src='images/icons/add.png'></a>
                         <a href='#' data-hideinfo="{$domain.domain}" style="display: none;"><img src='images/icons/accessdenied.png'></a>
+                        {/if}
                     </td>
 
                     <td>
+                        {if $domain.registrar eq $module_name}
                         <a href='{$links.sync_domain}&domain_checkbox[]={$domain.id}'><img src='images/icons/navrotate.png'></a>
+                        {/if}
                     </td>
                 </tr>
                 <tr data-info="{$domain.domain}" style="display: none;">
-                    <td colspan="5">
+                    <td colspan="6">
                         <span data-error class="text-danger"></span>
                         <ul data-success>
                             <li>{$LANG.domain_name}: <span data-name></span></li>
@@ -217,7 +221,7 @@
             {/foreach}
         {else}
             <tr>
-                <td colspan='4'>
+                <td colspan='6'>
                     {$LANG.info_no_results}
                 </td>
             </tr>
