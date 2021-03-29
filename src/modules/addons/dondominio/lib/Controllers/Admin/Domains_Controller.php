@@ -4,6 +4,7 @@ namespace WHMCS\Module\Addon\Dondominio\Controllers\Admin;
 
 use Exception;
 use WHMCS\Module\Addon\Dondominio\App;
+use WHMCS\Module\Addon\Dondominio\Helpers\Response;
 
 if (!defined("WHMCS")) {
     die("This file cannot be accessed directly");
@@ -18,6 +19,7 @@ class Domains_Controller extends Controller
     const VIEW_TRANSFER = 'viewtransfer';
     const VIEW_IMPORT = 'viewimport';
     const VIEW_DELETED = 'viewdeleted';
+    const VIEW_GETINFO = 'viewgetinfo';
 
     const ACTION_SYNC = 'sync';
     const ACTION_SWITCH_REGISTRAR = 'switchregistrar';
@@ -38,6 +40,7 @@ class Domains_Controller extends Controller
             static::VIEW_TRANSFER => 'view_Transfer',
             static::VIEW_IMPORT => 'view_Import',
             static::VIEW_DELETED => 'view_Deleted',
+            static::VIEW_GETINFO => 'view_GetInfo',
             static::ACTION_SYNC => 'action_Sync',
             static::ACTION_SWITCH_REGISTRAR => 'action_SwitchRegistrar',
             static::ACTION_UPDATE_PRICE => 'action_UpdatePrice',
@@ -127,6 +130,7 @@ class Domains_Controller extends Controller
             ],
             'links' => [
                 'sync_domain' => static::makeUrl(static::ACTION_SYNC),
+                'get_info' => static::makeUrl(static::VIEW_GETINFO),
                 'prev_page' => static::makeUrl(static::VIEW_INDEX, ['page' => ($page - 1)]),
                 'next_page' => static::makeUrl(static::VIEW_INDEX, ['page' => ($page + 1)])
             ]
@@ -346,6 +350,35 @@ class Domains_Controller extends Controller
         $params['pagination_select'] = $paginationSelect;
 
         return $this->view('deleted', $params);
+    }
+
+    /**
+     * Get Domain info in JSON
+     *
+     * @return void
+     */
+    public function view_getInfo()
+    {
+        $response = $this->getResponse();
+        $domain = $this->getRequest()->getParam('domain');
+
+        try {
+            $info = $this->getApp()->getService('api')->getDomainInfo($domain);
+
+            $params = [
+                'name' => $info->get('name'),
+                'tld' => $info->get('tld'),
+                'status' => $info->get('status'),
+                'tsExpire' => $info->get('tsExpir'),
+                'tsCreate' => $info->get('tsCreate'),
+            ];
+
+        } catch (Exception $e){
+            $params['error'] = $e->getMessage();
+        }
+
+        $response->setContentType(Response::CONTENT_JSON);
+        $response->send(json_encode($params), true);
     }
 
     /**

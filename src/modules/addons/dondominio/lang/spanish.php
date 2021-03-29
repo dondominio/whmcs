@@ -120,6 +120,11 @@ $_ADDONLANG = array(
     'domain_synced_succesfully' => 'sincronizado con éxito',
     'domain_updated_succesfully' => 'actualizado con éxito',
     'domain_not_found' => 'dominio no ha sido encontrado',
+    'domain_name' => 'Nombre',
+    'domain_tld' => 'TLD',
+    'domain_status' => 'Estado',
+    'domain_ts_create' => 'Fecha de creación',
+    'domain_ts_expire' => 'Fecha de expiración',
 
     //Import
     'import_title' => 'Importar dominios',
