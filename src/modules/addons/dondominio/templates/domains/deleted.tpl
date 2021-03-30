@@ -1,5 +1,3 @@
-{include file='../nav.tpl'}
-
 <h2>{$LANG.deleted_domains_title}</h2>
 
 <form action='' method='get'>

@@ -1,5 +1,3 @@
-{include file='../nav.tpl'}
-
 <h2>{$LANG.tld_title}</h2>
 
 <p>{$LANG.tld_info}</p>

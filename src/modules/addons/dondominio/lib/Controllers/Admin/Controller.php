@@ -35,6 +35,10 @@ abstract class Controller extends BaseController
     public function view($view, array $params = [])
     {
         $params['css_path'] = sprintf('/modules/addons/%s/css/', $this->getApp()->getName());
+
+        if(!isset($params['print_nav'])){
+            $params['print_nav'] = true;
+        }
         
         return parent::view($view, $params);
     }

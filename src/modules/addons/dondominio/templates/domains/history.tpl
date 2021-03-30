@@ -1,5 +1,3 @@
-{include file='../nav.tpl'}
-
 <h2>{$LANG.history_title}: {$domain_name}</h2>
 
 <div class="modal" id="message" tabindex="-1" role="dialog">

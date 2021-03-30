@@ -1,5 +1,3 @@
-{include file='../nav.tpl'}
-
 <div class="panel-heading">
     <h3 class="panel-title" style="touch-action: none;">{$LANG.dondominio_modules_information}</h3>
 </div>

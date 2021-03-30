@@ -136,7 +136,8 @@ class Domains_Controller extends Controller
                 'domain_history' => static::makeUrl(static::VIEW_HISTORY),
                 'prev_page' => static::makeUrl(static::VIEW_INDEX, ['page' => ($page - 1)]),
                 'next_page' => static::makeUrl(static::VIEW_INDEX, ['page' => ($page + 1)])
-            ]
+            ],
+            'breadcrumbs' => $this->getBreadcrumbs()
         ];
 
         $paginationSelect = [];
@@ -198,7 +199,8 @@ class Domains_Controller extends Controller
             'links' => [
                 'prev_page' => static::makeUrl(static::VIEW_TRANSFER, ['page' => ($page - 1)]),
                 'next_page' => static::makeUrl(static::VIEW_TRANSFER, ['page' => ($page + 1)])
-            ]
+            ],
+            'breadcrumbs' => $this->getBreadcrumbs(static::VIEW_TRANSFER)
         ];
 
         $paginationSelect = [];
@@ -280,7 +282,8 @@ class Domains_Controller extends Controller
             'filters' => [
                 'domain' => $word,
                 'tld' => $tld,
-            ]
+            ],
+            'breadcrumbs' => $this->getBreadcrumbs(static::VIEW_IMPORT)
         ];
 
         $paginationSelect = [];
@@ -342,7 +345,8 @@ class Domains_Controller extends Controller
             'links' => [
                 'prev_page' => static::makeUrl(static::VIEW_DELETED, ['page' => ($page - 1)]),
                 'next_page' => static::makeUrl(static::VIEW_DELETED, ['page' => ($page + 1)])
-            ]
+            ],
+            'breadcrumbs' => $this->getBreadcrumbs(static::VIEW_DELETED)
         ];
 
         $paginationSelect = [];
@@ -432,7 +436,8 @@ class Domains_Controller extends Controller
             'links' => [
                 'prev_page' => static::makeUrl(static::VIEW_DELETED, ['page' => ($page - 1)]),
                 'next_page' => static::makeUrl(static::VIEW_DELETED, ['page' => ($page + 1)])
-            ]
+            ],
+            'breadcrumbs' => $this->getBreadcrumbs(static::VIEW_HISTORY, $domain)
         ];
 
         $paginationSelect = [];
@@ -757,5 +762,52 @@ class Domains_Controller extends Controller
         ];   
 
         return parent::view($view, $params);
+    }
+
+    /**
+     * Return array  with the breadcrumbs
+     * 
+     * @param string $action Controller action
+     * @param string $domain Domain of the view
+     * 
+     * @return array
+     */
+    protected function getBreadcrumbs($action = null, $domain = null)
+    {
+        $app = $this->getApp();
+        $bredcrumbs = [];
+
+        $bredcrumbs[] = [
+            'title' => $app->getLang('domains_title'),
+            'link' => static::makeURL()
+        ];
+
+        $actions = [
+            static::VIEW_TRANSFER => [
+                'title' => $app->getLang('transfer_title'),
+                'link' => static::makeURL(static::VIEW_TRANSFER)
+            ],
+            static::VIEW_IMPORT => [
+                'title' => $app->getLang('import_title'),
+                'link' => static::makeURL(static::VIEW_IMPORT)
+            ],
+            static::VIEW_DELETED => [
+                'title' => $app->getLang('deleted_domains_title'),
+                'link' => static::makeURL(static::VIEW_DELETED)
+            ],
+        ];
+
+        if (isset($actions[$action])){
+            $bredcrumbs[] = $actions[$action];
+        }
+
+        if (!is_null($domain)){
+            $bredcrumbs[] = [
+                'title' => $domain,
+                'link' => static::makeURL(static::VIEW_HISTORY, ['domain' => $domain])
+            ];
+        }
+
+        return $bredcrumbs;
     }
 }

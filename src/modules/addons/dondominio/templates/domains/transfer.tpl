@@ -1,5 +1,3 @@
-{include file='../nav.tpl'}
-
 <h2>{$LANG.transfer_title}</h2>
 	
 <p>{$LANG.transfer_info}</p>

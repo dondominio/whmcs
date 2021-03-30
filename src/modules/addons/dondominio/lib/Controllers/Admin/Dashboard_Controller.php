@@ -58,6 +58,12 @@ class Dashboard_Controller extends Controller
                 'update_modules' => static::makeURL(static::UPDATE_MODULES),
                 'check_api_status_link' => static::makeURL(static::VIEW_INDEX, ['check_api' => 1]),
                 'settings' => Settings_Controller::makeURL(),
+            ],
+            'breadcrumbs' => [
+                [
+                    'title' => $app->getLang('menu_status'),
+                    'link' => static::makeURL()
+                ]
             ]
         ];
 
@@ -83,7 +89,10 @@ class Dashboard_Controller extends Controller
             'settings' => Settings_Controller::makeURL(),
         ];
 
-        return $this->view('sidebar', ['links' => $links]);
+        return $this->view('sidebar', [
+            'links' => $links,
+            'print_nav' => false
+        ]);
     }
 
     /**
@@ -124,7 +133,8 @@ class Dashboard_Controller extends Controller
         }
 
         $params = [
-            'success' => $success
+            'success' => $success,
+            'print_nav' => false
         ];
 
         return $this->view('update', $params);

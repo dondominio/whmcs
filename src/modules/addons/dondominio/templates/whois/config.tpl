@@ -1,5 +1,3 @@
-{include file='../nav.tpl'}
-
 {if $need_config eq true}
 <div class='infobox'>
     <span class='title'>{$LANG.error_whois_domain_empty}</span>

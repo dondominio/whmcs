@@ -1,5 +1,3 @@
-{include file='../nav.tpl'}
-
 <h2>{$LANG.domains_title} <i class="fad fa-question-circle title-icon" data-toggle="modal" data-target="#domains"></i></h2>
 
 <div class="modal" id="domains" tabindex="-1" role="dialog">

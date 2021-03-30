@@ -56,4 +56,9 @@
 {/if}
 
 
+{if $print_nav eq true}
+{include file='nav.tpl'}
+{include file='breadcrumb.tpl'}
+{/if}
+
 {include file=$CONTENT_FILE}
