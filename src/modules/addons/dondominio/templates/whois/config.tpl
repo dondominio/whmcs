@@ -1,3 +1,5 @@
+<h2>{$LANG.whois_config_title}</h2>
+
 {if $need_config eq true}
 <div class='infobox'>
     <span class='title'>{$LANG.error_whois_domain_empty}</span>

@@ -333,12 +333,13 @@ $_ADDONLANG = array(
      * WHOIS
      */
     'change_selected_whois' => 'Cambiar Seleccionados a DonDominio',
+    'whois_config_title' => 'Configuración de Whois',
+    'whois_import_title' => 'Importar Whois',
 
      /**
      * DOMAIN HISTORY
      */
     'history_title' => 'Historial del dominio',
-    'log_message' => 'Mensaje del log',
     'log_date' => 'Fecha',
     'log_ip' => 'IP',
     'log_user' => 'Usuario',

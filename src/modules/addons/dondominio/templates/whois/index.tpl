@@ -1,3 +1,5 @@
+<h2>{$LANG.menu_whois}</h2>
+
 <div class='contexthelp'>
     <img src='images/icons/reports.png' border='0' align='absmiddle'>&nbsp;
     <a href='https://dev.dondominio.com/whmcs/docs/addon/' target="_blank">
