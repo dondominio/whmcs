@@ -134,7 +134,6 @@ class Domains_Controller extends Controller
             ],
             'links' => [
                 'sync_domain' => static::makeUrl(static::ACTION_SYNC),
-                'get_info' => static::makeUrl(static::VIEW_GETINFO),
                 'domain_view' => static::makeUrl(static::VIEW_DOMAIN),
                 'prev_page' => static::makeUrl(static::VIEW_INDEX, ['page' => ($page - 1)]),
                 'next_page' => static::makeUrl(static::VIEW_INDEX, ['page' => ($page + 1)])

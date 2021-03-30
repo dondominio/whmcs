@@ -197,8 +197,7 @@
 
                     <td>
                         {if $domain.registrar eq $module_name}
-                        <a href='#' data-getinfo="{$domain.domain}" data-getinfo-link="{$links.get_info}&domain={$domain.domain}"><img src='images/icons/add.png'></a>
-                        <a href='#' data-hideinfo="{$domain.domain}" style="display: none;"><img src='images/icons/accessdenied.png'></a>
+                        <a href="{$links.domain_view}&domain_id={$domain.id}"><img src='images/icons/add.png'></a>
                         {/if}
                     </td>
 
@@ -206,18 +205,6 @@
                         {if $domain.registrar eq $module_name}
                         <a href='{$links.sync_domain}&domain_checkbox[]={$domain.id}'><img src='images/icons/navrotate.png'></a>
                         {/if}
-                    </td>
-                </tr>
-                <tr data-info="{$domain.domain}" style="display: none;">
-                    <td colspan="6">
-                        <span data-error class="text-danger"></span>
-                        <ul data-success>
-                            <li>{$LANG.domain_name}: <span data-name></span></li>
-                            <li>{$LANG.domain_tld}: <span data-tld></span></li>
-                            <li>{$LANG.domain_status}: <span data-status></span></li>
-                            <li>{$LANG.domain_ts_create}: <span data-ts-create></span></li>
-                            <li>{$LANG.domain_ts_expire}: <span data-ts-expire></span></li>
-                        </ul>
                     </td>
                 </tr>
             {/foreach}
@@ -349,51 +336,6 @@ $(document).ready(function() {
         const form = $(e.target).parents('form');
         $(form).children('[name="__a__"]').val($(e.target).data('action'));
     });
-
-    $('[data-getinfo]').on('click', function (event) {
-        event.preventDefault();
-        let domain = $(this).data('getinfo');
-        let link = $(this).data('getinfo-link');
-        let infoTd = $('[data-info="' + domain + '"]');
-        let hideInfo = $('[data-hideinfo="' + domain + '"]');
-
-        $.get(link, function (response) {
-            let td = infoTd.find('td');
-
-            if(typeof response.error !== 'undefined'){
-                infoTd.find('[data-error]').show()
-                infoTd.find('[data-success]').hide()
-                td.find('[data-error]').text(response.error)
-                return;
-            }
-
-            infoTd.find('[data-error]').hide()
-            infoTd.find('[data-success]').show()
-
-            td.find('[data-name]').text(response.name)
-            td.find('[data-tld]').text(response.tld)
-            td.find('[data-status]').text(response.status)
-            td.find('[data-ts-expire]').text(response.tsExpire)
-            td.find('[data-ts-create]').text(response.tsCreate)
-        }).always(function () {
-            $('[data-getinfo="' + domain + '"]').hide();
-            infoTd.show();
-            hideInfo.show();
-        })
-
-    });
-
-    $('[data-hideinfo]').on('click', function (event) {
-        event.preventDefault();
-        let domain = $(this).data('hideinfo');
-        let infoTd = $('[data-info="' + domain + '"]');
-        let getinfo = $('[data-getinfo="' + domain + '"]');
-
-        $(this).hide();
-        infoTd.hide()
-        getinfo.show();
-    });
-
 });
 </script>
 {/literal}

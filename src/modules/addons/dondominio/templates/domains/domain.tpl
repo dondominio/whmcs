@@ -3,7 +3,7 @@
     <div class="panel-heading">
         <div class="row">
             <div class="col-xs-8">
-                <h3 class="panel-title">{$LANG.domains_domain}: {$domain.domain}</h3>
+                <h3 class="panel-title domain-title">{$LANG.domains_domain}: {$domain.domain}</h3>
             </div>
             <div class="col-xs-4">
                 <div class="dropdown pull-right">

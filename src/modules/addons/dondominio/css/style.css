@@ -60,3 +60,7 @@
 .domain-table tr td:first-child {
   width: 12em;
 }
+
+.domain-title {
+  margin-top: .5em;
+}
