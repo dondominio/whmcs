@@ -336,13 +336,29 @@ $_ADDONLANG = array(
     'whois_config_title' => 'Configuración de Whois',
     'whois_import_title' => 'Importar Whois',
 
-     /**
+    /**
      * DOMAIN HISTORY
      */
+    'bradcrumbs_history_title' => 'Historial',
     'history_title' => 'Historial del dominio',
     'log_date' => 'Fecha',
     'log_ip' => 'IP',
     'log_user' => 'Usuario',
     'log_title' => 'Título',
     'log_message' => 'Mensaje',
+
+    /**
+     * DOMAIN VIEW
+     */
+    'domain_name_view' => 'Nombre de Dominio',
+    'domain_tld_view' => 'TLD',
+    'domain_register_view' => 'Registrador',
+    'domain_status_view' => 'Estado',
+    'domain_expire_view' => 'Fecha de expiración',
+    'domain_create_view' => 'Fecha de creación',
+    'domain_api_check_view' => 'Consulta a la API',
+    'domain_actions_view' => 'Acciones',
+    'domain_sync_view' => 'Sincronizar estado',
+    'domain_check_view' => 'Consultar',
+    'domain_history_view' => 'Historial',
 );

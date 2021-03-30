@@ -56,3 +56,7 @@
 .dd-breadcrumb li:last-of-type .fa {
 	display: none;
 }
+
+.domain-table tr td:first-child {
+  width: 12em;
+}

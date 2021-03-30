@@ -16,6 +16,7 @@ class Domains_Controller extends Controller
     const DEFAULT_TEMPLATE_FOLDER = 'domains';
 
     const VIEW_INDEX = '';
+    const VIEW_DOMAIN = 'viewdomain';
     const VIEW_TRANSFER = 'viewtransfer';
     const VIEW_IMPORT = 'viewimport';
     const VIEW_DELETED = 'viewdeleted';
@@ -38,6 +39,7 @@ class Domains_Controller extends Controller
     {
         return [
             static::VIEW_INDEX => 'view_Index',
+            static::VIEW_DOMAIN => 'view_Domain',
             static::VIEW_TRANSFER => 'view_Transfer',
             static::VIEW_IMPORT => 'view_Import',
             static::VIEW_DELETED => 'view_Deleted',
@@ -133,7 +135,7 @@ class Domains_Controller extends Controller
             'links' => [
                 'sync_domain' => static::makeUrl(static::ACTION_SYNC),
                 'get_info' => static::makeUrl(static::VIEW_GETINFO),
-                'domain_history' => static::makeUrl(static::VIEW_HISTORY),
+                'domain_view' => static::makeUrl(static::VIEW_DOMAIN),
                 'prev_page' => static::makeUrl(static::VIEW_INDEX, ['page' => ($page - 1)]),
                 'next_page' => static::makeUrl(static::VIEW_INDEX, ['page' => ($page + 1)])
             ],
@@ -389,23 +391,57 @@ class Domains_Controller extends Controller
     }
 
     /**
+     * Retrieves template for Domain
+     *
+     * @return void
+     */
+    public function view_Domain()
+    {
+        $id = $this->getRequest()->getParam('domain_id');
+        $domain = $this->getApp()->getService('whmcs')->getDomainById($id);
+
+        if(is_null($domain)){
+            $this->getResponse()->addError($this->getApp()->getLang('domain_not_found'));
+        }        
+
+        $params = [
+            'domain' => $domain,
+            'module_name' => $this->getApp()->getName(),
+            'expire_date' => is_object($domain) ? $domain->expirydate->format('Y-m-d') : '',
+            'links' => [
+                'get_info' => $this->makeURL(static::VIEW_GETINFO, ['domain' => $domain->domain]),
+                'history' => $this->makeURL(static::VIEW_HISTORY, ['domain_id' => $domain->id]),
+                'sync' => $this->makeURL(static::ACTION_SYNC, ['domain_id' => $domain->id])
+            ],
+            'breadcrumbs' => $this->getBreadcrumbs(static::VIEW_DOMAIN, $domain)
+        ];
+
+        return $this->view('domain', $params);
+    }
+
+    /**
      *  Retrieves template for Domain history
      *
      * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
      */
     public function view_History()
     {
-        $domain = $this->getRequest()->getParam('domain');
+        $domainId = $this->getRequest()->getParam('domain_id');
         $page = $this->getRequest()->getParam('page', 1);
         $whmcsService = $this->getApp()->getService('whmcs');
         $limit = $whmcsService->getConfiguration('NumRecordstoDisplay');
+        $domain = $whmcsService->getDomainById($domainId);
 
         try {
-            $response = $this->getApp()->getService('api')->getDomainHistory($domain, $page, $limit);
+            if (is_null($domain)) {
+                throw new Exception('domain_not_found');
+            }
+
+            $response = $this->getApp()->getService('api')->getDomainHistory($domain->domain, $page, $limit);
 
             $history = $response->get('history');
             $totalRecords = $response->get("queryInfo")['total'];
-        } catch (\Throwable $e){
+        } catch (\Exception $e){
             $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
         }
 
@@ -421,7 +457,7 @@ class Domains_Controller extends Controller
 
         $params = [
             'module_name' => $this->getApp()->getName(),
-            'domain_name' => $domain,
+            'domain_name' => $domain->domain,
             '__c__' => static::CONTROLLER_NAME,
             'history' => $history,
             'pagination' => [
@@ -458,7 +494,12 @@ class Domains_Controller extends Controller
     public function action_Sync()
     {
         try {
+            $domainId = $this->getRequest()->getParam('domain_id');
             $ids = $this->getRequest()->getArrayParam('domain_checkbox');
+
+            if (!empty($domainId)){
+                $ids[] = $domainId;
+            }
 
             $whmcsService = $this->getApp()->getService('whmcs');
 
@@ -489,7 +530,7 @@ class Domains_Controller extends Controller
             $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
         }
 
-        return $this->view_Index();
+        return empty($domainId) ? $this->view_Index() : $this->view_Domain();
     }
 
     /**
@@ -768,7 +809,7 @@ class Domains_Controller extends Controller
      * Return array  with the breadcrumbs
      * 
      * @param string $action Controller action
-     * @param string $domain Domain of the view
+     * @param WHMCS\Domain\Domain $domain Domain id of the view
      * 
      * @return array
      */
@@ -803,9 +844,16 @@ class Domains_Controller extends Controller
 
         if (!is_null($domain)){
             $bredcrumbs[] = [
-                'title' => $domain,
-                'link' => static::makeURL(static::VIEW_HISTORY, ['domain' => $domain])
+                'title' => $domain->domain,
+                'link' => static::makeURL(static::VIEW_DOMAIN, ['domain_id' => $domain->id])
             ];
+
+            if($action === static::VIEW_HISTORY){
+                $bredcrumbs[] = [
+                    'title' => $app->getLang('bradcrumbs_history_title'),
+                    'link' => static::makeURL(static::VIEW_HISTORY, ['domain' => $domain->domain])
+                ];
+            }
         }
 
         return $bredcrumbs;

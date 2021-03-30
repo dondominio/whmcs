@@ -339,10 +339,26 @@ $_ADDONLANG = array(
     /**
      * DOMAIN HISTORY
      */
+    'bradcrumbs_history_title' => 'History',
     'history_title' => 'Domain history',
     'log_date' => 'Date',
     'log_ip' => 'IP',
     'log_user' => 'User',
     'log_title' => 'Title',
     'log_message' => 'Message',
+
+    /**
+     * DOMAIN VIEW
+     */
+    'domain_name_view' => 'Domain name',
+    'domain_tld_view' => 'TLD',
+    'domain_register_view' => 'Registrar',
+    'domain_status_view' => 'Status',
+    'domain_expire_view' => 'Expiration date',
+    'domain_create_view' => 'Creation date',
+    'domain_api_check_view' => 'API Check',
+    'domain_actions_view' => 'Actions',
+    'domain_sync_view' => 'Sync status',
+    'domain_check_view' => 'Check',
+    'domain_history_view' => 'History',
 );

@@ -147,7 +147,7 @@
 
                     <td>
                         {if $domain.registrar eq $module_name}
-                        <a href="{$links.domain_history}&domain={$domain.domain}">{$domain.domain}</a>
+                        <a href="{$links.domain_view}&domain_id={$domain.id}">{$domain.domain}</a>
                         {else}
                         {$domain.domain}
                         {/if}
