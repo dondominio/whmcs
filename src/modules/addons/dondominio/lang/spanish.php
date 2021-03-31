@@ -125,6 +125,8 @@ $_ADDONLANG = array(
     'domain_status' => 'Estado',
     'domain_ts_create' => 'Fecha de creación',
     'domain_ts_expire' => 'Fecha de expiración',
+    'domain_transfer' => 'Transferir',
+    'domain_more_info' => 'Más información',
 
     //Import
     'import_title' => 'Importar dominios',
@@ -147,7 +149,7 @@ $_ADDONLANG = array(
     'transfer_invalid_domain_name' => 'El dominio no tiene un nombre de dominio válido',
     'transfer_tld_not_found' => 'La extensión de dominio no es una extensión soportada por DonDominio',
     'transfer_client_not_found' => 'El cliente no ha sido encontrado en WHMCS',
-    'transfer_vatnumber_empty' => 'El cliente tiene el campo NIF vacío; no se puede continuar',
+    'transfer_vatnumber_empty' => 'No se ha encontrado el Vat Number del cliente (El Vat Number se obtendrá del campo personalizado "Vat Number", si no se encuentra se buscara en el seleccionado por el Registrador de DonDominio)',
     'transfer_already_transferred' => 'Este dominio ya ha sido transferido a DonDominio',
     'transfer_error' => 'Se ha producido un error al transferir el dominio',
     'transfer_success' => 'Transferencia iniciada correctamente',

@@ -131,6 +131,7 @@ class Domains_Controller extends Controller
                 'switch_registrar' => static::ACTION_SWITCH_REGISTRAR,
                 'update_price' => static::ACTION_UPDATE_PRICE,
                 'update_contact' => static::ACTION_UPDATE_CONTACT,
+                'transfer' => static::ACTION_TRANSFER,
             ],
             'links' => [
                 'sync_domain' => static::makeUrl(static::ACTION_SYNC),
@@ -674,6 +675,7 @@ class Domains_Controller extends Controller
     public function action_Transfer()
     {
         try {
+            $redirectIndex = $this->getRequest()->getParam('redirect_index');
             $ids = $this->getRequest()->getArrayParam('domain_checkbox');
             $authCodes = $this->getRequest()->getArrayParam('authcode');
 
@@ -715,7 +717,7 @@ class Domains_Controller extends Controller
             $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
         }
 
-        return $this->view_Transfer();
+        return empty($redirectIndex) ? $this->view_Transfer() : $this->view_Index();
     }
 
     /**

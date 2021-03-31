@@ -125,6 +125,8 @@ $_ADDONLANG = array(
     'domain_tld' => 'TLD',
     'domain_ts_create' => 'Expiration date',
     'domain_ts_expire' => 'Creation date',
+    'domain_transfer' => 'Transfer',
+    'domain_more_info' => 'More information',
 
     //Import
     'import_title' => 'Import domains',
@@ -147,7 +149,7 @@ $_ADDONLANG = array(
     'transfer_invalid_domain_name' => 'This domain does not have a valid domain name',
     'transfer_tld_not_found' => 'This domain extension is not supported by DonDominio/MrDomain',
     'transfer_client_not_found' => 'The customer could not be found on WHMCS',
-    'transfer_vatnumber_empty' => 'This customer\'s VAT Number is empty; could not continue',
+    'transfer_vatnumber_empty' => 'The customer\'s Vat Number has not been found (The Vat Number will be obtained from the custom field "Vat Number", if it is not found, it will be searched in the one selected by the Registrar of MrDomain)',
     'transfer_already_transferred' => 'This domain has been already transferred to DonDominio/MrDomain',
     'transfer_error' => 'There was an error while starting the transfer',
     'transfer_success' => 'Transfer has been initiated correctly',
