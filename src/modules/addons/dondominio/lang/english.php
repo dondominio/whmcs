@@ -34,14 +34,10 @@ $_ADDONLANG = array(
     'link_more_info' => 'More information',
 
     //Menu
-    'menu_status' => 'Status',
-    'menu_tlds_update' => 'Price update',
-    'menu_tlds_new' => 'Available TLDs',
+    'menu_status' => 'Admin',
+    'menu_tlds_update' => 'TLDs and Price',
     'menu_domains' => 'Manage domains',
-    'menu_import' => 'Import domains',
-    'menu_transfer' => 'Transfer domains',
     'menu_whois' => 'Whois Proxy',
-    'menu_settings' => 'Settings',
     'menu_help' => 'Help & Documentation',
 
     //Filter
@@ -124,6 +120,13 @@ $_ADDONLANG = array(
     'domain_synced_succesfully' => 'synced succesfully!',
     'domain_updated_succesfully' => 'updated successfully',
     'domain_not_found' => 'domain not found',
+    'domain_name' => 'Name',
+    'domain_status' => 'Status',
+    'domain_tld' => 'TLD',
+    'domain_ts_create' => 'Expiration date',
+    'domain_ts_expire' => 'Creation date',
+    'domain_transfer' => 'Transfer',
+    'domain_more_info' => 'More information',
 
     //Import
     'import_title' => 'Import domains',
@@ -146,7 +149,7 @@ $_ADDONLANG = array(
     'transfer_invalid_domain_name' => 'This domain does not have a valid domain name',
     'transfer_tld_not_found' => 'This domain extension is not supported by DonDominio/MrDomain',
     'transfer_client_not_found' => 'The customer could not be found on WHMCS',
-    'transfer_vatnumber_empty' => 'This customer\'s VAT Number is empty; could not continue',
+    'transfer_vatnumber_empty' => 'The customer\'s Vat Number has not been found (The Vat Number will be obtained from the custom field "Vat Number", if it is not found, it will be searched in the one selected by the Registrar of MrDomain)',
     'transfer_already_transferred' => 'This domain has been already transferred to DonDominio/MrDomain',
     'transfer_error' => 'There was an error while starting the transfer',
     'transfer_success' => 'Transfer has been initiated correctly',
@@ -225,14 +228,13 @@ $_ADDONLANG = array(
      */
     'info_path_whois' => 'Yor Whois servers file is located here',
     'info_path_moreinfo' => 'Documentation',
-    'info_whois_domain' => 'Before using the Whois Proxy, configure it on the settings screen.',
-    'info_whois_settings' => 'Click here to access the settings screen',
+    'info_whois_domain' => 'Before using the Whois Proxy, configure it.',
 
     /**
      * IMPORT/EXPORT
      */	
     'servers_export' => 'Export server list',
-    'servers_import' => 'Import server list',
+    'servers_import' => 'Import',
     'import_btn' => 'Import file',
     'servers_delete' => 'Delete MrDomain server list',
 
@@ -270,6 +272,7 @@ $_ADDONLANG = array(
      /**
      * MODULES DASHBOARD
      */
+    'status_title' => 'Status',
     'going_back_in' => 'Going back in ',
     'modules_updated_successfully' => 'Modules updated succesfully.',
     'dondominio_modules_information' => 'Dondominio Modules Information',
@@ -277,12 +280,15 @@ $_ADDONLANG = array(
     'update' => 'Update',
     'more_info' => 'More Info',
     'check_credentials' => 'API credentials',
+    'check_api_status' => 'Check Status',
+    'success_api_conection' => 'Correct connection with DonDominio API',
 
     /**
      * GENERIC
      */
     'ok' => 'OK',
     'error' => 'ERROR',
+    'close' => 'Close',
 
     /**
      * UPDATE
@@ -310,4 +316,51 @@ $_ADDONLANG = array(
     'modules_installed' => 'Modules Installed',
     'addon_module' => 'Addon Module',
     'registrar_module' => 'Registrar Module',
+
+    /**
+     * DELETED DOMAINS
+     */
+    'deleted_domains_title' => 'Deleted domain list',
+    'deleted_domains_ts' => 'Delete date',
+    'deleted_domains_info' => 'Info',
+
+    /**
+     * PREMIUM DOMAINS
+     */
+    'premium_domains' => 'Premium Domains',
+    'enable' => 'Enable',
+    'disable' => 'Disabled',
+
+    /**
+     * WHOIS
+     */
+    'change_selected_whois' => 'Change selected to DonDominio',
+    'whois_config_title' => 'Whois Config',
+    'whois_import_title' => 'WHois Import',
+
+    /**
+     * DOMAIN HISTORY
+     */
+    'bradcrumbs_history_title' => 'History',
+    'history_title' => 'Domain history',
+    'log_date' => 'Date',
+    'log_ip' => 'IP',
+    'log_user' => 'User',
+    'log_title' => 'Title',
+    'log_message' => 'Message',
+
+    /**
+     * DOMAIN VIEW
+     */
+    'domain_name_view' => 'Domain name',
+    'domain_tld_view' => 'TLD',
+    'domain_register_view' => 'Registrar',
+    'domain_status_view' => 'Status',
+    'domain_expire_view' => 'Expiration date',
+    'domain_create_view' => 'Creation date',
+    'domain_api_check_view' => 'API Check',
+    'domain_actions_view' => 'Actions',
+    'domain_sync_view' => 'Sync status',
+    'domain_check_view' => 'Check',
+    'domain_history_view' => 'History',
 );

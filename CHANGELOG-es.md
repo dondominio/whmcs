@@ -6,47 +6,60 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.
 
 ## [Pendiente por lanzar]
 
-## [2.1.2] - 2020-03-17
+## [2.1.3] - 2021-04-06
+### Changed
+- El registrador admite dominios premium.
+- Optimización en la consulta de nuevas versiones del módulo.
+- Consulta interactiva de la conexión con la API.
+- Mejora en la navegación dentro del Addon.
+- Listado de dominios borrados.
+- Filtros para la importación de dominios.
+- Historial de los dominios importados.
+- Vista para los dominios de DonDominio.
+- Poder transferir dominios a DonDominio directamente desde la Gestión de dominios.
+- Si no se encuentra el campo personalizado "Vat Number" para la transferencia de dominios dentro del Addon se usara el seleccionado por el Registrador
+
+## [2.1.2] - 2021-03-17
 ### Fixed
-- Ahora las tablas configuradas con row_format compact funcionan correctamente
-- Las operaciones relacionadas con Vat Number funcionan correctamente
+- Ahora las tablas configuradas con row_format compact funcionan correctamente.
+- Las operaciones relacionadas con Vat Number funcionan correctamente.
 
 ### Changed
-- Estados de dominio más específicos
-- Más información en la pestaña de estado del Addon
+- Estados de dominio más específicos.
+- Más información en la pestaña de estado del Addon.
 
-## [2.1.1] - 2020-02-26
+## [2.1.1] - 2021-02-26
 ### Arreglado
 - Consistencia en base de datos con campos no nulables.
 
-## [2.1.0] - 2020-02-23
+## [2.1.0] - 2021-02-23
 ### Cambiado
 - Nuevo sistema de actualizaciones. Ahora es más robusto, incluyendo copias de seguridad, comprobación de permisos, rollbacks, etc.
 
-## [2.0.5] - 2020-02-22
+## [2.0.5] - 2021-02-22
 ### Arreglado
 - Sincronización de transferencias de dominios arreglada. [Más Info](https://developers.whmcs.com/domain-registrars/domain-syncing/)
 
-## [2.0.4] - 2020-02-22
+## [2.0.4] - 2021-02-22
 ### Arreglado
 - El actualizador de módulos ahora hace una comprobación más exhaustiva de permisos antes de actualizar.
 
-## [2.0.3] - 2020-02-19
+## [2.0.3] - 2021-02-19
 ### Arreglado
 - Arreglado typo al parsear los datos de contacto. Ahora importar y transferir dominios funciona como se espera.
 
-## [2.0.2] - 2020-02-19
+## [2.0.2] - 2021-02-19
 ### Arreglado
 - Añadida prevención contra tablas con colaciones no recomendadas. [Ver WHMCS Database Collations](https://docs.whmcs.com/Database_Collations)
 
-## [2.0.1] - 2020-02-11
+## [2.0.1] - 2021-02-11
 Esta versión está basada en los cambios propuestos de [documentación de actualización a WHMCS8](https://developers.whmcs.com/advanced/upgrade-to-whmcs-8/) y arregla los problemas relacionados con la actualización de Laravel (métodos `plug` y `get`).
 
 ### Arreglado
 - Módulo Registrador: Selector para VAT Number en Configuración ahora funciona correctamente.
 - Módulo Addon: Filtro de TLDS en Gestión de Dominios ahora funciona correctamente.
 
-## [2.0.0] - 2020-01-31
+## [2.0.0] - 2021-01-31
 Este es un lanzamiento de cambio de versión mayor del proyecto Integración de Módulos Dondominio - WHMCS. Hemos analizado y verificado toda la funcionalidad desde cero para crear un producto mejor, más rápido y más mantenible. Hemos desarrollado todas las funcionalidades para que sean 100% compatible con WHMCS 7 y 8, así como lo hemos actualizado con las nuevas buenas prácticas que introduce la guía del desarrollador de WHMCS 7.
 
 Desde el equipo de Dondominio, estamos muy orgullosos de anunciar esta nueva versión de la Integración de Módulos entre Dondominio - WHMCS 2.0.

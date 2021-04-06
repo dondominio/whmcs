@@ -2,6 +2,48 @@
 	
 <p>{$LANG.import_info}</p>
 
+<div id='tabs'>
+    <ul class='nav nav-tabs admin-tabs' role='tablist'>
+        <li id='tab0' class='tab tabselected'>
+            <a href='javascript:;'>{$LANG.filter_title}</a>
+        </li>
+    </ul>
+</div>
+<div id='tab0box' class='tabbox'>
+    <div id='tab_content'>
+        <form action='' method='get'>
+            <input type="hidden" name="module" value="{$module_name}">
+            <input type="hidden" name="__c__" value="{$__c__}">
+            <input type="hidden" name="__a__" value="{$actions.view_import}">
+            <table class='form' width='100%' border='0' cellspacing='2' cellpadding='3'>
+                <tbody>
+                    <tr>
+                        <td width='15%' class='fieldlabel'>
+                            {$LANG.filter_domain}
+                        </td>
+
+                        <td class='fieldarea'>
+                            <input type='text' name='domain' size='30' value='{$filters.domain}'>
+                        </td>
+
+                        <td width='15%' class='fieldlabel'>
+                            {$LANG.filter_tld}
+                        </td>
+
+                        <td class='fieldarea'>
+                            <input type='text' name='tld' size='30' value='{$filters.tld}'>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p align='center'>
+                <input type='submit' id='search-clients' value='{$LANG.filter_search}' class='button'>
+            </p>
+        </form>
+    </div>
+</div>
+
 <form action='' method='get'>
     <input type="hidden" name="module" value="{$module_name}">
     <input type="hidden" name="__c__" value="{$__c__}">

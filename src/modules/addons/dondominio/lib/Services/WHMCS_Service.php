@@ -13,6 +13,7 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
 {
 
     const NOT_FOUND_DOMAIN_API_CODE = 2008;
+    const VAT_NUMBER_FIELDNAME = 'Vat Number';
 
     /**
      * Makes a local API Call
@@ -184,13 +185,49 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
      *
      * @see Illuminate\Database\Connection:selectOne()
      *
-     * @param string $id Vat Number
+     * @param string $id Domain ID
      *
      * @return mixed|null
      */
     public function getDomainExtendedById($id)
     {
-        return  Capsule::selectOne('
+        $extDomain = $this->getDomainExtended($id, static::VAT_NUMBER_FIELDNAME);
+        
+        if (!empty($extDomain->vatnumber)) {
+            return $extDomain;
+        }
+        
+        $registrarFileName = Capsule::selectOne('
+            SELECT * FROM `tblregistrars`
+            WHERE `tblregistrars`.`registrar` = "dondominio"
+            AND `tblregistrars`.`setting` = "vat"
+        ')->value;
+
+        if (!empty($registrarFileName) && function_exists('decrypt')) {
+            $vatFieldName = decrypt($registrarFileName);
+            $extDomain = $this->getDomainExtended($id, $vatFieldName);
+
+            if (!empty($extDomain->vatnumber)) {
+                return $extDomain;
+            }
+        }
+
+        return $extDomain;
+    }
+
+    /**
+     * Finds domain with extra information (client and custom fields related)
+     *
+     * @see Illuminate\Database\Connection:selectOne()
+     *
+     * @param string $id Domain ID
+     * @param string $vatFieldName VAT Number fiel name
+     *
+     * @return mixed|null
+     */
+    protected function getDomainExtended($id, $vatFieldName)
+    {
+        return Capsule::selectOne('
             SELECT *, (
                 SELECT
                     value COLLATE utf8_unicode_ci
@@ -202,13 +239,13 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
                             id
                         FROM tblcustomfields
                         WHERE
-                            fieldname = "Vat Number"
+                            fieldname = ?
                     )
                 ) AS vatnumber
             FROM tbldomains D
             LEFT JOIN tblclients C ON C.id = D.userid
             WHERE D.id = ?',
-            [$id]
+            [$vatFieldName, $id]
         );
     }
 
@@ -235,6 +272,16 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
     public function getPricing($type, $tld, $currency, $field)
     {
         return Capsule::table('tblpricing')->where(['type' => $type, 'relid' => $tld, 'currency' => $currency])->value($field);
+    }
+
+    /**
+     * Return the status of premium domains
+     *
+     * @return bool if premium domains are enabled
+     */
+    public function isPremiumDomainEnable()
+    {
+        return (bool) Capsule::table('tblconfiguration')->where(['setting' => 'PremiumDomains'])->value('value');
     }
 
     /**

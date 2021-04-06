@@ -1,0 +1,66 @@
+.navbar-selected {
+    color: #333 !important;
+}
+
+.title-icon {
+    vertical-align: middle;
+    margin-right: 5px;
+    cursor: pointer;
+  }
+
+.text-ellipsis {
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.log-message-icon {
+    display: inline-block;
+    overflow: auto;
+}
+
+.dd-breadcrumb {
+	color: #A4A7C0;
+	font-size: 13px;
+	list-style: none;
+	margin: 0 0 10px 0;
+	padding: 0 0 0 5px;
+}
+
+.dd-breadcrumb li {
+	display: inline;
+}
+
+.dd-breadcrumb li:first-of-type a {
+	padding: 0 12px 0 0;
+}
+
+.dd-breadcrumb li + li a {
+	padding: 0 10px;
+}
+
+.dd-breadcrumb li a {
+	color: #A4A7C0;
+}
+
+.dd-breadcrumb li a:hover {
+	color: #5158fb;
+	text-decoration: none;
+}
+
+.dd-breadcrumb li:last-of-type .fa {
+	display: none;
+}
+
+.domain-table tr td:first-child {
+  width: 12em;
+}
+
+.domain-title {
+  margin-top: .5em;
+}

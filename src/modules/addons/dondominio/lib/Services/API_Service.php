@@ -100,7 +100,7 @@ class API_Service extends AbstractService implements APIService_Interface
      *
      * @return \Dondominio\API\Response\Response
      */
-    public function getDomainList($page = null, $pageLength = null)
+    public function getDomainList($page = null, $pageLength = null, $word = null, $tld = null)
     {
         $params = [];
 
@@ -110,6 +110,14 @@ class API_Service extends AbstractService implements APIService_Interface
 
         if (!is_null($pageLength)) {
             $params['pageLength'] = $pageLength;
+        }
+
+        if (!empty($pageLength)) {
+            $params['word'] = $word;
+        }
+
+        if (!empty($pageLength)) {
+            $params['tld'] = $tld;
         }
 
         $response = $this->getApiConnection()->domain_list($params);
@@ -216,6 +224,61 @@ class API_Service extends AbstractService implements APIService_Interface
         return $this->parseResponse($response, $params);
     }
 
+    /**
+     * Gets deleted domains list
+     *
+     * @see https://dev.dondominio.com/api/docs/api/#list-deleted-domain-listdeleted
+     *
+     * @param int $page Offset where query starts
+     * @param int $pageLength Limit where query ends
+     *
+     * @return \Dondominio\API\Response\Response
+     */
+    public function getListDeleted($page = null, $pageLength = null)
+    {
+        $params = [];
+
+        if(!is_null($page)){
+            $params['page'] = $page;
+        }
+
+        if(!is_null($page)){
+            $params['pageLength'] = $pageLength;
+        }
+
+        $response = $this->getApiConnection()->domain_listDeleted($params);
+
+        return $this->parseResponse($response, $params);
+    }
+
+    /**
+     * Gets history of a domain
+     *
+     * @see https://dev.dondominio.com/api/docs/api/#get-history-domain-gethistory
+     *
+     * @param string $domain Domain from which you want to obtain the history
+     * @param int $page Offset where query starts
+     * @param int $pageLength Limit where query ends
+     *
+     * @return \Dondominio\API\Response\Response
+     */
+    public function getDomainHistory($domain, $page = null, $pageLength = null)
+    {
+        $params = [];
+
+        if(!is_null($page)){
+            $params['page'] = $page;
+        }
+
+        if(!is_null($page)){
+            $params['pageLength'] = $pageLength;
+        }
+
+        $response = $this->getApiConnection()->domain_getHistory($domain, $params);
+
+        return $this->parseResponse($response, $params);
+    }
+
     public function printApiInfo()
     {
         $this->getApiConnection()->info();
@@ -243,7 +306,36 @@ class API_Service extends AbstractService implements APIService_Interface
             throw new Exception($response->getErrorCodeMsg(), $response->getErrorCode());
         }
 
+        $this->getApp()->getService('settings')->setSetting('api_conexion', 1);
+
         return $response;
+    }
+
+    /**
+     * Check if API conexion is ok
+     *
+     * @return bool
+     */
+    public function checkConnection($checkApi)
+    {
+        $settingService = $this->getApp()->getService('settings');
+
+        if ($checkApi){
+
+            try {
+                $this->doHello();
+            } catch (\Exception $e) {
+                $settingService->setSetting('api_conexion', 0);
+                throw $e;
+            }
+
+            $settingService->setSetting('api_conexion', 1);
+            return true;
+        }
+
+        $apiConexion = $settingService->getSetting('api_conexion');
+
+        return (bool) $apiConexion;
     }
 
     /**

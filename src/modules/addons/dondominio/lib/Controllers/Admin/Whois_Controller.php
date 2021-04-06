@@ -4,6 +4,7 @@ namespace WHMCS\Module\Addon\Dondominio\Controllers\Admin;
 
 use WHMCS\Module\Addon\Dondominio\Helpers\Response;
 use Exception;
+use WHMCS\Module\Addon\Dondominio\App;
 
 if (!defined("WHMCS")) {
     die("This file cannot be accessed directly");
@@ -16,6 +17,7 @@ class Whois_Controller extends Controller
 
     const VIEW_INDEX = '';
     const VIEW_IMPORT = 'viewimport';
+    const VIEW_CONFIG = 'viewconfig';
     const ACTION_SWITCH = 'switch';
     const ACTION_IMPORT = 'import';
     const ACTION_EXPORT = 'export';
@@ -31,6 +33,7 @@ class Whois_Controller extends Controller
         return [
             static::VIEW_INDEX => 'view_Index',
             static::VIEW_IMPORT => 'view_Import',
+            static::VIEW_CONFIG => 'view_Config',
             static::ACTION_SWITCH => 'action_Switch',
             static::ACTION_IMPORT => 'action_Import',
             static::ACTION_EXPORT => 'action_Export',
@@ -48,7 +51,7 @@ class Whois_Controller extends Controller
         $whoisDomain = $this->getApp()->getService('settings')->getSetting('whois_domain');
 
         if (strlen($whoisDomain) == 0) {
-            return $this->view_Empty();
+            return $this->view_Config();
         }
 
         $whoisService = $this->getApp()->getService('whois');
@@ -71,7 +74,8 @@ class Whois_Controller extends Controller
                 'switch' => static::makeURL(static::ACTION_SWITCH, ['tld' => '']),
                 'import' => static::makeURL(static::VIEW_IMPORT),
                 'export' => static::makeURL(static::ACTION_EXPORT)
-            ]
+            ],
+            'breadcrumbs' => $this->getBreadcrumbs()
         ];
 
         return $this->view('index', $params);
@@ -88,7 +92,8 @@ class Whois_Controller extends Controller
             'links' => [
                 'index' => static::makeURL(),
                 'import' => static::makeURL(static::ACTION_IMPORT)
-            ]
+            ],
+            'breadcrumbs' => $this->getBreadcrumbs(static::VIEW_IMPORT)
         ];
 
         return $this->view('import', $params);
@@ -99,15 +104,30 @@ class Whois_Controller extends Controller
      *
      * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
      */
-    public function view_Empty()
+    public function view_Config()
     {
+        $settings = $this->getApp()->getService('settings')->findSettingsAsKeyValue();
+        $whoisDomain = $this->getApp()->getService('settings')->getSetting('whois_domain');
+
+        $protocol = array_key_exists('HTTP_X_FORWARDED_PROTO', $_SERVER) ? $_SERVER['HTTP_X_FORWARDED_PROTO'] : $_SERVER['REQUEST_SCHEME'];
+        $domain = array_key_exists('HTTP_X_FORWARDED_HOST', $_SERVER) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $_SERVER['SERVER_NAME'];
+        $whoisDomainPlaceholder = (!empty($protocol) ? $protocol . '://' : '') . $domain;
+
+        $whoisIpPlaceholder = array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['SERVER_ADDR'];
+
         $params = [
-            'links' => [
-                'settings_index' => Settings_Controller::makeURL(Settings_Controller::VIEW_INDEX)
-            ]
+            'module_name' => $this->getApp()->getName(),
+            'settings_controller' => Settings_Controller::CONTROLLER_NAME,
+            'save_whois_action' => Settings_Controller::ACTION_SAVE_WHOIS_PROXY,
+            'whois_domain' => $settings->get('whois_domain'),
+            'whois_ip' => $settings->get('whois_ip'),
+            'whois_domain_placeholder' => $whoisDomainPlaceholder,
+            'whois_ip_placeholder' => $whoisIpPlaceholder,
+            'need_config' => strlen($whoisDomain) == 0,
+            'breadcrumbs' => $this->getBreadcrumbs(static::VIEW_CONFIG)
         ];
 
-        return $this->view('empty', $params);
+        return $this->view('config', $params);
     }
 
     /**
@@ -118,13 +138,17 @@ class Whois_Controller extends Controller
     public function action_Switch()
     {
         $tld = $this->getRequest()->getParam('tld');
+        $tldList =  $this->getRequest()->getArrayParam('tld_checkbox', []);
+
+        if (!empty($tld)) {
+            $tldList[] = $tld;
+        }
 
         try {
-            if (empty($tld)) {
-                throw new Exception('new-tld-error');
+            
+            foreach ($tldList as $tld){
+                $this->getApp()->getService('whois')->setup($tld);
             }
-
-            $this->getApp()->getService('whois')->setup($tld);
 
             $this->getResponse()->addSuccess($this->getApp()->getLang('new-tld-ok'));
         } catch (Exception $e) {
@@ -197,5 +221,74 @@ class Whois_Controller extends Controller
         }
 
         return $this->view_Index();
+    }
+
+    /**
+     * Searchs and returns a template
+     * 
+     * @param string $view View in format "folder.file" or "file"
+     * @param array $params Params to pass to template
+     * 
+     * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
+     */
+    public function view($view, array $params = [])
+    {
+        $app = App::getInstance();
+        $action = $this->getRequest()->getParam('__a__', '');
+
+        $params['nav'] = [
+            [
+                'title' => $app->getLang('menu_whois'),
+                'link' => static::makeURL(static::VIEW_INDEX),
+                'selected' => static::VIEW_INDEX === $action
+            ],
+            [
+                'title' => $app->getLang('settings_title'),
+                'link' => static::makeURL(static::VIEW_CONFIG),
+                'selected' => static::VIEW_CONFIG === $action
+            ],
+            [
+                'title' => $app->getLang('servers_import'),
+                'link' => static::makeURL(static::VIEW_IMPORT),
+                'selected' => static::VIEW_IMPORT === $action
+            ],
+        ];   
+
+        return parent::view($view, $params);
+    }
+
+    /**
+     * Return array with the breadcrumbs
+     * 
+     * @param string $action Controller action
+     * 
+     * @return array
+     */
+    protected function getBreadcrumbs($action = null)
+    {
+        $app = $this->getApp();
+        $bredcrumbs = [];
+
+        $bredcrumbs[] = [
+            'title' => $app->getLang('menu_whois'),
+            'link' => static::makeURL()
+        ];
+
+        $actions = [
+            static::VIEW_CONFIG => [
+                'title' => $app->getLang('settings_title'),
+                'link' => static::makeURL(static::VIEW_CONFIG)
+            ],
+            static::VIEW_IMPORT => [
+                'title' => $app->getLang('import_title'),
+                'link' => static::makeURL(static::VIEW_IMPORT)
+            ],
+        ];
+
+        if (isset($actions[$action])){
+            $bredcrumbs[] = $actions[$action];
+        }
+
+        return $bredcrumbs;
     }
 }

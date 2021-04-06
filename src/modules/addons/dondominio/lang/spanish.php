@@ -34,14 +34,10 @@ $_ADDONLANG = array(
     'link_more_info' => 'Más información',
 
     //Menu
-    'menu_status' => 'Estado',
-    'menu_tlds_update' => 'Actualizar tarifas',
-    'menu_tlds_new' => 'TLDs disponibles',
+    'menu_status' => 'Administracion',
+    'menu_tlds_update' => 'TLDs y Tarifas',
     'menu_domains' => 'Gestión de dominios',
-    'menu_import' => 'Importar dominios',
-    'menu_transfer' => 'Transferir dominios',
     'menu_whois' => 'Proxy Whois',
-    'menu_settings' => 'Configuración',
     'menu_help' => 'Ayuda y documentación',
 
     //Filter
@@ -124,6 +120,13 @@ $_ADDONLANG = array(
     'domain_synced_succesfully' => 'sincronizado con éxito',
     'domain_updated_succesfully' => 'actualizado con éxito',
     'domain_not_found' => 'dominio no ha sido encontrado',
+    'domain_name' => 'Nombre',
+    'domain_tld' => 'TLD',
+    'domain_status' => 'Estado',
+    'domain_ts_create' => 'Fecha de creación',
+    'domain_ts_expire' => 'Fecha de expiración',
+    'domain_transfer' => 'Transferir',
+    'domain_more_info' => 'Más información',
 
     //Import
     'import_title' => 'Importar dominios',
@@ -146,7 +149,7 @@ $_ADDONLANG = array(
     'transfer_invalid_domain_name' => 'El dominio no tiene un nombre de dominio válido',
     'transfer_tld_not_found' => 'La extensión de dominio no es una extensión soportada por DonDominio',
     'transfer_client_not_found' => 'El cliente no ha sido encontrado en WHMCS',
-    'transfer_vatnumber_empty' => 'El cliente tiene el campo NIF vacío; no se puede continuar',
+    'transfer_vatnumber_empty' => 'No se ha encontrado el Vat Number del cliente (El Vat Number se obtendrá del campo personalizado "Vat Number", si no se encuentra se buscara en el seleccionado por el Registrador de DonDominio)',
     'transfer_already_transferred' => 'Este dominio ya ha sido transferido a DonDominio',
     'transfer_error' => 'Se ha producido un error al transferir el dominio',
     'transfer_success' => 'Transferencia iniciada correctamente',
@@ -225,14 +228,13 @@ $_ADDONLANG = array(
      */
     'info_path_whois' => 'Tu fichero de Whois está aquí',
     'info_path_moreinfo' => 'Documentación',
-    'info_whois_domain' => 'Antes de usar el Proxy de Whois configure el dominio en la pantalla de configuración.',
-    'info_whois_Settings' => 'Haga click aquí para acceder a la configuración',
+    'info_whois_domain' => 'Antes de usar el Proxy de Whois configure el dominio.',
 
     /**
      * IMPORT/EXPORT
      */	
     'servers_export' => 'Exportar lista de servidores',
-    'servers_import' => 'Importar lista de servidores',
+    'servers_import' => 'Importar',
     'import_btn' => 'Importar archivo',
     'servers_delete' => 'Eliminar lista de servidores de Dondominio',
 
@@ -270,6 +272,7 @@ $_ADDONLANG = array(
     /**
      * MODULES DASHBOARD
      */
+    'status_title' => 'Estado',
     'going_back_in' => 'Volviendo atrás en ',
     'modules_updated_successfully' => 'Módulos actualizados con éxito',
     'dondominio_modules_information' => 'Información de Módulos de Dondominio',
@@ -277,12 +280,15 @@ $_ADDONLANG = array(
     'update' => 'Actualizar',
     'more_info' => 'Más Información',
     'check_credentials' => 'Credenciales API',
+    'check_api_status' => 'Consultar Estado',
+    'success_api_conection' => 'Conexión correcta con la API de DonDominio',
 
     /**
      * GENERIC
      */
     'ok' => 'OK',
     'error' => 'ERROR',
+    'close' => 'Cerrar',
 
     /**
      * UPDATE
@@ -310,4 +316,51 @@ $_ADDONLANG = array(
     'modules_installed' => 'Módulos instalados',
     'addon_module' => 'Módulo Addon',
     'registrar_module' => 'Módulo Registrador',
+
+    /**
+     * DELETED DOMAINS
+     */
+    'deleted_domains_title' => 'Dominios Borrados',
+    'deleted_domains_ts' => 'Fecha de eliminacion',
+    'deleted_domains_info' => 'Información',
+
+    /**
+     * PREMIUM DOMAINS
+     */
+    'premium_domains' => 'Dominios Premium',
+    'enable' => 'Activados',
+    'disable' => 'Desavtivados',
+
+    /**
+     * WHOIS
+     */
+    'change_selected_whois' => 'Cambiar Seleccionados a DonDominio',
+    'whois_config_title' => 'Configuración de Whois',
+    'whois_import_title' => 'Importar Whois',
+
+    /**
+     * DOMAIN HISTORY
+     */
+    'bradcrumbs_history_title' => 'Historial',
+    'history_title' => 'Historial del dominio',
+    'log_date' => 'Fecha',
+    'log_ip' => 'IP',
+    'log_user' => 'Usuario',
+    'log_title' => 'Título',
+    'log_message' => 'Mensaje',
+
+    /**
+     * DOMAIN VIEW
+     */
+    'domain_name_view' => 'Nombre de Dominio',
+    'domain_tld_view' => 'TLD',
+    'domain_register_view' => 'Registrador',
+    'domain_status_view' => 'Estado',
+    'domain_expire_view' => 'Fecha de expiración',
+    'domain_create_view' => 'Fecha de creación',
+    'domain_api_check_view' => 'Consulta a la API',
+    'domain_actions_view' => 'Acciones',
+    'domain_sync_view' => 'Sincronizar estado',
+    'domain_check_view' => 'Consultar',
+    'domain_history_view' => 'Historial',
 );

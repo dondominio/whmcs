@@ -1,3 +1,5 @@
+<link rel="stylesheet" type="text/css" href="{$css_path}style.css" />
+
 {if count($RESPONSE->errors) gt 0 or $RESPONSE->force_errors}
 <div class='errorbox'>
     <span class='title'>
@@ -53,5 +55,10 @@
 </div>
 {/if}
 
+
+{if $print_nav eq true}
+{include file='nav.tpl'}
+{include file='breadcrumb.tpl'}
+{/if}
 
 {include file=$CONTENT_FILE}

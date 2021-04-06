@@ -4,9 +4,12 @@ namespace WHMCS\Module\Addon\Dondominio\Services;
 
 use WHMCS\Module\Addon\Dondominio\Services\Contracts\SettingsService_Interface;
 use WHMCS\Module\Addon\Dondominio\Models\Settings_Model;
+use DateTime;
 
 class Settings_Service extends AbstractService implements SettingsService_Interface
 {
+    const TS_FORMAT = 'Y-m-d H:i:s';
+
     /**
      * Retreive a setting by key
      *
@@ -16,6 +19,25 @@ class Settings_Service extends AbstractService implements SettingsService_Interf
     {
         return Settings_Model::select('value')->where('key', $key)->value('value');
     }
+
+    /**
+     * Retreive a setting in DateTime by key
+     *
+     * @return DateTime
+     */
+    public static function getTsSetting($key)
+    {
+        $ts = Settings_Model::select('value')->where('key', $key)->value('value');
+
+        $dateTime = DateTime::createFromFormat(static::TS_FORMAT, $ts);
+
+        if ($dateTime instanceof DateTime){
+            return $dateTime;
+        }
+
+        return new DateTime;
+    }
+
 
     /**
      * Store a setting by key, $value

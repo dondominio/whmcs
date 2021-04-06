@@ -4,6 +4,7 @@ namespace WHMCS\Module\Addon\Dondominio\Controllers\Admin;
 
 use WHMCS\Module\Addon\Dondominio\App;
 use Exception;
+use WHMCS\Module\Addon\Dondominio\Helpers\Request;
 
 if (!defined("WHMCS")) {
     die("This file cannot be accessed directly");
@@ -42,15 +43,27 @@ class Dashboard_Controller extends Controller
     public function view_Index()
     {
         $app = App::getInstance();
+        $whmcs = $app->getService('whmcs');
+
+        $checkAPI = (bool) $this->getRequest()->getParam('check_api');
 
         $params = [
             'whmcs_version' => $app->getService('utils')->getWHMCSVersion(),
             'version' => $app->getVersion(),
-            'checks' => $app->getInformation(),
+            'checks' => $app->getInformation($checkAPI),
+            'premium_domains' => $whmcs->isPremiumDomainEnable(),
+            'do_check' => $checkAPI,
             'links' => [
                 'more_api_info' => static::makeURL(static::PRINT_MOREINFO),
                 'update_modules' => static::makeURL(static::UPDATE_MODULES),
+                'check_api_status_link' => static::makeURL(static::VIEW_INDEX, ['check_api' => 1]),
                 'settings' => Settings_Controller::makeURL(),
+            ],
+            'breadcrumbs' => [
+                [
+                    'title' => $app->getLang('menu_status'),
+                    'link' => static::makeURL()
+                ]
             ]
         ];
 
@@ -71,11 +84,15 @@ class Dashboard_Controller extends Controller
             'domains' => Domains_Controller::makeURL(),
             'transfer' => Domains_Controller::makeURL(Domains_Controller::VIEW_TRANSFER),
             'import' => Domains_Controller::makeURL(Domains_Controller::VIEW_IMPORT),
+            'deleted' => Domains_Controller::makeURL(Domains_Controller::VIEW_DELETED),
             'whois' => Whois_Controller::makeURL(Whois_controller::VIEW_INDEX),
             'settings' => Settings_Controller::makeURL(),
         ];
 
-        return $this->view('sidebar', ['links' => $links]);
+        return $this->view('sidebar', [
+            'links' => $links,
+            'print_nav' => false
+        ]);
     }
 
     /**
@@ -116,9 +133,49 @@ class Dashboard_Controller extends Controller
         }
 
         $params = [
-            'success' => $success
+            'success' => $success,
+            'print_nav' => false
         ];
 
         return $this->view('update', $params);
     }
+
+    /**
+     * Searchs and returns a template
+     * 
+     * @param string $view View in format "folder.file" or "file"
+     * @param array $params Params to pass to template
+     * 
+     * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
+     */
+    public function view($view, array $params = [])
+    {
+        $params['nav']= static::getNavArray();          
+        return parent::view($view, $params);
+    }
+
+    /**
+     * Return array to mount the dashboard navbar
+     * 
+     * @return array
+     */
+    public static function getNavArray()
+    {
+        $app = $app = App::getInstance();
+        $controller = Request::getInstance()->getParam('__c__', '');
+
+        return [
+            [
+                'title' => $app->getLang('status_title'),
+                'link' => static::makeURL(static::VIEW_INDEX),
+                'selected' => $controller === static::CONTROLLER_NAME
+            ],
+            [
+                'title' => $app->getLang('settings_title'),
+                'link' => Settings_Controller::makeURL(),
+                'selected' => $controller === Settings_Controller::CONTROLLER_NAME
+            ],
+        ];   
+    }
+
 }

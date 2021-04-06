@@ -6,47 +6,60 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [2.1.2] - 2020-03-17
+## [2.1.3] - 2021-04-06
+### Changed
+- The registrar supports premium domains.
+- Optimization in the query of new versions of the module.
+- Interactive query of the connection with the API.
+- Improved navigation within the Addon.
+- List of deleted domains.
+- Filters for importing domains.
+- History of imported domains.
+- View for MrDomain/DonDominio domains.
+- To be able to transfer domains to MrDomain/DonDominio directly from the Domain Management.
+- If the custom field "Vat Number" is not found for the transfer of domains within the Addon, the one selected by the Registrar will be used.
+
+## [2.1.2] - 2021-03-17
 ### Fixed
-- Now tables configured with row_format compact works as expected
-- Operations with domains that involve Vat Number, now works correctly
+- Now tables configured with row_format compact works as expected.
+- Operations with domains that involve Vat Number, now works correctly.
 
 ### Changed
-- More specific domain states
-- More information in Addon status tab
+- More specific domain states.
+- More information in Addon status tab.
 
-## [2.1.1] - 2020-02-26
+## [2.1.1] - 2021-02-26
 ### Fixed
 - Database consistency with non-nullable fields.
 
-## [2.1.0] - 2020-02-23
+## [2.1.0] - 2021-02-23
 ### Changed
 - New Updater system. Update system now includes backups, robust permissions checking, rollback, etc
 
-## [2.0.5] - 2020-02-22
+## [2.0.5] - 2021-02-22
 ### Fixed
 - Transfer sync fixed. [More Info](https://developers.whmcs.com/domain-registrars/domain-syncing/)
 
-## [2.0.4] - 2020-02-22
+## [2.0.4] - 2021-02-22
 ### Fixed
 - The module updater now does a more extensive permission check before updating.
 
-## [2.0.3] - 2020-02-19
+## [2.0.3] - 2021-02-19
 ### Fixed
 - Fixed typo in parsing owner contact data. Now import & transfer domains works as expected.
 
-## [2.0.2] - 2020-02-19
+## [2.0.2] - 2021-02-19
 ### Fixed
 - Added prevention against tables with non-recommended collations. [See WHMCS Database Collations](https://docs.whmcs.com/Database_Collations)
 
-## [2.0.1] - 2020-02-11
+## [2.0.1] - 2021-02-11
 This release is based on the proposed changes in [WHMCS 8 Upgrade Docs](https://developers.whmcs.com/advanced/upgrade-to-whmcs-8/) and fixes the Laravel upgrade issues (`plug`and `get` methods).
 
 ### Fixed
 - Registrar Module: Selector for VAT Number in Configuration now works correctly.
 - Addon Module: TLD Filter in Domains Management now works correctly.
 
-## [2.0.0] - 2020-01-31
+## [2.0.0] - 2021-01-31
 This is a major release of the Dondominio - WHMCS Modules Integration. We have analyzed and verified all the functionality from scratch to make a better, 
 faster, and more maintainable product. We have developed all the functionalities in order to make it 100% compatible with WHMCS 7 and 8 as well as we updated it with the new good practices that WHMCS 7 developer guide introduces.
 

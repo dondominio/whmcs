@@ -1,17 +1,69 @@
-<h2>{$LANG.domains_title}</h2>
+<h2>{$LANG.domains_title} <i class="fad fa-question-circle title-icon" data-toggle="modal" data-target="#domains"></i></h2>
 
-<p>{$LANG.domains_info}</p>
+<div class="modal" id="domains" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5  class="modal-title" >{$LANG.domains_title}</h5>
+            </div>
+            <div class="modal-body">
+                <p>{$LANG.domains_info}</p>
+                <p>{$LANG.info_too_much_requests}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">{$LANG.close}</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-<p>{$LANG.info_too_much_requests}</p>
+<div class="modal" id="transfer" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{$LANG.domains_title}</h5>
+            </div>
+            <div class="modal-body">
+                <form action="" method="get">
+                    <input type="hidden" name="module" value="{$module_name}">
+                    <input type="hidden" name="__c__" value="{$__c__}">
+                    <input type="hidden" name="__a__" value="{$actions.transfer}">
+                    <input type="hidden" name="redirect_index" value="1">
+                    <input type="hidden" data-transfer="domain" name="domain_checkbox[]" value="">
+                    <table class='form' width='100%' border='0' cellspacing='2' cellpadding='3'>
+                        <tbody>
+                            <tr>
+                                <td class='fieldlabel'>
+                                    {$LANG.transfer_authcode}
+                                </td>
+
+                                <td class='fieldarea'>
+                                    <input type="text" name="authcode[]" value="">
+                                </td>
+
+                                <td class='fieldarea'>
+                                    <input type="submit" value="Transferir">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">{$LANG.close}</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div id='tabs'>
     <ul class='nav nav-tabs admin-tabs' role='tablist'>
-        <li id='tab0' class='tab'>
+        <li id='tab0' class='tab tabselected'>
             <a href='javascript:;'>{$LANG.filter_title}</a>
         </li>
     </ul>
 </div>
-
 <div id='tab0box' class='tabbox'>
     <div id='tab_content'>
         <form action='' method='get'>
@@ -118,6 +170,10 @@
                 <th width='20'>
                     &nbsp;
                 </th>
+
+                <th width='20'>
+                    &nbsp;
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -130,7 +186,11 @@
                     </td>
 
                     <td>
+                        {if $domain.registrar eq $module_name}
+                        <a href="{$links.domain_view}&domain_id={$domain.id}">{$domain.domain}</a>
+                        {else}
                         {$domain.domain}
+                        {/if}
                     </td>
 
                     <td>
@@ -175,14 +235,27 @@
                         {/if}
                     </td>
 
-                    <td>
-                        <a href='{$links.sync_domain}&domain_checkbox[]={$domain.id}'><img src='images/icons/navrotate.png'></a>
+                    {if $domain.registrar eq $module_name}
+                    <td class="text-center">
+                        <a title="{$LANG.domain_more_info}" href="{$links.domain_view}&domain_id={$domain.id}"><img src='images/icons/add.png'></a>
                     </td>
+                    
+                    <td class="text-center">
+                        <a title="{$LANG.domain_sync_view}" href='{$links.sync_domain}&domain_checkbox[]={$domain.id}'><img src='images/icons/navrotate.png'></a>
+                    </td>
+
+                    {else}
+
+                    <td colspan="2">
+                        <a data-domain='{$domain.id}' data-transfer data-toggle="modal" data-target="#transfer" class="btn btn-xs btn-success">{$LANG.domain_transfer}</a>
+                    </td>
+
+                    {/if}
                 </tr>
             {/foreach}
         {else}
             <tr>
-                <td colspan='4'>
+                <td colspan='6'>
                     {$LANG.info_no_results}
                 </td>
             </tr>
@@ -205,6 +278,10 @@
 
                 <th width='100'>
                     {$LANG.domains_status}
+                </th>
+
+                <th width='20'>
+                    &nbsp;
                 </th>
 
                 <th width='20'>
@@ -267,6 +344,7 @@
     {/if}
 </p>
 
+{literal}
 <script type='text/javascript'>
 function toggleadvsearch() {
     if (document.getElementById('searchbox').style.visibility == "hidden") {
@@ -277,9 +355,7 @@ function toggleadvsearch() {
 }
 
 $(document).ready(function() {
-    $(".tabbox").css("display","none");
-    
-    var selectedTab;
+    var selectedTab = $("#tab0").attr("id");
     
     $(".tab").click(function() {
         var elid = $(this).attr("id");
@@ -305,5 +381,14 @@ $(document).ready(function() {
         const form = $(e.target).parents('form');
         $(form).children('[name="__a__"]').val($(e.target).data('action'));
     });
+
+    $('[data-transfer]').on('click', function(e) {
+        e.preventDefault();
+        let domain = $(this).data('domain');
+
+        $('[data-transfer="domain"]').val(domain);
+        
+    })
 });
 </script>
+{/literal}

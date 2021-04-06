@@ -95,7 +95,10 @@ class Migrations
                 ['key' => 'api_username', 'value' => ''],
                 ['key' => 'api_password', 'value' => ''],
                 ['key' => 'watchlist_mode', 'value' => 'disable'],
-                ['key' => 'prices_autoupdate', 'value' => '0']
+                ['key' => 'prices_autoupdate', 'value' => '0'],
+                ['key' => 'api_conexion', 'value' => '1'],
+                ['key' => 'last_version', 'value' => ''],
+                ['key' => 'last_version_ts_update', 'value' => '0000-00-00 00:00:00'],
             ]);
 
             Capsule::commit();
@@ -161,6 +164,9 @@ class Migrations
             }
             if (version_compare($version, '2.1.2', '<')) {
                 static::upgrade212();
+            }
+            if (version_compare($version, '2.1.3', '<')) {
+                static::upgrade213();
             }
         } catch (Exception $e) {
             logModuleCall(App::NAME, __FUNCTION__, '', $e->getMessage());
@@ -300,5 +306,19 @@ class Migrations
         $pdo->query('ALTER TABLE `mod_dondominio_tld_settings` CHANGE `renew_increase_type` `renew_increase_type` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;');
         $pdo->query('ALTER TABLE `mod_dondominio_tld_settings` CHANGE `transfer_increase_type` `transfer_increase_type` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;');
         $pdo->query('ALTER TABLE `mod_dondominio_watchlist` CHANGE `tld` `tld` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;');
+    }
+
+    /**
+     * Upgrades database schema for version 2.1.3
+     *
+     * Save API Conexion in DB
+     *
+     * @return void
+     */
+    protected static function upgrade213()
+    {
+        Capsule::table('mod_dondominio_settings')->updateOrInsert(['key' => 'api_conexion'], ['value' => 1]);
+        Capsule::table('mod_dondominio_settings')->updateOrInsert(['key' => 'last_version'], ['value' => '']);
+        Capsule::table('mod_dondominio_settings')->updateOrInsert(['key' => 'last_version_ts_update'], ['value' => '0000-00-00 00:00:00']);
     }
 }
