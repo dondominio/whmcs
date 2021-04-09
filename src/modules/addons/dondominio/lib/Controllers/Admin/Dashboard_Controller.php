@@ -199,7 +199,7 @@ class Dashboard_Controller extends Controller
             [
                 'title' => $app->getLang('status_title'),
                 'link' => static::makeURL(static::VIEW_INDEX),
-                'selected' => $controller === static::CONTROLLER_NAME
+                'selected' => $controller === static::CONTROLLER_NAME && $action === static::VIEW_INDEX
             ],
             [
                 'title' => $app->getLang('settings_title'),

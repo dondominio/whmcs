@@ -293,6 +293,41 @@ class API_Service extends AbstractService implements APIService_Interface
         return $this->parseResponse($response, $params);
     }
 
+    /**
+     * Gets the contacts of your account
+     *
+     * @see https://dev.dondominio.com/api/docs/api/#list-contact-list
+     *
+     * @param int $page Offset where query starts
+     * @param int $pageLength Limit where query ends
+     *
+     * @return \Dondominio\API\Response\Response
+     */
+    public function getContactList($page = null, $pageLength = null, $name = null, $email = null)
+    {
+        $params = [];
+
+        if(!is_null($page)){
+            $params['page'] = $page;
+        }
+
+        if(!is_null($page)){
+            $params['pageLength'] = $pageLength;
+        }
+
+        if(!is_null($name)){
+            $params['name'] = $name;
+        }
+
+        if(!is_null($email)){
+            $params['email'] = $email;
+        }
+
+        $response = $this->getApiConnection()->contact_getList($params);
+
+        return $this->parseResponse($response, $params);
+    }
+
     public function printApiInfo()
     {
         $this->getApiConnection()->info();

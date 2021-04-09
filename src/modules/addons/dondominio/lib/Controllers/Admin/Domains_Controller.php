@@ -22,6 +22,7 @@ class Domains_Controller extends Controller
     const VIEW_DELETED = 'viewdeleted';
     const VIEW_GETINFO = 'viewgetinfo';
     const VIEW_HISTORY = 'viewhistory';
+    const VIEW_CONTACTS = 'viewcontacts';
 
     const ACTION_SYNC = 'sync';
     const ACTION_SWITCH_REGISTRAR = 'switchregistrar';
@@ -45,6 +46,7 @@ class Domains_Controller extends Controller
             static::VIEW_DELETED => 'view_Deleted',
             static::VIEW_GETINFO => 'view_GetInfo',
             static::VIEW_HISTORY => 'view_History',
+            static::VIEW_CONTACTS => 'view_Contacts',
             static::ACTION_SYNC => 'action_Sync',
             static::ACTION_SWITCH_REGISTRAR => 'action_SwitchRegistrar',
             static::ACTION_UPDATE_PRICE => 'action_UpdatePrice',
@@ -78,16 +80,6 @@ class Domains_Controller extends Controller
         $totalDomains = $whmcsService->getDomainsCount($filters);
         $limit = $whmcsService->getConfiguration('NumRecordstoDisplay');
 
-        $total_pages = ceil($totalDomains / $limit);
-
-        if ($total_pages == 0) {
-            $total_pages = 1;
-        }
-
-        if ($page > $total_pages) {
-            $page = $total_pages;
-        }
-
         $offset = (($page - 1) * $limit);
 
         $domains = $whmcsService->getDomains($filters, $offset, $limit);
@@ -119,12 +111,6 @@ class Domains_Controller extends Controller
             'tlds' => $tlds,
             'registrars' => $registrars,
             'domains' => $domains,
-            'pagination' => [
-                'page' => $page,
-                'limit' => $limit,
-                'total' => $totalDomains,
-                'total_pages' => $total_pages
-            ],
             'actions' => [
                 'index' => static::VIEW_INDEX,
                 'sync' => static::ACTION_SYNC,
@@ -142,12 +128,7 @@ class Domains_Controller extends Controller
             'breadcrumbs' => $this->getBreadcrumbs()
         ];
 
-        $paginationSelect = [];
-        for ($i = 1; $i <= $total_pages; $i++) {
-            $paginationSelect[$i] = $i;
-        }
-
-        $params['pagination_select'] = $paginationSelect;
+        $this->setApiPagination($params, $limit, $page, $totalDomains);
 
         return $this->view('index', $params);
     }
@@ -168,16 +149,6 @@ class Domains_Controller extends Controller
         $totalDomains = $whmcsService->getDomainsCount(['not_registrars' => 'dondominio']);
         $limit = $whmcsService->getConfiguration('NumRecordstoDisplay');
 
-        $total_pages = ceil($totalDomains / $limit);
-
-        if ($total_pages == 0) {
-            $total_pages = 1;
-        }
-
-        if ($page > $total_pages) {
-            $page = $total_pages;
-        }
-
         $offset = (($page - 1) * $limit);
 
         $domains = $whmcsService->getDomains(['not_registrars' => 'dondominio'], $offset, $limit);
@@ -188,12 +159,6 @@ class Domains_Controller extends Controller
             'module_name' => $this->getApp()->getName(),
             '__c__' => static::CONTROLLER_NAME,
             'domains' => $domains,
-            'pagination' => [
-                'page' => $page,
-                'limit' => $limit,
-                'total' => $totalDomains,
-                'total_pages' => $total_pages
-            ],
             'actions' => [
                 'view_transfer' => static::VIEW_TRANSFER,
                 'transfer_domains' => static::ACTION_TRANSFER
@@ -205,12 +170,7 @@ class Domains_Controller extends Controller
             'breadcrumbs' => $this->getBreadcrumbs(static::VIEW_TRANSFER)
         ];
 
-        $paginationSelect = [];
-        for ($i = 1; $i <= $total_pages; $i++) {
-            $paginationSelect[$i] = $i;
-        }
-
-        $params['pagination_select'] = $paginationSelect;
+        $this->setApiPagination($params, $limit, $page, $totalDomains);
 
         return $this->view('transfer', $params);
     }
@@ -248,16 +208,6 @@ class Domains_Controller extends Controller
             $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
         }
 
-        $total_pages = ceil($totalRecords / $limit);
-
-        if ($total_pages == 0) {
-            $total_pages = 1;
-        }
-
-        if ($page > $total_pages) {
-            $page = $total_pages;
-        }
-
         $clients = $whmcsService->getClients();
 
         // PARAMS TO TEMPLATE
@@ -267,12 +217,6 @@ class Domains_Controller extends Controller
             '__c__' => static::CONTROLLER_NAME,
             'domains' => $domains,
             'customers' => $clients,
-            'pagination' => [
-                'page' => $page,
-                'limit' => $limit,
-                'total' => $totalRecords,
-                'total_pages' => $total_pages
-            ],
             'actions' => [
                 'view_import' => static::VIEW_IMPORT,
                 'import_domains' => static::ACTION_IMPORT,
@@ -288,12 +232,7 @@ class Domains_Controller extends Controller
             'breadcrumbs' => $this->getBreadcrumbs(static::VIEW_IMPORT)
         ];
 
-        $paginationSelect = [];
-        for ($i = 1; $i <= $total_pages; $i++) {
-            $paginationSelect[$i] = $i;
-        }
-
-        $params['pagination_select'] = $paginationSelect;
+        $this->setApiPagination($params, $limit, $page, $totalRecords);
 
         return $this->view('import', $params);
     }
@@ -321,26 +260,10 @@ class Domains_Controller extends Controller
             $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
         }
 
-        $total_pages = ceil($totalRecords / $limit);
-
-        if ($total_pages == 0) {
-            $total_pages = 1;
-        }
-
-        if ($page > $total_pages) {
-            $page = $total_pages;
-        }
-
         $params = [
             'module_name' => $this->getApp()->getName(),
             '__c__' => static::CONTROLLER_NAME,
             'domains' => $domains,
-            'pagination' => [
-                'page' => $page,
-                'limit' => $limit,
-                'total' => $totalRecords,
-                'total_pages' => $total_pages
-            ],
             'actions' => [
                 'view_deleted' => static::VIEW_DELETED,            
             ],
@@ -351,12 +274,7 @@ class Domains_Controller extends Controller
             'breadcrumbs' => $this->getBreadcrumbs(static::VIEW_DELETED)
         ];
 
-        $paginationSelect = [];
-        for ($i = 1; $i <= $total_pages; $i++) {
-            $paginationSelect[$i] = $i;
-        }
-
-        $params['pagination_select'] = $paginationSelect;
+        $this->setApiPagination($params, $limit, $page, $totalRecords);
 
         return $this->view('deleted', $params);
     }
@@ -445,27 +363,11 @@ class Domains_Controller extends Controller
             $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
         }
 
-        $total_pages = ceil($totalRecords / $limit);
-
-        if ($total_pages == 0) {
-            $total_pages = 1;
-        }
-
-        if ($page > $total_pages) {
-            $page = $total_pages;
-        }
-
         $params = [
             'module_name' => $this->getApp()->getName(),
             'domain_name' => $domain->domain,
             '__c__' => static::CONTROLLER_NAME,
             'history' => $history,
-            'pagination' => [
-                'page' => $page,
-                'limit' => $limit,
-                'total' => $totalRecords,
-                'total_pages' => $total_pages
-            ],
             'actions' => [
                 'view_deleted' => static::VIEW_DELETED,
             ],
@@ -476,14 +378,47 @@ class Domains_Controller extends Controller
             'breadcrumbs' => $this->getBreadcrumbs(static::VIEW_HISTORY, $domain)
         ];
 
-        $paginationSelect = [];
-        for ($i = 1; $i <= $total_pages; $i++) {
-            $paginationSelect[$i] = $i;
-        }
-
-        $params['pagination_select'] = $paginationSelect;
+        $this->setApiPagination($params, $limit, $page, $totalRecords);
 
         return $this->view('history', $params);
+    }
+
+    /**
+     * View for clients list
+     * 
+     * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
+     */
+    public function view_Contacts()
+    {
+        $page = $this->getRequest()->getParam('page', 1);
+        $name = $this->getRequest()->getParam('name');
+        $email = $this->getRequest()->getParam('email');
+
+        $app = App::getInstance();
+        $apiService = $app->getService('api');
+        $whmcsService = $app->getService('whmcs');
+        $limit = $whmcsService->getConfiguration('NumRecordstoDisplay');
+
+        $contacts = $apiService->getContactList($page, $limit, $name, $email);
+        $totalRecords = $contacts->get('queryInfo')['total'];
+
+        $params = [
+            'module_name' => $this->getApp()->getName(),
+            '__c__' => static::CONTROLLER_NAME,
+            'contacts' => $contacts->getResponseData()['contacts'],
+            'actions' => [
+                'view_contacts' => static::VIEW_CONTACTS,
+            ],
+            'filters' => [
+                'name' => $name,
+                'email' => $email,
+            ],
+            'breadcrumbs' => $this->getBreadcrumbs(static::VIEW_CONTACTS)
+        ];
+
+        $this->setApiPagination($params, $limit, $page, $totalRecords);
+
+        return $this->view('contacts', $params);
     }
 
     /**
@@ -801,6 +736,11 @@ class Domains_Controller extends Controller
                 'link' => static::makeURL(static::VIEW_DELETED),
                 'selected' => static::VIEW_DELETED === $action
             ],
+            [
+                'title' => $app->getLang('contacts_title'),
+                'link' => static::makeURL(static::VIEW_CONTACTS),
+                'selected' => static::VIEW_CONTACTS === $action
+            ],
         ];   
 
         return parent::view($view, $params);
@@ -837,6 +777,10 @@ class Domains_Controller extends Controller
                 'title' => $app->getLang('deleted_domains_title'),
                 'link' => static::makeURL(static::VIEW_DELETED)
             ],
+            static::VIEW_CONTACTS => [
+                'title' => $app->getLang('contacts_title'),
+                'link' => static::makeURL(static::VIEW_CONTACTS)
+            ],
         ];
 
         if (isset($actions[$action])){
@@ -858,5 +802,26 @@ class Domains_Controller extends Controller
         }
 
         return $bredcrumbs;
+    }
+
+    protected function setApiPagination(&$params, $limit, $page, $totalRecords)
+    {
+        $total_pages = ceil($totalRecords / $limit);
+        $paginationSelect = [];
+
+        $total_pages = (int) $total_pages === 0 ? 1 : $total_pages;
+        $page = $page > $total_pages ? $total_pages : $page;
+
+        for ($i = 1; $i <= $total_pages; $i++) {
+            $paginationSelect[$i] = $i;
+        }
+
+        $params['pagination'] = [
+            'page' => $page,
+            'limit' => $limit,
+            'total' => $totalRecords,
+            'total_pages' => $total_pages
+        ];
+        $params['pagination_select'] = $paginationSelect;
     }
 }

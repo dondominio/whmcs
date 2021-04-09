@@ -367,8 +367,25 @@ $_ADDONLANG = array(
     /**
      * BALANCE
      */
-    'balance_title' => 'Balance',
+    'balance_title' => 'Saldo',
     'balance_client_name' => 'Nombre del Cliente',
     'balance_threshold' => 'Umbral de aviso',
     'balance_currency' => 'Moneda',
+
+    /**
+     * CONTACTS
+     */
+    'contacts_title' => 'Contactos',
+    'contact_type' => 'Tipo',
+    'contact_name' => 'Nombre',
+    'contact_email' => 'Correo',
+    'contact_country' => 'País',
+    'contact_verification' => 'Verificación',
+    'contact_ver_verified' => 'Verificado',
+    'contact_ver_inprocess' => 'En proceso',
+    'contact_ver_notapplicable' => 'No Aplica/Innecesaria',
+    'contact_ver_failed' => 'Verificación fallida',
+    'contact_daaccepted' => 'DA',
+    'contact_da_accepted' => 'Aceptado',
+    'contact_da_no_accepted' => 'No aceptado',
 );

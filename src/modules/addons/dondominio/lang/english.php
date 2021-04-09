@@ -371,4 +371,21 @@ $_ADDONLANG = array(
     'balance_client_name' => 'Client name',
     'balance_threshold' => 'Warning threshold',
     'balance_currency' => 'Currency',
+
+     /**
+     * CONTACTS
+     */
+    'contacts_title' => 'Contacts',
+    'contact_type' => 'Type',
+    'contact_name' => 'Name',
+    'contact_email' => 'Email',
+    'contact_country' => 'Country',
+    'contact_verification' => 'Verification',
+    'contact_ver_verified' => 'Verified',
+    'contact_ver_inprocess' => 'In process',
+    'contact_ver_notapplicable' => 'Not Applicable/Unnecessary',
+    'contact_ver_failed' => 'Verification failed',
+    'contact_daaccepted' => 'DA',
+    'contact_da_accepted' => 'Accepted',
+    'contact_da_no_accepted' => 'No accepted',
 );
