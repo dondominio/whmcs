@@ -16,6 +16,7 @@ class Dashboard_Controller extends Controller
     const DEFAULT_TEMPLATE_FOLDER = 'dashboard';
 
     const VIEW_INDEX = '';
+    const VIEW_BALANCE = 'balance';
     const VIEW_SIDEBAR = 'sidebar';
     const PRINT_MOREINFO = 'moreapiinfo';
     const UPDATE_MODULES = 'updatemodules';
@@ -29,6 +30,7 @@ class Dashboard_Controller extends Controller
     {
         return [
             static::VIEW_INDEX => 'view_Index',
+            static::VIEW_BALANCE => 'view_Balance',
             static::VIEW_SIDEBAR => 'view_Sidebar',
             static::PRINT_MOREINFO => 'print_MoreApiInfo',
             static::UPDATE_MODULES => 'update_Modules'
@@ -68,6 +70,34 @@ class Dashboard_Controller extends Controller
         ];
 
         return $this->view('index', $params);
+    }
+
+    /**
+     * View for API User balance
+     * 
+     * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
+     */
+    public function view_Balance()
+    {
+        $app = App::getInstance();
+        $api = $app->getService('api');
+        $info = $api->getAccountInfo();
+
+        $params = [
+            'info' => $info->getResponseData(),
+            'breadcrumbs' => [
+                [
+                    'title' => $app->getLang('menu_status'),
+                    'link' => static::makeURL()
+                ],
+                [
+                    'title' =>  $app->getLang('balance_title'),
+                    'link' => static::makeURL()
+                ]
+            ]
+        ];
+
+        return $this->view('balance', $params);
     }
 
     /**
@@ -163,6 +193,7 @@ class Dashboard_Controller extends Controller
     {
         $app = $app = App::getInstance();
         $controller = Request::getInstance()->getParam('__c__', '');
+        $action = Request::getInstance()->getParam('__a__', '');
 
         return [
             [
@@ -174,6 +205,11 @@ class Dashboard_Controller extends Controller
                 'title' => $app->getLang('settings_title'),
                 'link' => Settings_Controller::makeURL(),
                 'selected' => $controller === Settings_Controller::CONTROLLER_NAME
+            ],
+            [
+                'title' => $app->getLang('balance_title'),
+                'link' => static::makeURL(static::VIEW_BALANCE),
+                'selected' => $action === static::VIEW_BALANCE
             ],
         ];   
     }

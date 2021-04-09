@@ -225,6 +225,20 @@ class API_Service extends AbstractService implements APIService_Interface
     }
 
     /**
+     * Get Account Info
+     *
+     * @see https://dev.dondominio.com/api/docs/sdk-php/#info-account-info
+     *
+     * @return \Dondominio\API\Response\Response
+     */
+    public function getAccountInfo()
+    {
+        $response = $this->getApiConnection()->account_info();
+
+        return $this->parseResponse($response);
+    }
+
+    /**
      * Gets deleted domains list
      *
      * @see https://dev.dondominio.com/api/docs/api/#list-deleted-domain-listdeleted

@@ -363,4 +363,12 @@ $_ADDONLANG = array(
     'domain_sync_view' => 'Sincronizar estado',
     'domain_check_view' => 'Consultar',
     'domain_history_view' => 'Historial',
+
+    /**
+     * BALANCE
+     */
+    'balance_title' => 'Balance',
+    'balance_client_name' => 'Nombre del Cliente',
+    'balance_threshold' => 'Umbral de aviso',
+    'balance_currency' => 'Moneda',
 );
