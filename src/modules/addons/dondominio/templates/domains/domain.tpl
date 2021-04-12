@@ -118,6 +118,14 @@
                         <td>{$LANG.domain_create_view}</td>
                         <td data-get-info="ts-create"></td>
                     </tr>
+                    <tr>
+                        <td>{$LANG.domain_verification}</td>
+                        <td data-get-info="verification"></td>
+                    </tr>
+                    <tr>
+                        <td>{$LANG.domain_nameservers}</td>
+                        <td data-get-info="nameservers" class="dns-row"></td>
+                    </tr>
                 </tbody>
                 <tbody data-get-info="error" style="display: none;">
                     <tr class="text-danger">
@@ -159,6 +167,17 @@
                 $('[data-get-info="status"]').text(response.status)
                 $('[data-get-info="ts-expire"]').text(response.tsExpire)
                 $('[data-get-info="ts-create"]').text(response.tsCreate)
+                $('[data-get-info="verification"]').text(response.ownerverification)
+
+                let dnsList = $('[data-get-info="nameservers"]');
+                dnsList.empty();
+
+                if (Array.isArray(response.nameservers)){
+                    response.nameservers.forEach(dns => {
+                        dnsList.append($('<span></span>').text(dns.name + ' (' + dns.ipv4 + ')'));
+                    });
+                }
+
             })
 
         });

@@ -81,9 +81,9 @@ class API_Service extends AbstractService implements APIService_Interface
      *
      * @return \Dondominio\API\Response\Response
      */
-    public function getDomainInfo($domain)
+    public function getDomainInfo($domain, $infoType = 'status')
     {
-        $params = ['infoType' => 'status'];
+        $params = ['infoType' => $infoType];
         $response = $this->getApiConnection()->domain_getInfo($domain, $params);
 
         $paramsToLog = ['domain' => $domain, 'params' => $params];

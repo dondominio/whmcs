@@ -288,9 +288,23 @@ class Domains_Controller extends Controller
     {
         $response = $this->getResponse();
         $domain = $this->getRequest()->getParam('domain');
+        $app = $this->getApp();
+
+        $verificationTrans = [
+            'verified' => 'contact_ver_verified',
+            'notapplicable' => 'contact_ver_inprocess',
+            'inprocess' => 'contact_ver_notapplicable',
+            'failed' => 'contact_ver_failed',
+        ];
 
         try {
-            $info = $this->getApp()->getService('api')->getDomainInfo($domain);
+            $info = $app->getService('api')->getDomainInfo($domain);
+            $infoDNS = $app->getService('api')->getDomainInfo($domain, 'nameservers');
+            $verification = $info->get('ownerverification');
+
+            if (isset($verificationTrans[$verification])){
+                $verification = $app->getLang('contact_ver_verified');
+            }
 
             $params = [
                 'name' => $info->get('name'),
@@ -298,6 +312,8 @@ class Domains_Controller extends Controller
                 'status' => $info->get('status'),
                 'tsExpire' => $info->get('tsExpir'),
                 'tsCreate' => $info->get('tsCreate'),
+                'ownerverification' => $verification,
+                'nameservers' => $infoDNS->get('nameservers'),
             ];
 
         } catch (Exception $e){

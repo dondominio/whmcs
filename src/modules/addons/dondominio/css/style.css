@@ -68,6 +68,10 @@
   margin-top: .5em;
 }
 
+.dd .dns-row span{
+  display: block;
+}
+
 #contentarea > div > h1:first-child {
   display: none;
 }
