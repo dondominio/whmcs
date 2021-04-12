@@ -291,6 +291,7 @@ $_ADDONLANG = array(
     'close' => 'Cerrar',
     'success_action' => 'Acción realizada',
     'error_action' => 'Error al realizar la acción',
+    'config' => 'Configurar',
 
     /**
      * UPDATE
@@ -331,7 +332,7 @@ $_ADDONLANG = array(
      */
     'premium_domains' => 'Dominios Premium',
     'enable' => 'Activados',
-    'disable' => 'Desavtivados',
+    'disable' => 'Desactivados',
 
     /**
      * WHOIS

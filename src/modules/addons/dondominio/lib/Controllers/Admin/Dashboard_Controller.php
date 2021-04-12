@@ -5,6 +5,7 @@ namespace WHMCS\Module\Addon\Dondominio\Controllers\Admin;
 use WHMCS\Module\Addon\Dondominio\App;
 use Exception;
 use WHMCS\Module\Addon\Dondominio\Helpers\Request;
+use WHMCS\Module\Addon\Dondominio\Helpers\Response;
 
 if (!defined("WHMCS")) {
     die("This file cannot be accessed directly");
@@ -17,6 +18,7 @@ class Dashboard_Controller extends Controller
 
     const VIEW_INDEX = '';
     const VIEW_BALANCE = 'balance';
+    const VIEW_BALANCEUPDATE = 'balanceupdate';
     const VIEW_SIDEBAR = 'sidebar';
     const PRINT_MOREINFO = 'moreapiinfo';
     const UPDATE_MODULES = 'updatemodules';
@@ -31,6 +33,7 @@ class Dashboard_Controller extends Controller
         return [
             static::VIEW_INDEX => 'view_Index',
             static::VIEW_BALANCE => 'view_Balance',
+            static::VIEW_BALANCEUPDATE => 'view_BalanceUpdate',
             static::VIEW_SIDEBAR => 'view_Sidebar',
             static::PRINT_MOREINFO => 'print_MoreApiInfo',
             static::UPDATE_MODULES => 'update_Modules'
@@ -85,6 +88,9 @@ class Dashboard_Controller extends Controller
 
         $params = [
             'info' => $info->getResponseData(),
+            'links' => [
+                'update' => static::makeURL(static::VIEW_BALANCEUPDATE),
+            ],
             'breadcrumbs' => [
                 [
                     'title' => $app->getLang('menu_status'),
@@ -98,6 +104,22 @@ class Dashboard_Controller extends Controller
         ];
 
         return $this->view('balance', $params);
+    }
+
+    /**
+     * JSON with API User balance response
+     * 
+     * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
+     */
+    public function view_BalanceUpdate()
+    {
+        $response = $this->getResponse();
+        $app = App::getInstance();
+        $api = $app->getService('api');
+        $info = $api->getAccountInfo();
+
+        $response->setContentType(Response::CONTENT_JSON);
+        $response->send(json_encode($info->getResponseData()), true);
     }
 
     /**

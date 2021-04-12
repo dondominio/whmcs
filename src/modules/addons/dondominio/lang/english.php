@@ -291,6 +291,7 @@ $_ADDONLANG = array(
     'close' => 'Close',
     'success_action' => 'Action successful',
     'error_action' => 'Setting update failed',
+    'config' => 'Configure',
 
     /**
      * UPDATE
