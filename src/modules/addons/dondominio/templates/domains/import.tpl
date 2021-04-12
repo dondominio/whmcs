@@ -1,48 +1,38 @@
 <h2>{$LANG.import_title}</h2>
-	
+
 <p>{$LANG.import_info}</p>
 
-<div id='tabs'>
-    <ul class='nav nav-tabs admin-tabs' role='tablist'>
-        <li id='tab0' class='tab tabselected'>
-            <a href='javascript:;'>{$LANG.filter_title}</a>
-        </li>
-    </ul>
-</div>
-<div id='tab0box' class='tabbox'>
-    <div id='tab_content'>
-        <form action='' method='get'>
-            <input type="hidden" name="module" value="{$module_name}">
-            <input type="hidden" name="__c__" value="{$__c__}">
-            <input type="hidden" name="__a__" value="{$actions.view_import}">
-            <table class='form' width='100%' border='0' cellspacing='2' cellpadding='3'>
-                <tbody>
-                    <tr>
-                        <td width='15%' class='fieldlabel'>
-                            {$LANG.filter_domain}
-                        </td>
+<form action='' method='get'>
+    <input type="hidden" name="module" value="{$module_name}">
+    <input type="hidden" name="__c__" value="{$__c__}">
+    <input type="hidden" name="__a__" value="{$actions.view_import}">
+    <table class='form' width='100%' border='0' cellspacing='2' cellpadding='3'>
+        <tbody>
+            <tr>
+                <td width='15%' class='fieldlabel'>
+                    {$LANG.filter_domain}
+                </td>
 
-                        <td class='fieldarea'>
-                            <input type='text' name='domain' size='30' value='{$filters.domain}'>
-                        </td>
+                <td class='fieldarea'>
+                    <input type='text' name='domain' size='30' value='{$filters.domain}'>
+                </td>
 
-                        <td width='15%' class='fieldlabel'>
-                            {$LANG.filter_tld}
-                        </td>
+                <td width='15%' class='fieldlabel'>
+                    {$LANG.filter_tld}
+                </td>
 
-                        <td class='fieldarea'>
-                            <input type='text' name='tld' size='30' value='{$filters.tld}'>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                <td class='fieldarea'>
+                    <input type='text' name='tld' size='30' value='{$filters.tld}'>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
-            <p align='center'>
-                <input type='submit' id='search-clients' value='{$LANG.filter_search}' class='button'>
-            </p>
-        </form>
-    </div>
-</div>
+    <p align='center'>
+        <input type='submit' id='search-clients' value='{$LANG.filter_search}' class='button'>
+    </p>
+</form>
+
 
 <form action='' method='get'>
     <input type="hidden" name="module" value="{$module_name}">
@@ -52,7 +42,8 @@
         <tbody>
             <tr>
                 <td width='50%' align='left'>
-                    {$pagination.total} {$LANG.pagination_results_found}, {$LANG.pagination_page} {$pagination.page} {$LANG.pagination_of} {$pagination.total_pages}
+                    {$pagination.total} {$LANG.pagination_results_found}, {$LANG.pagination_page} {$pagination.page}
+                    {$LANG.pagination_of} {$pagination.total_pages}
                 </td>
 
                 <td width='50%' align='right'>
@@ -89,7 +80,7 @@
             </tr>
         </thead>
         <tbody>
-        {if count($domains) gt 0}
+            {if count($domains) gt 0}
             {foreach $domains item=domain}
             <tr>
                 <td>
@@ -102,20 +93,20 @@
 
                 <td>
                     {if $domain.domain_found}
-                        <div style='text-align: center;' class='label active'>{$LANG.import_imported}</div>
+                    <div style='text-align: center;' class='label active'>{$LANG.import_imported}</div>
                     {else}
                     <div style='text-align: center;' class='label cancelled'>{$LANG.import_not_imported}</div>
                     {/if}
                 </td>
             </tr>
             {/foreach}
-        {else}
-        <tr>
-            <td colspan='2'>
-                {$LANG.info_no_results}
-            </td>
-        </tr>
-        {/if}
+            {else}
+            <tr>
+                <td colspan='2'>
+                    {$LANG.info_no_results}
+                </td>
+            </tr>
+            {/if}
 
         </tbody>
         <tfoot>
@@ -134,37 +125,36 @@
             </tr>
         </tfoot>
     </table>
-    
+
     <br />
     {$LANG.info_with_selected}
 
     <select name='customer' id='import_customer'>
-    {foreach $customers item=customer}
+        {foreach $customers item=customer}
         <option value="{$customer->id}">{$customer->firstname} {$customer->lastname}</option>
-    {/foreach}
+        {/foreach}
     </select>
-    
+
     <button id='import_import' name='form_action' value='import' class='btn'>{$LANG.import_btn_import}</button>
 </form>
 
 <p align='center'>
     {if $pagination.page gt 1}
-        <a href='{$links.prev_page}'>« {$LANG.pagination_previous}</a>
+    <a href='{$links.prev_page}'>« {$LANG.pagination_previous}</a>
     {else}
-        « {$LANG.pagination_previous}
+    « {$LANG.pagination_previous}
     {/if}
 
     &nbsp;
     {if $pagination.page lt $pagination.total_pages}
-        <a href='{$links.next_page}'>{$LANG.pagination_next} »</a>
+    <a href='{$links.next_page}'>{$LANG.pagination_next} »</a>
     {else}
-        {$LANG.pagination_next} »
+    {$LANG.pagination_next} »
     {/if}
 </p>
 
 <script type='text/javascript'>
-    $('.domains_check_all').bind('change', function(e)
-    {
+    $('.domains_check_all').bind('change', function (e) {
         $('.domain_checkbox').prop('checked', $(this).prop('checked'));
         $('.domains_check_all').prop('checked', $(this).prop('checked'));
     });
