@@ -289,6 +289,8 @@ $_ADDONLANG = array(
     'ok' => 'OK',
     'error' => 'ERROR',
     'close' => 'Cerrar',
+    'success_action' => 'Acción realizada',
+    'error_action' => 'Error al realizar la acción',
 
     /**
      * UPDATE

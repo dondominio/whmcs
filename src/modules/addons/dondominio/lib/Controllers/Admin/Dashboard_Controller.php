@@ -53,7 +53,7 @@ class Dashboard_Controller extends Controller
             'whmcs_version' => $app->getService('utils')->getWHMCSVersion(),
             'version' => $app->getVersion(),
             'checks' => $app->getInformation($checkAPI),
-            'premium_domains' => $whmcs->isPremiumDomainEnable(),
+            'premium_domains' => (int) $whmcs->isPremiumDomainEnable(),
             'do_check' => $checkAPI,
             'links' => [
                 'more_api_info' => static::makeURL(static::PRINT_MOREINFO),

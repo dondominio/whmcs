@@ -5,16 +5,16 @@
     <div class="widget-content-padded">
 
         {if $do_check eq true}
-            {if $checks.api.success eq true}
-            <div class="alert alert-success" > 
-                {$LANG.success_api_conection}
-            </div>
-            {else}
-            <div class="alert alert-danger" > 
-                {$checks.api.message}.
-                <a href="{$links.settings}"> {$LANG.check_credentials}</a>
-            </div>
-            {/if}
+        {if $checks.api.success eq true}
+        <div class="alert alert-success">
+            {$LANG.success_api_conection}
+        </div>
+        {else}
+        <div class="alert alert-danger">
+            {$checks.api.message}.
+            <a href="{$links.settings}"> {$LANG.check_credentials}</a>
+        </div>
+        {/if}
         {/if}
 
 
@@ -71,16 +71,18 @@
                         {/if}
                     </td>
                 </tr>
-                <tr>
+                <tr data-premium-domains="{$premium_domains}">
                     <td>{$LANG.premium_domains}</td>
                     <td>
-                        {if $premium_domains eq true}
-                        {$LANG.enable}
-                        {else}
-                        {$LANG.disable}
-                        {/if}
+                        <span data-lang-active="{$LANG.enable}" data-lang-disable="{$LANG.disable}"
+                            data-premium="{$premium_domains}"></span>
                     </td>
-                    <td></td>
+                    <td>
+                        <input id="toggle-premiumdomains" type="checkbox" />
+                        <a id="linkConfigurePremiumMarkup" href="configdomains.php?action=premium-levels"
+                            class="btn btn-default open-modal" data-modal-title="Configure Premium Domain Levels"
+                            data-btn-submit-id="btnSavePremium" data-btn-submit-label="Save">Configure</a>
+                    </td>
                 </tr>
                 <tr>
                     <td colspan="3">{$LANG.modules_installed}</td>
@@ -126,6 +128,10 @@
     <div id="more-api-infobox-details"></div>
 </div>
 
+<input data-success value="{$LANG.success_action}" hidden />
+<input data-error value="{$LANG.error_action}" hidden />
+
+{literal}
 <script>
     document.getElementById('get-more-api-info').addEventListener('click', async function (e) {
         document.getElementById('more-api-infobox').classList.remove('hide');
@@ -140,5 +146,65 @@
         document.getElementById('more-api-infobox-details').innerHTML = html;
     });
 
+    function setDomainPremiumText() {
+        let premium = $('[data-premium]');
+        let isPremium = premium.attr('data-premium');
+        let textData = isPremium == 1 ? 'lang-active' : 'lang-disable'
+
+        premium.text(premium.data(textData))
+    }
+
+    function saveSettingPremiumDomains(event, state) {
+        const val = state ? 1 : 0
+
+        $('#loading').show()
+
+        $.ajax({
+            url: '?module=ispapidomaincheck&action=savepremiumdomains',
+            type: 'POST',
+            data: {
+                premiumDomains: val
+            },
+            dataType: 'json'
+        }).done(function (d) {
+            succesPremiumDomainChange(val, d.msg);
+        }).fail(function (d) {
+            errorPremiumDomainChange(d.msg);
+        })
+    }
+
+    function succesPremiumDomainChange(state, message) {
+        $('[data-premium]').attr('data-premium', state);
+        let title = $('[data-success]').val();
+
+        $.growl.notice({
+            title: title,
+            message: message
+        })
+
+        setDomainPremiumText();
+    }
+
+    function errorPremiumDomainChange(message) {
+        let title = $('[data-error]').val();
+
+        $.growl.error({
+            title: title,
+            message: message
+        })
+    }
+
+    $(document).ready(function () {
+        setDomainPremiumText();
+        let premiumDomainState = $('[data-premium-domains]').data('premium-domains');
+
+        $('#toggle-premiumdomains').off().bootstrapSwitch({
+            state: premiumDomainState,
+            size: 'small',
+            onColor: 'success',
+            offColor: 'default'
+        }).on('switchChange.bootstrapSwitch', saveSettingPremiumDomains)
+    });
 
 </script>
+{/literal}
