@@ -388,4 +388,12 @@ $_ADDONLANG = array(
     'contact_daaccepted' => 'DA',
     'contact_da_accepted' => 'Accepted',
     'contact_da_no_accepted' => 'No accepted',
+
+    /**
+     * CONTENT TITLES
+     */
+    'content_title_admin' => 'DonDominio / Admin',
+    'content_title_tld' => 'DonDominio / TLDs and Price',
+    'content_title_domains' => 'DonDominio / Manage domains',
+    'content_title_whois' => 'DonDominio / Proxy Whois',
 );

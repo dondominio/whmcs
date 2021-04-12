@@ -715,6 +715,7 @@ class Domains_Controller extends Controller
         $app = App::getInstance();
         $action = $this->getRequest()->getParam('__a__', '');
 
+        $params['title'] = $app->getLang('content_title_domains');
         $params['nav'] = [
             [
                 'title' => $app->getLang('domains_title'),

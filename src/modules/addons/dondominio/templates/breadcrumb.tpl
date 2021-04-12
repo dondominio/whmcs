@@ -1,4 +1,4 @@
-<ul class="dd-breadcrumb">
+<ul class="breadcrumbs">
 	{foreach from=$breadcrumbs item=bread}
 	<li>
 		<a href="{$bread.link}">{$bread.title}</a>

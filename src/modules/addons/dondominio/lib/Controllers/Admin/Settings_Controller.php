@@ -2,6 +2,7 @@
 
 namespace WHMCS\Module\Addon\Dondominio\Controllers\Admin;
 
+use WHMCS\Module\Addon\Dondominio\App;
 use Exception;
 
 if (!defined("WHMCS")) {
@@ -299,6 +300,8 @@ class Settings_Controller extends Controller
      */
     public function view($view, array $params = [])
     {
+        $app = APP::getInstance();
+        $params['title'] = $app->getLang('content_title_admin');
         $params['nav']= Dashboard_Controller::getNavArray();          
         return parent::view($view, $params);
     }

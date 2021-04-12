@@ -180,6 +180,8 @@ class Dashboard_Controller extends Controller
      */
     public function view($view, array $params = [])
     {
+        $app = APP::getInstance();
+        $params['title'] = $app->getLang('content_title_admin');
         $params['nav']= static::getNavArray();          
         return parent::view($view, $params);
     }

@@ -236,6 +236,7 @@ class Whois_Controller extends Controller
         $app = App::getInstance();
         $action = $this->getRequest()->getParam('__a__', '');
 
+        $params['title'] = $app->getLang('content_title_whois');
         $params['nav'] = [
             [
                 'title' => $app->getLang('menu_whois'),

@@ -396,7 +396,8 @@ class DomainPricings_Controller extends Controller
     {
         $app = App::getInstance();
         $action = $this->getRequest()->getParam('__a__', '');
-
+        
+        $params['title'] = $app->getLang('content_title_tld');
         $params['nav'] = [
             [
                 'title' => $app->getLang('tld_title'),
@@ -427,7 +428,7 @@ class DomainPricings_Controller extends Controller
         $breadcrumb = [];
 
         $breadcrumb[] = [
-            'title' => $app->getLang('tld_title'),
+            'title' => $app->getLang('menu_tlds_update'),
             'link' => static::makeURL()
         ];
 

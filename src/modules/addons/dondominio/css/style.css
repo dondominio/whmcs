@@ -1,14 +1,17 @@
-.navbar-selected {
+.dd {}
+
+.dd .navbar-selected {
     color: #333 !important;
+    border-bottom: solid #ff9800;
 }
 
-.title-icon {
+.dd .title-icon {
     vertical-align: middle;
     margin-right: 5px;
     cursor: pointer;
   }
 
-.text-ellipsis {
+.dd .text-ellipsis {
   display: inline-block;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -19,12 +22,12 @@
   box-sizing: border-box;
 }
 
-.log-message-icon {
+.dd .log-message-icon {
     display: inline-block;
     overflow: auto;
 }
 
-.dd-breadcrumb {
+.dd .breadcrumbs {
 	color: #A4A7C0;
 	font-size: 13px;
 	list-style: none;
@@ -32,35 +35,39 @@
 	padding: 0 0 0 5px;
 }
 
-.dd-breadcrumb li {
+.dd .breadcrumbs li {
 	display: inline;
 }
 
-.dd-breadcrumb li:first-of-type a {
+.dd .breadcrumbs li:first-of-type a {
 	padding: 0 12px 0 0;
 }
 
-.dd-breadcrumb li + li a {
+.dd .breadcrumbs li + li a {
 	padding: 0 10px;
 }
 
-.dd-breadcrumb li a {
+.dd .breadcrumbs li a {
 	color: #A4A7C0;
 }
 
-.dd-breadcrumb li a:hover {
+.dd .breadcrumbs li a:hover {
 	color: #5158fb;
 	text-decoration: none;
 }
 
-.dd-breadcrumb li:last-of-type .fa {
+.dd .breadcrumbs li:last-of-type .fa {
 	display: none;
 }
 
-.domain-table tr td:first-child {
+.dd .domain-table tr td:first-child {
   width: 12em;
 }
 
-.domain-title {
+.dd .domain-title {
   margin-top: .5em;
+}
+
+#contentarea > div > h1:first-child {
+  display: none;
 }
