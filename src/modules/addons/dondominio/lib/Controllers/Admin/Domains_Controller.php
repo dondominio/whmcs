@@ -761,7 +761,7 @@ class Domains_Controller extends Controller
         $bredcrumbs = [];
 
         $bredcrumbs[] = [
-            'title' => $app->getLang('domains_title'),
+            'title' => $app->getLang('menu_domains'),
             'link' => static::makeURL()
         ];
 

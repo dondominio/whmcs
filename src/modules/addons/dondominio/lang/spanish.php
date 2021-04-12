@@ -88,7 +88,7 @@ $_ADDONLANG = array(
     'tld_regenerate' => 'Reconstruir la caché de TLDs',
 
     //Domains
-    'domains_title' => 'Gestión de dominios',
+    'domains_title' => 'Gestión',
     'domains_info' => 'Estos son los dominios actualmente registrados en tu instalación de WHMCS. Puedes actualizar su infromación usando la API de DonDominio y configurarlos para que usen el módulo de registro de Dondominio, si está instalado. También puedes actualizar su información de contacto usando un ID de contacto de DonDominio.',
     'domains_domain' => 'Dominio',
     'domains_status' => 'Estado',
@@ -129,7 +129,7 @@ $_ADDONLANG = array(
     'domain_more_info' => 'Más información',
 
     //Import
-    'import_title' => 'Importar dominios',
+    'import_title' => 'Importar',
     'import_info' => 'Estos son los dominios que hay en tu cuenta de DonDominio. Si un dominio no está en tu instalación de WHMCS, puedes importar su información y asignarlo a un cliente existente.',
     'import_btn_import' => 'Importar a WHMCS y asignar al cliente seleccionado',
     'import_imported' => 'Importado',
@@ -139,7 +139,7 @@ $_ADDONLANG = array(
     'import_error' => 'Los siguientes dominios no se han importado debido a un error:',
 
     //Transfer
-    'transfer_title' => 'Transferir dominios',
+    'transfer_title' => 'Transferir',
     'transfer_info' => 'Utiliza esta opción para transferir dominios a DonDominio desde otros registradores',
     'transfer_domain' => 'Nombre de dominio',
     'transfer_authcode' => 'Authcode/EPP',
@@ -320,7 +320,7 @@ $_ADDONLANG = array(
     /**
      * DELETED DOMAINS
      */
-    'deleted_domains_title' => 'Dominios Borrados',
+    'deleted_domains_title' => 'Borrados',
     'deleted_domains_ts' => 'Fecha de eliminacion',
     'deleted_domains_info' => 'Información',
 

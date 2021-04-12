@@ -88,7 +88,7 @@ $_ADDONLANG = array(
     'tld_regenerate' => 'Rebuild TLD cache',
 
     //Domains
-    'domains_title' => 'Manage domains',
+    'domains_title' => 'Manage',
     'domains_info' => 'These are the domains currently registered on your WHMCS installation. You can update their information using the DonDominio API and configure them to use the DonDominio Registrar addon, if installed. You can also update their contact information using a DonDominio Contact ID.',
     'domains_domain' => 'Domain',
     'domains_status' => 'Status',
@@ -129,7 +129,7 @@ $_ADDONLANG = array(
     'domain_more_info' => 'More information',
 
     //Import
-    'import_title' => 'Import domains',
+    'import_title' => 'Import',
     'import_info' => 'These are the domains that exist in your DonDominio account. If a domain is not on your WHMCS installation, you may import its information and assign it to an existing customer.',
     'import_btn_import' => 'Import to WHMCS and assign to selected customer',
     'import_imported' => 'Imported',
@@ -139,7 +139,7 @@ $_ADDONLANG = array(
     'import_error' => 'The following couldn\'t be imported because of an error:',
 
     //Transfer
-    'transfer_title' => 'Transfer domains',
+    'transfer_title' => 'Transfer',
     'transfer_info' => 'Use this option to transfer domains to DonDominio/MrDomain from other registrars',
     'transfer_domain' => 'Domain name',
     'transfer_authcode' => 'Authcode/EPP',
@@ -320,7 +320,7 @@ $_ADDONLANG = array(
     /**
      * DELETED DOMAINS
      */
-    'deleted_domains_title' => 'Deleted domain list',
+    'deleted_domains_title' => 'Deleted',
     'deleted_domains_ts' => 'Delete date',
     'deleted_domains_info' => 'Info',
 
