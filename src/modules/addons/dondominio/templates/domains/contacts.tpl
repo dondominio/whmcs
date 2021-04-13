@@ -1,5 +1,3 @@
-<h2>{$LANG.contacts_title}</h2>
-
 <div id='tab0box' class='tabbox'>
     <div id='tab_content'>
         <form action='' method='get'>
@@ -23,6 +21,29 @@
 
                         <td class='fieldarea'>
                             <input type='text' name='email' size='30' value='{$filters.email}'>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width='15%' class='fieldlabel'>
+                            {$LANG.contact_verification}
+                        </td>
+
+                        <td class='fieldarea'>
+                            <select name='verification' id='tldDropDown'>
+                                <option value=''>{$LANG.filter_any}</option>
+                                {html_options options=$options.verification selected=$filters.verification}
+                            </select>
+                        </td>
+
+                        <td width='15%' class='fieldlabel'>
+                            {$LANG.contact_daaccepted}
+                        </td>
+
+                        <td class='fieldarea'>
+                            <select name='daaccepted' id='tldDropDown'>
+                                <option value=''>{$LANG.filter_any}</option>
+                                {html_options options=$options.daaccepted selected=$filters.daaccepted}
+                            </select>
                         </td>
                     </tr>
                 </tbody>
@@ -92,7 +113,12 @@
         {foreach $contacts item=contact}
         <tr>
             <td>
-                {$contact.contactType}
+                {if $contact.contactType eq 'organization'}
+                    {$LANG.contact_type_organization}
+                {/if}
+                {if $contact.contactType eq 'individual'}
+                    {$LANG.contact_type_individual}
+                {/if}
             </td>
             <td>
                 {$contact.contactName}

@@ -409,14 +409,28 @@ class Domains_Controller extends Controller
         $page = $this->getRequest()->getParam('page', 1);
         $name = $this->getRequest()->getParam('name');
         $email = $this->getRequest()->getParam('email');
+        $verification = $this->getRequest()->getParam('verification');
+        $daaccepted = $this->getRequest()->getParam('daaccepted');
 
         $app = App::getInstance();
         $apiService = $app->getService('api');
         $whmcsService = $app->getService('whmcs');
         $limit = $whmcsService->getConfiguration('NumRecordstoDisplay');
 
-        $contacts = $apiService->getContactList($page, $limit, $name, $email);
+        $contacts = $apiService->getContactList($page, $limit, $name, $email, $verification, $daaccepted);
         $totalRecords = $contacts->get('queryInfo')['total'];
+
+        $verificationOptions = [
+            'verified' => $app->getLang('contact_ver_verified'),
+            'inprocess' => $app->getLang('contact_ver_inprocess'),
+            'failed' => $app->getLang('contact_ver_failed'),
+            'notapplicable' => $app->getLang('contact_ver_notapplicable'),
+        ];
+
+        $daacceptedOptions = [
+            0 => $app->getLang('contact_da_no_accepted'),
+            1 => $app->getLang('contact_da_accepted'),
+        ];
 
         $params = [
             'module_name' => $this->getApp()->getName(),
@@ -425,9 +439,15 @@ class Domains_Controller extends Controller
             'actions' => [
                 'view_contacts' => static::VIEW_CONTACTS,
             ],
+            'options' => [
+                'verification' => $verificationOptions,
+                'daaccepted' => $daacceptedOptions,
+            ],
             'filters' => [
                 'name' => $name,
                 'email' => $email,
+                'verification' => $verification,
+                'daaccepted' => $daaccepted,
             ],
             'breadcrumbs' => $this->getBreadcrumbs(static::VIEW_CONTACTS)
         ];
@@ -736,7 +756,7 @@ class Domains_Controller extends Controller
             [
                 'title' => $app->getLang('domains_title'),
                 'link' => static::makeURL(static::VIEW_INDEX),
-                'selected' => static::VIEW_INDEX === $action
+                'selected' => in_array($action, [static::VIEW_INDEX, static::VIEW_DOMAIN, static::VIEW_HISTORY])
             ],
             [
                 'title' => $app->getLang('transfer_title'),

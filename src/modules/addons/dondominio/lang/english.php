@@ -386,13 +386,15 @@ $_ADDONLANG = array(
     'contact_email' => 'Email',
     'contact_country' => 'Country',
     'contact_verification' => 'Verification',
+    'contact_daaccepted' => 'Designated Agent ',
+    'contact_da_accepted' => 'Accepted',
+    'contact_da_no_accepted' => 'No accepted',
     'contact_ver_verified' => 'Verified',
     'contact_ver_inprocess' => 'In process',
     'contact_ver_notapplicable' => 'Not Applicable/Unnecessary',
     'contact_ver_failed' => 'Verification failed',
-    'contact_daaccepted' => 'DA',
-    'contact_da_accepted' => 'Accepted',
-    'contact_da_no_accepted' => 'No accepted',
+    'contact_type_organization' => 'Organization',
+    'contact_type_individual' => 'Individual',
 
     /**
      * CONTENT TITLES

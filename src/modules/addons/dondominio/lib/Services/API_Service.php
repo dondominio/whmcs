@@ -167,22 +167,22 @@ class API_Service extends AbstractService implements APIService_Interface
         /*
 		 * Building parameter array for DonDominio's API
 		 */
-		$params = [
-			'nameservers' => 'keepns',
-			'authcode' => $authCode,
-			'ownerContactType' => ( $orgType == "1" || $extDomain->country != 'ES' ) ? 'individual' : 'organization',
-			'ownerContactFirstName' =>$extDomain->firstname,
-			'ownerContactLastName' => $extDomain->lastname,
-			'ownerContactOrgName' => $extDomain->companyname,
-			'ownerContactOrgType' => $orgType,
-			'ownerContactIdentNumber' => $extDomain->vatnumber,
-			'ownerContactEmail' => $extDomain->email,
-			'ownerContactPhone' => '+' . $clientDetails['client']['phonecc'] . '.' . $clientDetails['client']['phonenumber'],
-			'ownerContactAddress' => $extDomain->address1,
-			'ownerContactPostalCode' => $extDomain->postcode,
-			'ownerContactCity' => $extDomain->city,
-			'ownerContactState' => $extDomain->state,
-			'ownerContactCountry' => $clientDetails['client']['countrycode']
+        $params = [
+            'nameservers' => 'keepns',
+            'authcode' => $authCode,
+            'ownerContactType' => ($orgType == "1" || $extDomain->country != 'ES') ? 'individual' : 'organization',
+            'ownerContactFirstName' => $extDomain->firstname,
+            'ownerContactLastName' => $extDomain->lastname,
+            'ownerContactOrgName' => $extDomain->companyname,
+            'ownerContactOrgType' => $orgType,
+            'ownerContactIdentNumber' => $extDomain->vatnumber,
+            'ownerContactEmail' => $extDomain->email,
+            'ownerContactPhone' => '+' . $clientDetails['client']['phonecc'] . '.' . $clientDetails['client']['phonenumber'],
+            'ownerContactAddress' => $extDomain->address1,
+            'ownerContactPostalCode' => $extDomain->postcode,
+            'ownerContactCity' => $extDomain->city,
+            'ownerContactState' => $extDomain->state,
+            'ownerContactCountry' => $clientDetails['client']['countrycode']
         ];
 
         $response = $this->getApiConnection()->domain_transfer($extDomain->domain, $params);
@@ -252,11 +252,11 @@ class API_Service extends AbstractService implements APIService_Interface
     {
         $params = [];
 
-        if(!is_null($page)){
+        if (!is_null($page)) {
             $params['page'] = $page;
         }
 
-        if(!is_null($page)){
+        if (!is_null($page)) {
             $params['pageLength'] = $pageLength;
         }
 
@@ -280,11 +280,11 @@ class API_Service extends AbstractService implements APIService_Interface
     {
         $params = [];
 
-        if(!is_null($page)){
+        if (!is_null($page)) {
             $params['page'] = $page;
         }
 
-        if(!is_null($page)){
+        if (!is_null($page)) {
             $params['pageLength'] = $pageLength;
         }
 
@@ -303,24 +303,21 @@ class API_Service extends AbstractService implements APIService_Interface
      *
      * @return \Dondominio\API\Response\Response
      */
-    public function getContactList($page = null, $pageLength = null, $name = null, $email = null)
+    public function getContactList($page = null, $pageLength = null, $name = null, $email = null, $verification = null, $daaccepted = null)
     {
-        $params = [];
+        $params = [
+            'page' => $page,
+            'pageLength' => $pageLength,
+            'name' => $name,
+            'email' => $email,
+            'verificationstatus' => $verification,
+            'daaccepted' => $daaccepted,
+        ];
 
-        if(!is_null($page)){
-            $params['page'] = $page;
-        }
-
-        if(!is_null($page)){
-            $params['pageLength'] = $pageLength;
-        }
-
-        if(!is_null($name)){
-            $params['name'] = $name;
-        }
-
-        if(!is_null($email)){
-            $params['email'] = $email;
+        foreach ($params as $key => $param){
+            if(is_null($param)){
+                unset($page[$key]);
+            }
         }
 
         $response = $this->getApiConnection()->contact_getList($params);
@@ -346,9 +343,9 @@ class API_Service extends AbstractService implements APIService_Interface
      */
     public function parseResponse($response, array $params = [])
     {
-         // Call internal WHMCS function logModuleCall
+        // Call internal WHMCS function logModuleCall
         if (function_exists('logModuleCall')) {
-            logModuleCall($this->getApp()->getName(), $response->getAction(), $params, $response->getRawResponse(),$response->getArray());
+            logModuleCall($this->getApp()->getName(), $response->getAction(), $params, $response->getRawResponse(), $response->getArray());
         }
 
         if (!$response->getSuccess()) {
@@ -369,7 +366,7 @@ class API_Service extends AbstractService implements APIService_Interface
     {
         $settingService = $this->getApp()->getService('settings');
 
-        if ($checkApi){
+        if ($checkApi) {
 
             try {
                 $this->doHello();
