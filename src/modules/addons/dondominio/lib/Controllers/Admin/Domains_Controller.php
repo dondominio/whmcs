@@ -391,8 +391,8 @@ class Domains_Controller extends Controller
                 'view_deleted' => static::VIEW_DELETED,
             ],
             'links' => [
-                'prev_page' => static::makeUrl(static::VIEW_HISTORY, ['page' => ($page - 1)]),
-                'next_page' => static::makeUrl(static::VIEW_HISTORY, ['page' => ($page + 1)]),
+                'prev_page' => static::makeUrl(static::VIEW_HISTORY, ['page' => ($page - 1), 'domain_id' => $domainId]),
+                'next_page' => static::makeUrl(static::VIEW_HISTORY, ['page' => ($page + 1), 'domain_id' => $domainId]),
                 'get_info' => $this->makeURL(static::VIEW_GETINFO, ['domain' => $domain->domain]),
                 'history' => $this->makeURL(static::VIEW_HISTORY, ['domain_id' => $domain->id]),
                 'sync' => $this->makeURL(static::ACTION_SYNC, ['domain_id' => $domain->id])
