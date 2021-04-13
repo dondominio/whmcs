@@ -122,8 +122,8 @@ class Domains_Controller extends Controller
             'links' => [
                 'sync_domain' => static::makeUrl(static::ACTION_SYNC),
                 'domain_view' => static::makeUrl(static::VIEW_DOMAIN),
-                'prev_page' => static::makeUrl(static::VIEW_INDEX, ['page' => ($page - 1)]),
-                'next_page' => static::makeUrl(static::VIEW_INDEX, ['page' => ($page + 1)])
+                'prev_page' => static::makeUrl(static::VIEW_INDEX, array_merge(['page' => ($page - 1)], $filters)),
+                'next_page' => static::makeUrl(static::VIEW_INDEX, array_merge(['page' => ($page + 1)], $filters))
             ],
             'breadcrumbs' => $this->getBreadcrumbs()
         ];
@@ -209,6 +209,10 @@ class Domains_Controller extends Controller
         }
 
         $clients = $whmcsService->getClients();
+        $filters = [
+            'domain' => $word,
+            'tld' => $tld,
+        ];
 
         // PARAMS TO TEMPLATE
 
@@ -222,13 +226,10 @@ class Domains_Controller extends Controller
                 'import_domains' => static::ACTION_IMPORT,
             ],
             'links' => [
-                'prev_page' => static::makeUrl(static::VIEW_IMPORT, ['page' => ($page - 1)]),
-                'next_page' => static::makeUrl(static::VIEW_IMPORT, ['page' => ($page + 1)])
+                'prev_page' => static::makeUrl(static::VIEW_IMPORT, array_merge(['page' => ($page - 1)], $filters)),
+                'next_page' => static::makeUrl(static::VIEW_IMPORT, array_merge(['page' => ($page + 1)], $filters))
             ],
-            'filters' => [
-                'domain' => $word,
-                'tld' => $tld,
-            ],
+            'filters' => $filters,
             'breadcrumbs' => $this->getBreadcrumbs(static::VIEW_IMPORT)
         ];
 
@@ -437,6 +438,13 @@ class Domains_Controller extends Controller
             1 => $app->getLang('contact_da_accepted'),
         ];
 
+        $filters = [
+            'name' => $name,
+            'email' => $email,
+            'verification' => $verification,
+            'daaccepted' => $daaccepted,
+        ];
+
         $params = [
             'module_name' => $this->getApp()->getName(),
             '__c__' => static::CONTROLLER_NAME,
@@ -448,15 +456,10 @@ class Domains_Controller extends Controller
                 'verification' => $verificationOptions,
                 'daaccepted' => $daacceptedOptions,
             ],
-            'filters' => [
-                'name' => $name,
-                'email' => $email,
-                'verification' => $verification,
-                'daaccepted' => $daaccepted,
-            ],
+            'filters' => $filters,
             'links' => [
-                'prev_page' => static::makeUrl(static::VIEW_CONTACTS, ['page' => ($page - 1)]),
-                'next_page' => static::makeUrl(static::VIEW_CONTACTS, ['page' => ($page + 1)])
+                'prev_page' => static::makeUrl(static::VIEW_CONTACTS, array_merge(['page' => ($page - 1)], $filters)),
+                'next_page' => static::makeUrl(static::VIEW_CONTACTS, array_merge(['page' => ($page + 1)], $filters))
             ],
             'breadcrumbs' => $this->getBreadcrumbs(static::VIEW_CONTACTS)
         ];
