@@ -316,7 +316,7 @@ class API_Service extends AbstractService implements APIService_Interface
 
         foreach ($params as $key => $param){
             if(is_null($param)){
-                unset($page[$key]);
+                unset($params[$key]);
             }
         }
 

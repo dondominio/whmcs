@@ -380,23 +380,28 @@ class Domains_Controller extends Controller
         }
 
         $params = [
+            'action' => static::VIEW_HISTORY,
+            'domain' => $domain,
+            'expire_date' => is_object($domain) ? $domain->expirydate->format('Y-m-d') : '',
             'module_name' => $this->getApp()->getName(),
-            'domain_name' => $domain->domain,
             '__c__' => static::CONTROLLER_NAME,
             'history' => $history,
             'actions' => [
                 'view_deleted' => static::VIEW_DELETED,
             ],
             'links' => [
-                'prev_page' => static::makeUrl(static::VIEW_DELETED, ['page' => ($page - 1)]),
-                'next_page' => static::makeUrl(static::VIEW_DELETED, ['page' => ($page + 1)])
+                'prev_page' => static::makeUrl(static::VIEW_HISTORY, ['page' => ($page - 1)]),
+                'next_page' => static::makeUrl(static::VIEW_HISTORY, ['page' => ($page + 1)]),
+                'get_info' => $this->makeURL(static::VIEW_GETINFO, ['domain' => $domain->domain]),
+                'history' => $this->makeURL(static::VIEW_HISTORY, ['domain_id' => $domain->id]),
+                'sync' => $this->makeURL(static::ACTION_SYNC, ['domain_id' => $domain->id])
             ],
             'breadcrumbs' => $this->getBreadcrumbs(static::VIEW_HISTORY, $domain)
         ];
 
         $this->setApiPagination($params, $limit, $page, $totalRecords);
 
-        return $this->view('history', $params);
+        return $this->view('domain', $params);
     }
 
     /**
@@ -448,6 +453,10 @@ class Domains_Controller extends Controller
                 'email' => $email,
                 'verification' => $verification,
                 'daaccepted' => $daaccepted,
+            ],
+            'links' => [
+                'prev_page' => static::makeUrl(static::VIEW_CONTACTS, ['page' => ($page - 1)]),
+                'next_page' => static::makeUrl(static::VIEW_CONTACTS, ['page' => ($page + 1)])
             ],
             'breadcrumbs' => $this->getBreadcrumbs(static::VIEW_CONTACTS)
         ];
