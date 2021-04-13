@@ -192,6 +192,7 @@ class DomainPricings_Controller extends Controller
         $params = [
             'module_name' => $this->getApp()->getName(),
             '__c__' => static::CONTROLLER_NAME,
+            'tld' => $tld,
             'tld_settings' => $tldSettings,
             'actions' => [
                 'save_settings' => static::ACTION_SAVE_SETTINGS
@@ -402,7 +403,7 @@ class DomainPricings_Controller extends Controller
             [
                 'title' => $app->getLang('tld_title'),
                 'link' => static::makeURL(static::VIEW_INDEX),
-                'selected' => static::VIEW_INDEX === $action || static::VIEW_SETTINGS === $action,
+                'selected' => in_array($action, [static::VIEW_INDEX, static::VIEW_SETTINGS, static::ACTION_SAVE_SETTINGS])
             ],
             [
                 'title' => $app->getLang('tld_new_title'),
