@@ -9,6 +9,7 @@ use WHMCS\Module\Addon\Dondominio\Controllers\Admin\DomainPricings_Controller;
 use WHMCS\Module\Addon\Dondominio\Controllers\Admin\Settings_Controller;
 use WHMCS\Module\Addon\Dondominio\Controllers\Admin\Domains_Controller;
 use WHMCS\Module\Addon\Dondominio\Controllers\Admin\Whois_Controller;
+use WHMCS\Module\Addon\Dondominio\Controllers\Admin\Home_Controller;
 use WHMCS\Module\Addon\Dondominio\Helpers\Template;
 
 class AdminDispatcher implements Dispatcher_Interface
@@ -21,6 +22,7 @@ class AdminDispatcher implements Dispatcher_Interface
     public function getRegisteredControllers()
     {
         return [
+            Home_Controller::CONTROLLER_NAME => Home_Controller::class,
             Dashboard_Controller::CONTROLLER_NAME => Dashboard_Controller::class,
             DomainPricings_Controller::CONTROLLER_NAME => DomainPricings_Controller::class,
             Domains_controller::CONTROLLER_NAME => Domains_controller::class,
@@ -56,7 +58,7 @@ class AdminDispatcher implements Dispatcher_Interface
         }
 
         if (strlen($requestController) == 0) {
-            $requestController = Dashboard_Controller::CONTROLLER_NAME;
+            $requestController = Home_Controller::CONTROLLER_NAME;
         }
 
         $controllers = $this->getRegisteredControllers();

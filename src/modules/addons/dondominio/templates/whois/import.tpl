@@ -1,5 +1,3 @@
-<h2>{$LANG.whois_import_title}</h2>
-
 <form action='{$links.import}' method='post' enctype='multipart/form-data'>
     <input type='file' name='whoisservers' />
 

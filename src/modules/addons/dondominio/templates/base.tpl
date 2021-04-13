@@ -1,5 +1,12 @@
 <link rel="stylesheet" type="text/css" href="{$css_path}style.css" />
 <div class="dd">
+    
+    
+    {if $print_nav eq true}
+    <h1>{$title}</h1>
+    {include file='nav.tpl'}
+    <!-- {include file='breadcrumb.tpl'} -->
+    {/if}
 
     {if count($RESPONSE->errors) gt 0 or $RESPONSE->force_errors}
     <div class='errorbox'>
@@ -54,15 +61,6 @@
         <br>
         {/foreach}
     </div>
-    {/if}
-
-
-    
-    
-    {if $print_nav eq true}
-    <h1>{$title}</h1>
-    {include file='breadcrumb.tpl'}
-    {include file='nav.tpl'}
     {/if}
 
     {include file=$CONTENT_FILE}

@@ -1,5 +1,4 @@
-<h2>{$LANG.domains_title} <i class="fad fa-question-circle title-icon" data-toggle="modal" data-target="#domains"></i>
-</h2>
+<i class="fad fa-question-circle title-icon pull-right" data-toggle="modal" data-target="#domains"></i>
 
 <div class="modal" id="domains" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">

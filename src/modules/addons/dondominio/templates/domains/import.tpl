@@ -1,5 +1,3 @@
-<h2>{$LANG.import_title}</h2>
-
 <p>{$LANG.import_info}</p>
 
 <form action='' method='get'>

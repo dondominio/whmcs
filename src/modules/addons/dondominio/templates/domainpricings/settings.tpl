@@ -1,5 +1,3 @@
-<h2>{$LANG.tld_settings_title}: {$tld_settings.tld}</h2>
-	
 <p>{$LANG.tld_settings_description}</p>
 
 <form action='' method='post'>

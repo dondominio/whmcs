@@ -407,7 +407,7 @@ class DomainPricings_Controller extends Controller
             [
                 'title' => $app->getLang('tld_new_title'),
                 'link' => static::makeURL(static::VIEW_AVAILABLE_TLDS),
-                'selected' => static::VIEW_AVAILABLE_TLDS === $action,
+                'selected' => static::VIEW_AVAILABLE_TLDS === $action || $action === static::ACTION_CREATE,
             ],
         ];
 

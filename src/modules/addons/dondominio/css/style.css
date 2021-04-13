@@ -72,6 +72,21 @@
   display: block;
 }
 
+.dd .tab-content {
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  padding: 10px;
+}
+
+.dd .selected {
+  background-color: #1a4d80;
+}
+
+.dd .selected a {
+  color: #ffffff;
+}
+
 #contentarea > div > h1:first-child {
   display: none;
 }

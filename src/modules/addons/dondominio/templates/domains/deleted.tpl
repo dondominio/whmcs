@@ -1,5 +1,3 @@
-<h2>{$LANG.deleted_domains_title}</h2>
-
 <form action='' method='get'>
     <input type="hidden" name="module" value="{$module_name}">
     <input type="hidden" name="__c__" value="{$__c__}">

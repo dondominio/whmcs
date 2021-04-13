@@ -1,15 +1,3 @@
-{if $do_check eq true}
-{if $checks.api.success eq true}
-<div class="alert alert-success">
-    {$LANG.success_api_conection}
-</div>
-{else}
-<div class="alert alert-danger">
-    {$checks.api.message}.
-    <a href="{$links.settings}"> {$LANG.check_credentials}</a>
-</div>
-{/if}
-{/if}
 <div class="panel panel-default">
     <div class="panel-heading">
         <h3 class="panel-title" style="touch-action: none;">{$LANG.dondominio_modules_information}</h3>

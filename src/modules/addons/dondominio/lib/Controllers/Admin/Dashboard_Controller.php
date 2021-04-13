@@ -13,7 +13,7 @@ if (!defined("WHMCS")) {
 
 class Dashboard_Controller extends Controller
 {
-    const CONTROLLER_NAME = '';
+    const CONTROLLER_NAME = 'dashboard';
     const DEFAULT_TEMPLATE_FOLDER = 'dashboard';
 
     const VIEW_INDEX = '';
@@ -51,13 +51,13 @@ class Dashboard_Controller extends Controller
         $whmcs = $app->getService('whmcs');
 
         $checkAPI = (bool) $this->getRequest()->getParam('check_api');
+        $info = $app->getInformation($checkAPI);
 
         $params = [
             'whmcs_version' => $app->getService('utils')->getWHMCSVersion(),
             'version' => $app->getVersion(),
-            'checks' => $app->getInformation($checkAPI),
+            'checks' => $info,
             'premium_domains' => (int) $whmcs->isPremiumDomainEnable(),
-            'do_check' => $checkAPI,
             'links' => [
                 'more_api_info' => static::makeURL(static::PRINT_MOREINFO),
                 'update_modules' => static::makeURL(static::UPDATE_MODULES),
@@ -71,6 +71,10 @@ class Dashboard_Controller extends Controller
                 ]
             ]
         ];
+
+        if ($checkAPI) {
+            $this->addAPICHeck($info);
+        }
 
         return $this->view('index', $params);
     }
@@ -129,20 +133,39 @@ class Dashboard_Controller extends Controller
      */
     public function view_Sidebar()
     {
-        $links = [
-            'dashboard' => static::makeURL(),
-            'tlds' => DomainPricings_Controller::makeURL(),
-            'tlds_new' => DomainPricings_Controller::makeURL(DomainPricings_Controller::VIEW_AVAILABLE_TLDS),
-            'domains' => Domains_Controller::makeURL(),
-            'transfer' => Domains_Controller::makeURL(Domains_Controller::VIEW_TRANSFER),
-            'import' => Domains_Controller::makeURL(Domains_Controller::VIEW_IMPORT),
-            'deleted' => Domains_Controller::makeURL(Domains_Controller::VIEW_DELETED),
-            'whois' => Whois_Controller::makeURL(Whois_controller::VIEW_INDEX),
-            'settings' => Settings_Controller::makeURL(),
+        $app = $this->getApp();
+        $controller = $this->getRequest()->getParam('__c__', '');
+
+        $sidebar = [
+            [
+                'link' => Home_Controller::makeURL(),
+                'title' => $app->getLang('menu_home'),
+                'selected' => Home_Controller::CONTROLLER_NAME === $controller
+            ],
+            [
+                'link' => Dashboard_Controller::makeURL(),
+                'title' => $app->getLang('menu_status'),
+                'selected' => Dashboard_Controller::CONTROLLER_NAME === $controller || Settings_Controller::CONTROLLER_NAME === $controller
+            ],
+            [
+                'link' => DomainPricings_Controller::makeURL(),
+                'title' => $app->getLang('menu_tlds_update'),
+                'selected' => DomainPricings_Controller::CONTROLLER_NAME === $controller
+            ],
+            [
+                'link' => Domains_Controller::makeURL(),
+                'title' => $app->getLang('menu_domains'),
+                'selected' => Domains_Controller::CONTROLLER_NAME === $controller
+            ],
+            [
+                'link' => Whois_Controller::makeURL(),
+                'title' => $app->getLang('menu_whois'),
+                'selected' => Whois_Controller::CONTROLLER_NAME === $controller
+            ],
         ];
 
         return $this->view('sidebar', [
-            'links' => $links,
+            'sidebar' => $sidebar,
             'print_nav' => false
         ]);
     }
@@ -204,8 +227,31 @@ class Dashboard_Controller extends Controller
     {
         $app = APP::getInstance();
         $params['title'] = $app->getLang('content_title_admin');
-        $params['nav']= static::getNavArray();          
+        $params['nav'] = static::getNavArray();
         return parent::view($view, $params);
+    }
+
+    /**
+     * Add error or success of api conexion
+     * 
+     * @param array $info Result of APP GetInformation
+     * 
+     * @return void
+     */
+    protected function addAPICheck($info)
+    {
+        $app = $this->getApp();
+        $success = isset($info['api']['success']) ? $info['api']['success'] : false;
+        $error = $app->getLang('error');
+
+        if($success) {
+            $this->getResponse()->addSuccess($app->getLang('success_api_conection'));
+            return;
+        }
+
+        $error = isset($info['api']['message']) ? $info['api']['message'] : $error; 
+
+        $this->getResponse()->addError($error);
     }
 
     /**
@@ -235,7 +281,6 @@ class Dashboard_Controller extends Controller
                 'link' => static::makeURL(static::VIEW_BALANCE),
                 'selected' => $action === static::VIEW_BALANCE
             ],
-        ];   
+        ];
     }
-
 }

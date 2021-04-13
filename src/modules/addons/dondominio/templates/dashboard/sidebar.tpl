@@ -3,10 +3,10 @@
 </div>
 
 <ul class="menu">
-    <li><a href="{$links.dashboard}">{$LANG.menu_status}</a></li>
-    <li><a href="{$links.tlds}">{$LANG.menu_tlds_update}</a></li>
-    <li><a href="{$links.domains}">{$LANG.menu_domains}</a></li>
-    <li><a href="{$links.whois}">{$LANG.menu_whois}</a></li>
-    <li class="divider">&nbsp;</li>
-    <li><a href="https://docs.dondominio.com/" target="_api">{$LANG.menu_help}</a></li>
+
+    {foreach from=$sidebar item=section}
+
+    <li {if $section.selected} class="selected" {/if} ><a href="{$section.link}">{$section.title}</a></li>
+    {/foreach}
+
 </ul>

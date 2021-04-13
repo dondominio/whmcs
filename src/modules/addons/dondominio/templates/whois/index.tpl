@@ -1,14 +1,3 @@
-<h2>{$LANG.menu_whois}</h2>
-
-<div class='contexthelp'>
-    <img src='images/icons/reports.png' border='0' align='absmiddle'>&nbsp;
-    <a href='https://dev.dondominio.com/whmcs/docs/addon/' target="_blank">
-        {$LANG.info_path_moreinfo}
-    </a>
-</div>
-
-<p>
-
 <form method='post' action=''>
     <input type="hidden" name="module" value="{$module_name}">
     <input type="hidden" name="__c__" value="{$__c__}">
@@ -37,7 +26,6 @@
 </form>
 
 {if $whois_server_file_is_writable}
-<p>
 <div class='tab-pane active' id='tab1'>
     <form action='' method='post'>
         <input type="hidden" name="module" value="{$module_name}">
