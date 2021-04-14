@@ -6,6 +6,7 @@
                 <h3 class="panel-title domain-title">{$contact.contactID}</h3>
             </div>
             <div class="col-xs-4">
+                {if $contact.verificationstatus eq 'inprocess'}
                 <div class="dropdown pull-right">
                     <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -16,6 +17,7 @@
                         <li><a href="{$links.contact_resend}">{$LANG.contact_resend}</a></li>
                     </ul>
                 </div>
+                {/if}
             </div>
         </div>
     </div>
@@ -35,7 +37,7 @@
                     </tr>
                     {/if}
                     <tr>
-                        <td>{$LANG.contact_id}</td>
+                        <td>{$LANG.contact_type}</td>
                         <td>
                             {if $contact.contactType eq 'organization'}
                             {$LANG.contact_type_organization}
