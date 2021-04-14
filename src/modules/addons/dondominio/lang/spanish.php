@@ -404,4 +404,16 @@ $_ADDONLANG = array(
     'content_title_tld' => 'DonDominio / TLDs y Tarifas',
     'content_title_domains' => 'DonDominio / Gestión de dominios',
     'content_title_whois' => 'DonDominio / Proxy Whois',
+
+    /**
+     * HOME
+     */
+    'home_new_version' => 'Ya está disponible la nueva versión del Módulo de DonDominio',
+    'home_go_update' => 'Ir a Actualizar',
+    'home_api_error' => 'Se ha registrado un error en la última conexión con la API',
+    'home_check_credentials' => 'Comprobar credenciales API',
+    'home_no_problems' => 'No se han detectado problemas!',
+    'home_documentation' => 'Documentación',
+    'home_check_changelog' => 'Consultar cambios',
+
 );

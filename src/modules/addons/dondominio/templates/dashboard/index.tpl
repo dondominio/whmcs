@@ -4,9 +4,6 @@
     </div>
     <div class="panel-body">
         <div class="widget-content-padded">
-
-
-
             <table class="datatable" style="width: 100%;">
                 <tbody>
                     <tr>

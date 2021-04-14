@@ -404,4 +404,15 @@ $_ADDONLANG = array(
     'content_title_tld' => 'DonDominio / TLDs and Price',
     'content_title_domains' => 'DonDominio / Manage domains',
     'content_title_whois' => 'DonDominio / Proxy Whois',
+
+    /**
+     * HOME
+     */
+    'home_new_version' => 'The new version of the MrDomain Module is now available',
+    'home_go_update' => 'Go to Update',
+    'home_api_error' => 'An error was logged in the last connection to the API',
+    'home_check_credentials' => 'Check API credentials',
+    'home_no_problems' => 'No issues detected!',
+    'home_documentation' => 'Documentation',
+    'home_check_changelog' => 'Check changes',
 );
