@@ -46,7 +46,8 @@ class Home_Controller extends Controller
                 'admin' => Dashboard_Controller::makeURL(),
                 'settings' => Settings_Controller::makeURL(),
             ],
-            'nav' => static::getNavArray()
+            'nav' => static::getNavArray(),
+            'print_nav' => false,
         ];
 
         return $this->view('index', $params);

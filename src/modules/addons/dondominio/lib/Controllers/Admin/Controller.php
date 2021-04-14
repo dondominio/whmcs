@@ -41,6 +41,10 @@ abstract class Controller extends BaseController
         if(!isset($params['print_nav'])){
             $params['print_nav'] = true;
         }
+
+        if(!isset($params['print_title'])){
+            $params['print_title'] = true;
+        }
         
         return parent::view($view, $params);
     }

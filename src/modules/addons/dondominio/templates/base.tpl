@@ -1,12 +1,16 @@
 <link rel="stylesheet" type="text/css" href="{$css_path}style.css" />
 <div class="dd">
     
-    
-    {if $print_nav eq true}
+    {if $print_title eq true}
     <h1>{$title}</h1>
-    {include file='nav.tpl'}
-    <!-- {include file='breadcrumb.tpl'} -->
     {/if}
+
+    {if $print_nav eq true}
+    {include file='nav.tpl'}
+    {/if}
+
+    <!-- {include file='breadcrumb.tpl'} -->
+    
 
     {if count($RESPONSE->errors) gt 0 or $RESPONSE->force_errors}
     <div class='errorbox'>

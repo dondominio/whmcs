@@ -166,7 +166,8 @@ class Dashboard_Controller extends Controller
 
         return $this->view('sidebar', [
             'sidebar' => $sidebar,
-            'print_nav' => false
+            'print_nav' => false,
+            'print_title' => false,
         ]);
     }
 
@@ -209,7 +210,8 @@ class Dashboard_Controller extends Controller
 
         $params = [
             'success' => $success,
-            'print_nav' => false
+            'print_nav' => false,
+            'print_title' => false,
         ];
 
         return $this->view('update', $params);
