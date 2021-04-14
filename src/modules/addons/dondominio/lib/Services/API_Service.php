@@ -325,6 +325,48 @@ class API_Service extends AbstractService implements APIService_Interface
         return $this->parseResponse($response, $params);
     }
 
+    /**
+     * Gets the contacts of your account
+     *
+     * @see https://dev.dondominio.com/api/docs/api/#get-info-contact-getinfo
+     *
+     * @param int $contactID ID of contact
+     * @param int $infoType Type of information
+     *
+     * @return \Dondominio\API\Response\Response
+     */
+    public function getContactInfo($contactID, $infoType = 'data')
+    {
+        $params = [
+            'contactID' => $contactID,
+            'infoType' => $infoType,
+        ];
+
+        $response = $this->getApiConnection()->contact_getInfo($params);
+
+        return $this->parseResponse($response, $params);
+    }
+
+    /**
+     *  Resend the contact details verification email
+     *
+     * @see https://dev.dondominio.com/api/docs/api/#esend-verification-mail-contact-resendverificationmail
+     *
+     * @param int $page Offset where query starts
+     *
+     * @return \Dondominio\API\Response\Response
+     */
+    public function getContactResendVerificationMail($contactID)
+    {
+        $params = [
+            'contactID' => $contactID,
+        ];
+
+        $response = $this->getApiConnection()->contact_resendVerificationMail($params);
+
+        return $this->parseResponse($response, $params);
+    }
+
     public function printApiInfo()
     {
         $this->getApiConnection()->info();

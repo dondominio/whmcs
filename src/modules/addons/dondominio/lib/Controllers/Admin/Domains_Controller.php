@@ -23,6 +23,7 @@ class Domains_Controller extends Controller
     const VIEW_GETINFO = 'viewgetinfo';
     const VIEW_HISTORY = 'viewhistory';
     const VIEW_CONTACTS = 'viewcontacts';
+    const VIEW_CONTACT = 'viewcontact';
 
     const ACTION_SYNC = 'sync';
     const ACTION_SWITCH_REGISTRAR = 'switchregistrar';
@@ -30,6 +31,7 @@ class Domains_Controller extends Controller
     const ACTION_UPDATE_CONTACT = 'updatecontact';
     const ACTION_TRANSFER = 'transfer';
     const ACTION_IMPORT = 'import';
+    const action_RESENDVERIFICATIONMAIL = 'actionresendverificationmail';
 
     /**
      * Gets available actions for Controller
@@ -47,12 +49,14 @@ class Domains_Controller extends Controller
             static::VIEW_GETINFO => 'view_GetInfo',
             static::VIEW_HISTORY => 'view_History',
             static::VIEW_CONTACTS => 'view_Contacts',
+            static::VIEW_CONTACT => 'view_Contact',
             static::ACTION_SYNC => 'action_Sync',
             static::ACTION_SWITCH_REGISTRAR => 'action_SwitchRegistrar',
             static::ACTION_UPDATE_PRICE => 'action_UpdatePrice',
             static::ACTION_UPDATE_CONTACT => 'action_updateContact',
             static::ACTION_TRANSFER => 'action_Transfer',
             static::ACTION_IMPORT => 'action_Import',
+            static::action_RESENDVERIFICATIONMAIL => 'action_ResendVerificationMail',
         ];
     }
 
@@ -410,7 +414,7 @@ class Domains_Controller extends Controller
     }
 
     /**
-     * View for clients list
+     * View for contacts list
      * 
      * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
      */
@@ -463,7 +467,8 @@ class Domains_Controller extends Controller
             'filters' => $filters,
             'links' => [
                 'prev_page' => static::makeUrl(static::VIEW_CONTACTS, array_merge(['page' => ($page - 1)], $filters)),
-                'next_page' => static::makeUrl(static::VIEW_CONTACTS, array_merge(['page' => ($page + 1)], $filters))
+                'next_page' => static::makeUrl(static::VIEW_CONTACTS, array_merge(['page' => ($page + 1)], $filters)),
+                'contact' => static::makeUrl(static::VIEW_CONTACT),
             ],
             'breadcrumbs' => $this->getBreadcrumbs(static::VIEW_CONTACTS)
         ];
@@ -472,6 +477,52 @@ class Domains_Controller extends Controller
         $this->setActualView(static::VIEW_CONTACTS);
 
         return $this->view('contacts', $params);
+    }
+
+    /**
+     * View for contact
+     * 
+     * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
+     */
+    public function view_Contact()
+    {
+        $contactID = $this->getRequest()->getParam('contact_id');
+        $api = $this->getApp()->getService('api');
+        $contact = $api->getContactInfo($contactID);
+
+        if(is_null($contact)){
+            $this->getResponse()->addError($this->getApp()->getLang('domain_not_found'));
+        }
+
+        $params = [
+            'contact' => $contact->getResponseData(),
+            'links' => [
+                'contact_resend' => static::makeURL(static::action_RESENDVERIFICATIONMAIL, ['contact_id' => $contactID])
+            ]
+        ];
+
+        return $this->view('contact', $params);
+    }
+
+    /**
+     * Resend the contact details verification email
+     *
+     * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
+     */
+    public function action_ResendVerificationMail()
+    {
+        $contactID = $this->getRequest()->getParam('contact_id');
+        $api = $this->getApp()->getService('api');
+
+        try {
+            $api->getContactResendVerificationMail($contactID);
+
+            $this->getResponse()->addSuccess($this->getApp()->getLang('contact_success_resend'));
+        } catch (Exception $e) {
+            $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
+        }
+
+        return $this->view_Contact();
     }
 
     /**

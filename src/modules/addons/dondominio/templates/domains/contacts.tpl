@@ -84,6 +84,10 @@
     <thead>
         <tr>
             <th>
+                {$LANG.contact_id}
+            </th>
+
+            <th>
                 {$LANG.contact_type}
             </th>
 
@@ -112,6 +116,11 @@
         {if count($contacts) gt 0}
         {foreach $contacts item=contact}
         <tr>
+            <td>
+                <a href="{$links.contact}&contact_id={$contact.contactID}">
+                    {$contact.contactID}
+                </a>
+            </td>
             <td>
                 {if $contact.contactType eq 'organization'}
                     {$LANG.contact_type_organization}
@@ -164,6 +173,10 @@
     <tfoot>
         <tr>
             <th>
+                {$LANG.contact_id}
+            </th>
+
+            <th>
                 {$LANG.contact_type}
             </th>
 
@@ -180,11 +193,11 @@
             </th>
 
             <th>
-                {$LANG.contacts_verification}
+                {$LANG.contact_verification}
             </th>
 
             <th>
-                {$LANG.contacts_daaccepted}
+                {$LANG.contact_daaccepted}
             </th>
         </tr>
     </tfoot>

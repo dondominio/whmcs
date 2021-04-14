@@ -382,6 +382,7 @@ $_ADDONLANG = array(
      * CONTACTS
      */
     'contacts_title' => 'Contactos',
+    'contact_id' => 'ID',
     'contact_type' => 'Tipo',
     'contact_name' => 'Nombre',
     'contact_email' => 'Correo',
@@ -396,6 +397,16 @@ $_ADDONLANG = array(
     'contact_ver_failed' => 'Verificación fallida',
     'contact_type_organization' => 'Organización',
     'contact_type_individual' => 'Individuo',
+    'contact_type_phone' => 'Teléfono',
+    'contact_type_fax' => 'Fax',
+    'contact_type_address' => 'Dirección',
+    'contact_type_postal_code' => 'Código postal',
+    'contact_type_city' => 'Ciudad',
+    'contact_type_state' => 'Estado',
+    'contact_type_country' => 'País',
+    'contact_resend' => 'Reenviar email de verificación',
+    'contact_success_resend' => 'Email de verificación reenviado correctamente',
+    
 
     /**
      * CONTENT TITLES
