@@ -128,7 +128,8 @@ class Domains_Controller extends Controller
             'breadcrumbs' => $this->getBreadcrumbs()
         ];
 
-        $this->setApiPagination($params, $limit, $page, $totalDomains);
+        $this->setPagination($params, $limit, $page, $totalDomains);
+        $this->setActualView(static::VIEW_INDEX);
 
         return $this->view('index', $params);
     }
@@ -170,7 +171,8 @@ class Domains_Controller extends Controller
             'breadcrumbs' => $this->getBreadcrumbs(static::VIEW_TRANSFER)
         ];
 
-        $this->setApiPagination($params, $limit, $page, $totalDomains);
+        $this->setPagination($params, $limit, $page, $totalDomains);
+        $this->setActualView(static::VIEW_TRANSFER);
 
         return $this->view('transfer', $params);
     }
@@ -233,7 +235,8 @@ class Domains_Controller extends Controller
             'breadcrumbs' => $this->getBreadcrumbs(static::VIEW_IMPORT)
         ];
 
-        $this->setApiPagination($params, $limit, $page, $totalRecords);
+        $this->setPagination($params, $limit, $page, $totalRecords);
+        $this->setActualView(static::VIEW_IMPORT);
 
         return $this->view('import', $params);
     }
@@ -275,7 +278,8 @@ class Domains_Controller extends Controller
             'breadcrumbs' => $this->getBreadcrumbs(static::VIEW_DELETED)
         ];
 
-        $this->setApiPagination($params, $limit, $page, $totalRecords);
+        $this->setPagination($params, $limit, $page, $totalRecords);
+        $this->setActualView(static::VIEW_DELETED);
 
         return $this->view('deleted', $params);
     }
@@ -400,7 +404,7 @@ class Domains_Controller extends Controller
             'breadcrumbs' => $this->getBreadcrumbs(static::VIEW_HISTORY, $domain)
         ];
 
-        $this->setApiPagination($params, $limit, $page, $totalRecords);
+        $this->setPagination($params, $limit, $page, $totalRecords);
 
         return $this->view('domain', $params);
     }
@@ -464,7 +468,8 @@ class Domains_Controller extends Controller
             'breadcrumbs' => $this->getBreadcrumbs(static::VIEW_CONTACTS)
         ];
 
-        $this->setApiPagination($params, $limit, $page, $totalRecords);
+        $this->setPagination($params, $limit, $page, $totalRecords);
+        $this->setActualView(static::VIEW_CONTACTS);
 
         return $this->view('contacts', $params);
     }
@@ -761,34 +766,33 @@ class Domains_Controller extends Controller
     public function view($view, array $params = [])
     {
         $app = App::getInstance();
-        $action = $this->getRequest()->getParam('__a__', '');
 
         $params['title'] = $app->getLang('content_title_domains');
         $params['nav'] = [
             [
                 'title' => $app->getLang('domains_title'),
                 'link' => static::makeURL(static::VIEW_INDEX),
-                'selected' => in_array($action, [static::VIEW_INDEX, static::VIEW_DOMAIN, static::VIEW_HISTORY])
+                'selected' => $this->checkActualView(static::VIEW_INDEX)
             ],
             [
                 'title' => $app->getLang('transfer_title'),
                 'link' => static::makeURL(static::VIEW_TRANSFER),
-                'selected' => static::VIEW_TRANSFER === $action
+                'selected' => $this->checkActualView(static::VIEW_TRANSFER)
             ],
             [
                 'title' => $app->getLang('import_title'),
                 'link' => static::makeURL(static::VIEW_IMPORT),
-                'selected' => static::VIEW_IMPORT === $action
+                'selected' => $this->checkActualView(static::VIEW_IMPORT)
             ],
             [
                 'title' => $app->getLang('deleted_domains_title'),
                 'link' => static::makeURL(static::VIEW_DELETED),
-                'selected' => static::VIEW_DELETED === $action
+                'selected' => $this->checkActualView(static::VIEW_DELETED)
             ],
             [
                 'title' => $app->getLang('contacts_title'),
                 'link' => static::makeURL(static::VIEW_CONTACTS),
-                'selected' => static::VIEW_CONTACTS === $action
+                'selected' => $this->checkActualView(static::VIEW_CONTACTS)
             ],
         ];   
 
@@ -851,26 +855,5 @@ class Domains_Controller extends Controller
         }
 
         return $bredcrumbs;
-    }
-
-    protected function setApiPagination(&$params, $limit, $page, $totalRecords)
-    {
-        $total_pages = ceil($totalRecords / $limit);
-        $paginationSelect = [];
-
-        $total_pages = (int) $total_pages === 0 ? 1 : $total_pages;
-        $page = $page > $total_pages ? $total_pages : $page;
-
-        for ($i = 1; $i <= $total_pages; $i++) {
-            $paginationSelect[$i] = $i;
-        }
-
-        $params['pagination'] = [
-            'page' => $page,
-            'limit' => $limit,
-            'total' => $totalRecords,
-            'total_pages' => $total_pages
-        ];
-        $params['pagination_select'] = $paginationSelect;
     }
 }

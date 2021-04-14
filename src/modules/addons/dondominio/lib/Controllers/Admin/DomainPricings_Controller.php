@@ -60,14 +60,8 @@ class DomainPricings_Controller extends Controller
 
         $total_pages = ceil($totalTlds / $limit);
 
-        if ($total_pages == 0) {
-            $total_pages = 1;
-        }
-
-        if ($page > $total_pages) {
-            $page = $total_pages;
-        }
-
+        $total_pages = (int) $total_pages === 0 ? 1 : $total_pages;
+        $page = $page > $total_pages ? $total_pages : $page;
         $offset = (($page - 1) * $limit);
 
         $tlds = $this->getApp()->getService('whmcs')->getDomainPricings([], $offset, $limit);
@@ -98,12 +92,8 @@ class DomainPricings_Controller extends Controller
             'breadcrumbs' => $this->getBreadcrumbs()
         ];
 
-        $paginationSelect = [];
-        for ($i = 1; $i <= $total_pages; $i++) {
-            $paginationSelect[$i] = $i;
-        }
-
-        $params['pagination_select'] = $paginationSelect;
+        $this->setPagination($params, $limit, $page, $totalTlds);
+        $this->setActualView(static::VIEW_INDEX);
 
         return $this->view('index', $params);
     }
@@ -127,14 +117,8 @@ class DomainPricings_Controller extends Controller
 
         $total_pages = ceil($availableTldsCount / $limit);
 
-        if ($total_pages == 0) {
-            $total_pages = 1;
-        }
-
-        if ($page > $total_pages) {
-            $page = $total_pages;
-        }
-
+        $total_pages = (int) $total_pages === 0 ? 1 : $total_pages;
+        $page = $page > $total_pages ? $total_pages : $page;
         $offset = (($page - 1) * $limit);
 
         $availableTlds = $this->getApp()->getService('pricing')->getAvailableTlds($filters, $offset, $limit);
@@ -163,12 +147,8 @@ class DomainPricings_Controller extends Controller
             'breadcrumbs' => $this->getBreadcrumbs(static::VIEW_AVAILABLE_TLDS)
         ];
 
-        $paginationSelect = [];
-        for ($i = 1; $i <= $total_pages; $i++) {
-            $paginationSelect[$i] = $i;
-        }
-
-        $params['pagination_select'] = $paginationSelect;
+        $this->setPagination($params, $limit, $page, $availableTldsCount);
+        $this->setActualView(static::VIEW_AVAILABLE_TLDS);
 
         return $this->view('availables', $params);
     }
@@ -396,19 +376,18 @@ class DomainPricings_Controller extends Controller
     public function view($view, array $params = [])
     {
         $app = App::getInstance();
-        $action = $this->getRequest()->getParam('__a__', '');
         
         $params['title'] = $app->getLang('content_title_tld');
         $params['nav'] = [
             [
                 'title' => $app->getLang('tld_title'),
                 'link' => static::makeURL(static::VIEW_INDEX),
-                'selected' => in_array($action, [static::VIEW_INDEX, static::VIEW_SETTINGS, static::ACTION_SAVE_SETTINGS])
+                'selected' => $this->checkActualView(static::VIEW_INDEX)
             ],
             [
                 'title' => $app->getLang('tld_new_title'),
                 'link' => static::makeURL(static::VIEW_AVAILABLE_TLDS),
-                'selected' => static::VIEW_AVAILABLE_TLDS === $action || $action === static::ACTION_CREATE,
+                'selected' => $this->checkActualView(static::VIEW_AVAILABLE_TLDS)
             ],
         ];
 
