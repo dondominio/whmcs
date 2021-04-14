@@ -5,9 +5,9 @@
   border-bottom: solid #ff9800;
 }
 
-.dd .nav a:hover {
+.dd .nav a:hover:not(.navbar-selected) {
   color: #333 !important;
-  border-bottom: solid #ff9800;
+  border-bottom: solid #666666;
 }
 
 .dd .nav a:not(:hover):not(.navbar-selected) {
