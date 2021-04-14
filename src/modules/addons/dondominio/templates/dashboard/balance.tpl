@@ -20,15 +20,11 @@
                     </tr>
                     <tr>
                         <td style="width: 250px">{$LANG.balance_title}</td>
-                        <td data-balane>{$info.balance}</td>
+                        <td data-balane>{$info.balance} {$info.currency}</td>
                     </tr>
                     <tr>
                         <td style="width: 250px">{$LANG.balance_threshold}</td>
-                        <td data-threshold>{$info.threshold}</td>
-                    </tr>
-                    <tr>
-                        <td style="width: 250px">{$LANG.balance_currency}</td>
-                        <td data-currency>{$info.currency}</td>
+                        <td data-threshold>{$info.threshold} {$info.currency}</td>
                     </tr>
                 </tbody>
             </table>
