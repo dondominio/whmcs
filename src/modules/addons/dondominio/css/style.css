@@ -102,6 +102,18 @@
   color: #ff9800;
 }
 
+.dd .form-footer {
+  text-align: right;
+}
+
+.dd .form-label {
+  text-align: right;
+}
+
+.dd .form-table td{
+  padding: 3px 5px;
+}
+
 #contentarea>div>h1:first-child {
   display: none;
 }
