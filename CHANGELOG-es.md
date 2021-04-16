@@ -6,6 +6,23 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.
 
 ## [Pendiente por lanzar]
 
+## [2.1.4] - 2021-04-16
+### Changed
+- Mostrar el saldo disponible del usuario API.
+- Tabla con los contactos del usuario API.
+- Mostrar más información en la consulta de un dominio.
+- Poder activar/desactivar los dominios prémium desde el Addon.
+- Vista para los contactos del usuario API.
+- Poder reenviar el correo de verificación a un contacto.
+- Mejora en la navegación dentro del Addon.
+- Nueva pantalla de inicio.
+- Poder activar y configurar el Registrador dentro del Addon.
+- Widget en dashboard de WHMCS para actualizar el Registrador/Addon y para acceder al Addon.
+- Popup en el dashboard de WHMCS que avisa de una nueva versión.
+  
+### Fixed
+- Permanecer filtros al paginar en listas dentro del apartado de gestión de Dominios.
+
 ## [2.1.3] - 2021-04-06
 ### Changed
 - El registrador admite dominios premium.
