@@ -1,4 +1,4 @@
-<link rel="stylesheet" type="text/css" href="{$css_path}style.css" />
+<link rel="stylesheet" type="text/css" href="{$css_path}style.css?v={$version}" />
 <div class="dd">
     
     {if $print_title eq true}

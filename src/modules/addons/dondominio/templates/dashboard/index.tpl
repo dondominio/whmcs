@@ -98,12 +98,69 @@
                         </td>
                         <td>
                             {$checks.registrar.message}
+                            {if $checks.registrar.success eq true}
+                            {if $checks.registrar.active eq true}
+                            <button class="btn btn-default" data-toggle="modal"
+                                data-target="#registrar">{$LANG.config}</button>
+                            {else}
+                            <a data-reload-link class="btn btn-success" href='{$links.active_registrar}'>{$LANG.active}</a>
+                            {/if}
+                            {/if}
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
+</div>
+
+<div class="modal" id="registrar" tabindex="-1" role="modal">
+    <form data-form="registrar" method="post"
+        action="{$links.registrar_config}">
+        <fieldset>
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content panel panel-primary">
+                    <div class="modal-header panel-heading">
+                        <h5 class="modal-title">{$LANG.registrar_config_title}</h5>
+                    </div>
+                    <div class="modal-body">
+                        <table class="form" width="100%">
+                            <tbody>
+                                {foreach from=$registrar_config key=key item=val}
+                                <tr>
+                                    <td class="fieldlabel">{$val.FriendlyName}</td>
+                                    <td class="fieldarea">
+                                        {if ($val.Type eq 'text') or ($val.Type eq 'password')}
+                                        <input type="text" name="{$val.Name}"
+                                            class="form-control input-inline {$val.inputClass}" value="{$val.Value}"
+                                            placeholder="{$val.Placeholder}" />
+                                        {$val.Description}
+                                        {/if}
+                                        {if $val.Type eq 'yesno'}
+                                        <label class="checkbox-inline"><input type="hidden" name="{$val.Name}"
+                                                value=""><input type="checkbox" name="{$val.Name}" {if $val.Value}
+                                                checked="checked" {/if} />{$val.Description}</label>
+                                        {/if}
+                                        {if $val.Type eq 'dropdown'}
+                                        <select name="{$val.Name}{if $val.Multiple}[]" multiple="true" size="3"
+                                            {else}"{/if} class="form-control select-inline">
+                                            {html_options options=$val.Options selected=$val.Value}
+                                            {/if}
+                                    </td>
+                                </tr>
+                                {/foreach}
+                            </tbody>
+                        </table>
+                        <br>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" name="save" value="{$LANG.btn_save}" class="btn btn-primary">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{$LANG.close}</button>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </form>
 </div>
 
 <br>
@@ -192,6 +249,52 @@
             onColor: 'success',
             offColor: 'default'
         }).on('switchChange.bootstrapSwitch', saveSettingPremiumDomains)
+
+        $('[data-form="registrar"]').on('submit', function (event) {
+            event.preventDefault();
+
+            let fieldset = $(this).find('fieldset');
+            let url = $(this).attr('action');
+            let data = $(this).serialize();
+            let errorTitle = $('[data-error]').val();
+            let successTitle = $('[data-success]').val();
+
+            fieldset.attr("disabled", "disabled");
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: data,
+            }).done(function () {
+                $.growl.notice({
+                    title: successTitle,
+                    message: ''
+                })
+            }).fail(function () {
+                $.growl.error({
+                    title: errorTitle,
+                    message: ''
+                })
+            }).always(function () {
+                fieldset.removeAttr("disabled");
+            })
+
+        });
+
+        $('[data-reload-link]').on('click', function(event) {
+            event.preventDefault();
+            $(this).attr('disabled', true);
+            let url = $(this).attr('href');
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+            }).done(function () {
+                location.reload();
+            })
+
+        });
+
     });
 
 </script>

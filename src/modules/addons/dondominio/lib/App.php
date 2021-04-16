@@ -521,7 +521,9 @@ class App
             if ($this->getService('utils')->isRegistrarModuleActive()) {
                 $this->getService('utils')->findRegistrarModule();
                 $checks['registrar']['success'] = true;
+                $checks['registrar']['active'] = true;
             } else {
+                $checks['registrar']['active'] = false;
                 $checks['registrar']['success'] = true;
                 $checks['registrar']['message'] = $this->getLang('registrar_not_activated');
             }

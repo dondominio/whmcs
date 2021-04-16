@@ -6,6 +6,7 @@ use WHMCS\Module\Addon\Dondominio\App;
 use Exception;
 use WHMCS\Module\Addon\Dondominio\Helpers\Request;
 use WHMCS\Module\Addon\Dondominio\Helpers\Response;
+use WHMCS\Module\Registrar\Dondominio\Actions\getConfigArray;
 
 if (!defined("WHMCS")) {
     die("This file cannot be accessed directly");
@@ -52,8 +53,19 @@ class Dashboard_Controller extends Controller
 
         $checkAPI = (bool) $this->getRequest()->getParam('check_api');
         $info = $app->getInformation($checkAPI);
+        $registrarConfig = [];
+        $token = '';
+
+        if ($info['registrar']) {
+            $registrarConfig = $this->getRegistrarConfig();
+        }
+
+        if (function_exists('generate_token')) {
+            $token = generate_token('link');
+        }
 
         $params = [
+            'module_name' => $app->getName(),
             'whmcs_version' => $app->getService('utils')->getWHMCSVersion(),
             'version' => $app->getVersion(),
             'checks' => $info,
@@ -63,7 +75,10 @@ class Dashboard_Controller extends Controller
                 'update_modules' => static::makeURL(static::UPDATE_MODULES),
                 'check_api_status_link' => static::makeURL(static::VIEW_INDEX, ['check_api' => 1]),
                 'settings' => Settings_Controller::makeURL(),
+                'active_registrar' => sprintf('/admin/configregistrars.php?action=activate&module=%s%s', $app->getName(), $token),
+                'registrar_config' => sprintf('/admin/configregistrars.php?action=save&module=%s', $app->getName()),
             ],
+            'registrar_config' => $registrarConfig,
             'breadcrumbs' => [
                 [
                     'title' => $app->getLang('menu_status'),
@@ -246,12 +261,12 @@ class Dashboard_Controller extends Controller
         $success = isset($info['api']['success']) ? $info['api']['success'] : false;
         $error = $app->getLang('error');
 
-        if($success) {
+        if ($success) {
             $this->getResponse()->addSuccess($app->getLang('success_api_conection'));
             return;
         }
 
-        $error = isset($info['api']['message']) ? $info['api']['message'] : $error; 
+        $error = isset($info['api']['message']) ? $info['api']['message'] : $error;
 
         $this->getResponse()->addError($error);
     }
@@ -284,5 +299,89 @@ class Dashboard_Controller extends Controller
                 'selected' => $action === static::VIEW_BALANCE
             ],
         ];
+    }
+
+    /**
+     * Returns an array to mount the Registrar configuration form
+     * 
+     * @return array
+     */
+    protected function getRegistrarConfig()
+    {
+        $getConfigArray = new getConfigArray(new \WHMCS\Module\Registrar\Dondominio\App(), []);
+        $registrarConfig = [];
+
+        $registrar = new \WHMCS\Module\Registrar();
+        $registrar->load('dondominio');
+        $values = $registrar->getSettings();
+
+        foreach ($getConfigArray() as $key => $val) {
+            if ($val['Type'] === 'System') {
+                continue;
+            }
+
+            $val['Name'] = $key;
+            $val['Value'] = $values[$key];
+            $registrarConfig[] = $this->processRegitrarValues($val);
+        }
+
+        return $registrarConfig;
+    }
+
+    /**
+     * Return processed array of one Registrar config
+     * 
+     * @param array $values Values of one Registrar config array
+     * 
+     * @return array
+     */
+    protected function processRegitrarValues($values)
+    {
+        if (is_null($values["Value"])) {
+            $values["Value"] = (isset($values["Default"]) ? $values["Default"] : "");
+        }
+
+        if (empty($values["Size"])) {
+            $values["Size"] = 40;
+        }
+
+        if (!isset($values["Placeholder"])) {
+            $values["Placeholder"] = '';
+        }
+
+        $inputClass = "input-";
+        switch (true) {
+            case $values["Size"] <= 10:
+                $inputClass .= "100";
+                break;
+            case $values["Size"] <= 20:
+                $inputClass .= "200";
+                break;
+            case $values["Size"] <= 30:
+                $inputClass .= "300";
+                break;
+            default:
+                $inputClass .= "400";
+                break;
+        }
+
+        $values['inputClass'] = $inputClass;
+
+        if ($values["Type"] === 'text') {
+            $values['Value'] = \WHMCS\Input\Sanitize::encode($values["Value"]);
+        }
+
+        if ($values["Type"] === 'dropdown' || !is_array($values["Options"])) {
+            $options = explode(',', $values["Options"]);
+            $optionsArray = [];
+
+            foreach ($options as $option) {
+                $optionsArray[$option] = $option;
+            }
+
+            $values["Options"] = $optionsArray;
+        }
+
+        return $values;
     }
 }

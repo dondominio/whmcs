@@ -283,6 +283,7 @@ $_ADDONLANG = array(
     'check_credentials' => 'API credentials',
     'check_api_status' => 'Check Status',
     'success_api_conection' => 'Correct connection with DonDominio API',
+    'registrar_config_title' => 'Registrar Configuration',
 
     /**
      * GENERIC
@@ -293,6 +294,7 @@ $_ADDONLANG = array(
     'success_action' => 'Action successful',
     'error_action' => 'Setting update failed',
     'config' => 'Configure',
+    'active' => 'Activate',
 
     /**
      * UPDATE
