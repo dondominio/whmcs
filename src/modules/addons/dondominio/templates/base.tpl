@@ -9,9 +9,6 @@
     {include file='nav.tpl'}
     {/if}
 
-    <!-- {include file='breadcrumb.tpl'} -->
-    
-
     {if count($RESPONSE->errors) gt 0 or $RESPONSE->force_errors}
     <div class='errorbox'>
         <span class='title'>

@@ -129,7 +129,6 @@ class Domains_Controller extends Controller
                 'prev_page' => static::makeUrl(static::VIEW_INDEX, array_merge(['page' => ($page - 1)], $filters)),
                 'next_page' => static::makeUrl(static::VIEW_INDEX, array_merge(['page' => ($page + 1)], $filters))
             ],
-            'breadcrumbs' => $this->getBreadcrumbs()
         ];
 
         $this->setPagination($params, $limit, $page, $totalDomains);
@@ -172,7 +171,6 @@ class Domains_Controller extends Controller
                 'prev_page' => static::makeUrl(static::VIEW_TRANSFER, ['page' => ($page - 1)]),
                 'next_page' => static::makeUrl(static::VIEW_TRANSFER, ['page' => ($page + 1)])
             ],
-            'breadcrumbs' => $this->getBreadcrumbs(static::VIEW_TRANSFER)
         ];
 
         $this->setPagination($params, $limit, $page, $totalDomains);
@@ -236,7 +234,6 @@ class Domains_Controller extends Controller
                 'next_page' => static::makeUrl(static::VIEW_IMPORT, array_merge(['page' => ($page + 1)], $filters))
             ],
             'filters' => $filters,
-            'breadcrumbs' => $this->getBreadcrumbs(static::VIEW_IMPORT)
         ];
 
         $this->setPagination($params, $limit, $page, $totalRecords);
@@ -279,7 +276,6 @@ class Domains_Controller extends Controller
                 'prev_page' => static::makeUrl(static::VIEW_DELETED, ['page' => ($page - 1)]),
                 'next_page' => static::makeUrl(static::VIEW_DELETED, ['page' => ($page + 1)])
             ],
-            'breadcrumbs' => $this->getBreadcrumbs(static::VIEW_DELETED)
         ];
 
         $this->setPagination($params, $limit, $page, $totalRecords);
@@ -356,7 +352,6 @@ class Domains_Controller extends Controller
                 'history' => $this->makeURL(static::VIEW_HISTORY, ['domain_id' => $domain->id]),
                 'sync' => $this->makeURL(static::ACTION_SYNC, ['domain_id' => $domain->id])
             ],
-            'breadcrumbs' => $this->getBreadcrumbs(static::VIEW_DOMAIN, $domain)
         ];
 
         return $this->view('domain', $params);
@@ -405,7 +400,6 @@ class Domains_Controller extends Controller
                 'history' => $this->makeURL(static::VIEW_HISTORY, ['domain_id' => $domain->id]),
                 'sync' => $this->makeURL(static::ACTION_SYNC, ['domain_id' => $domain->id])
             ],
-            'breadcrumbs' => $this->getBreadcrumbs(static::VIEW_HISTORY, $domain)
         ];
 
         $this->setPagination($params, $limit, $page, $totalRecords);
@@ -470,7 +464,6 @@ class Domains_Controller extends Controller
                 'next_page' => static::makeUrl(static::VIEW_CONTACTS, array_merge(['page' => ($page + 1)], $filters)),
                 'contact' => static::makeUrl(static::VIEW_CONTACT),
             ],
-            'breadcrumbs' => $this->getBreadcrumbs(static::VIEW_CONTACTS)
         ];
 
         $this->setPagination($params, $limit, $page, $totalRecords);
@@ -848,63 +841,5 @@ class Domains_Controller extends Controller
         ];   
 
         return parent::view($view, $params);
-    }
-
-    /**
-     * Return array  with the breadcrumbs
-     * 
-     * @param string $action Controller action
-     * @param WHMCS\Domain\Domain $domain Domain id of the view
-     * 
-     * @return array
-     */
-    protected function getBreadcrumbs($action = null, $domain = null)
-    {
-        $app = $this->getApp();
-        $bredcrumbs = [];
-
-        $bredcrumbs[] = [
-            'title' => $app->getLang('menu_domains'),
-            'link' => static::makeURL()
-        ];
-
-        $actions = [
-            static::VIEW_TRANSFER => [
-                'title' => $app->getLang('transfer_title'),
-                'link' => static::makeURL(static::VIEW_TRANSFER)
-            ],
-            static::VIEW_IMPORT => [
-                'title' => $app->getLang('import_title'),
-                'link' => static::makeURL(static::VIEW_IMPORT)
-            ],
-            static::VIEW_DELETED => [
-                'title' => $app->getLang('deleted_domains_title'),
-                'link' => static::makeURL(static::VIEW_DELETED)
-            ],
-            static::VIEW_CONTACTS => [
-                'title' => $app->getLang('contacts_title'),
-                'link' => static::makeURL(static::VIEW_CONTACTS)
-            ],
-        ];
-
-        if (isset($actions[$action])){
-            $bredcrumbs[] = $actions[$action];
-        }
-
-        if (!is_null($domain)){
-            $bredcrumbs[] = [
-                'title' => $domain->domain,
-                'link' => static::makeURL(static::VIEW_DOMAIN, ['domain_id' => $domain->id])
-            ];
-
-            if($action === static::VIEW_HISTORY){
-                $bredcrumbs[] = [
-                    'title' => $app->getLang('bradcrumbs_history_title'),
-                    'link' => static::makeURL(static::VIEW_HISTORY, ['domain' => $domain->domain])
-                ];
-            }
-        }
-
-        return $bredcrumbs;
     }
 }

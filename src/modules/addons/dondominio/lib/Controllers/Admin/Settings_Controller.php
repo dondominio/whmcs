@@ -115,16 +115,6 @@ class Settings_Controller extends Controller
             'whois_domain_placeholder' => $whoisDomainPlaceholder,
             'whois_ip_placeholder' => $whoisIpPlaceholder,
             'actions' => $actions,
-            'breadcrumbs' => [
-                [
-                    'title' => $this->getApp()->getLang('menu_status'),
-                    'link' => Dashboard_Controller::makeURL()
-                ],
-                [
-                    'title' => $this->getApp()->getLang('settings_title'),
-                    'link' => static::makeURL()
-                ]
-            ]
         ];
 
         if ($settings->get('register_increase_type') == 'fixed') {

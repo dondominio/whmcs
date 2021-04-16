@@ -75,7 +75,6 @@ class Whois_Controller extends Controller
                 'import' => static::makeURL(static::VIEW_IMPORT),
                 'export' => static::makeURL(static::ACTION_EXPORT)
             ],
-            'breadcrumbs' => $this->getBreadcrumbs()
         ];
 
         return $this->view('index', $params);
@@ -93,7 +92,6 @@ class Whois_Controller extends Controller
                 'index' => static::makeURL(),
                 'import' => static::makeURL(static::ACTION_IMPORT)
             ],
-            'breadcrumbs' => $this->getBreadcrumbs(static::VIEW_IMPORT)
         ];
 
         return $this->view('import', $params);
@@ -124,7 +122,6 @@ class Whois_Controller extends Controller
             'whois_domain_placeholder' => $whoisDomainPlaceholder,
             'whois_ip_placeholder' => $whoisIpPlaceholder,
             'need_config' => strlen($whoisDomain) == 0,
-            'breadcrumbs' => $this->getBreadcrumbs(static::VIEW_CONFIG)
         ];
 
         return $this->view('config', $params);
@@ -256,40 +253,5 @@ class Whois_Controller extends Controller
         ];   
 
         return parent::view($view, $params);
-    }
-
-    /**
-     * Return array with the breadcrumbs
-     * 
-     * @param string $action Controller action
-     * 
-     * @return array
-     */
-    protected function getBreadcrumbs($action = null)
-    {
-        $app = $this->getApp();
-        $bredcrumbs = [];
-
-        $bredcrumbs[] = [
-            'title' => $app->getLang('menu_whois'),
-            'link' => static::makeURL()
-        ];
-
-        $actions = [
-            static::VIEW_CONFIG => [
-                'title' => $app->getLang('settings_title'),
-                'link' => static::makeURL(static::VIEW_CONFIG)
-            ],
-            static::VIEW_IMPORT => [
-                'title' => $app->getLang('import_title'),
-                'link' => static::makeURL(static::VIEW_IMPORT)
-            ],
-        ];
-
-        if (isset($actions[$action])){
-            $bredcrumbs[] = $actions[$action];
-        }
-
-        return $bredcrumbs;
     }
 }

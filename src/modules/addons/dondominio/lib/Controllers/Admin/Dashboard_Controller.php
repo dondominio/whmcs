@@ -79,12 +79,6 @@ class Dashboard_Controller extends Controller
                 'registrar_config' => sprintf('/admin/configregistrars.php?action=save&module=%s', $app->getName()),
             ],
             'registrar_config' => $registrarConfig,
-            'breadcrumbs' => [
-                [
-                    'title' => $app->getLang('menu_status'),
-                    'link' => static::makeURL()
-                ]
-            ]
         ];
 
         if ($checkAPI) {
@@ -110,16 +104,6 @@ class Dashboard_Controller extends Controller
             'links' => [
                 'update' => static::makeURL(static::VIEW_BALANCEUPDATE),
             ],
-            'breadcrumbs' => [
-                [
-                    'title' => $app->getLang('menu_status'),
-                    'link' => static::makeURL()
-                ],
-                [
-                    'title' =>  $app->getLang('balance_title'),
-                    'link' => static::makeURL()
-                ]
-            ]
         ];
 
         return $this->view('balance', $params);

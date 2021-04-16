@@ -89,7 +89,6 @@ class DomainPricings_Controller extends Controller
                 'prev_page' => static::makeUrl(static::VIEW_INDEX, ['page' => ($page - 1)]),
                 'next_page' => static::makeUrl(static::VIEW_INDEX, ['page' => ($page + 1)])
             ],
-            'breadcrumbs' => $this->getBreadcrumbs()
         ];
 
         $this->setPagination($params, $limit, $page, $totalTlds);
@@ -144,7 +143,6 @@ class DomainPricings_Controller extends Controller
                 'prev_page' => static::makeUrl(static::VIEW_AVAILABLE_TLDS, array_merge($filters, ['page' => ($page - 1)])),
                 'next_page' => static::makeUrl(static::VIEW_AVAILABLE_TLDS, array_merge($filters, ['page' => ($page + 1)])),
             ],
-            'breadcrumbs' => $this->getBreadcrumbs(static::VIEW_AVAILABLE_TLDS)
         ];
 
         $this->setPagination($params, $limit, $page, $availableTldsCount);
@@ -180,7 +178,6 @@ class DomainPricings_Controller extends Controller
             'links' => [
                 'tlds_index' => static::makeURL()
             ],
-            'breadcrumbs' => $this->getBreadcrumbs(static::VIEW_SETTINGS, $tld)
         ];
 
         return $this->view('settings', $params);
@@ -392,40 +389,5 @@ class DomainPricings_Controller extends Controller
         ];
 
         return parent::view($view, $params);
-    }
-
-    /**
-     * Return array with the breadcrumbs
-     * 
-     * @param string $action Controller action
-     * @param string $tld TLD of the view
-     * 
-     * @return array
-     */
-    protected function getBreadcrumbs($action = null, $tld = null)
-    {
-        $app = $this->getApp();
-        $breadcrumb = [];
-
-        $breadcrumb[] = [
-            'title' => $app->getLang('menu_tlds_update'),
-            'link' => static::makeURL()
-        ];
-
-        if($action === static::VIEW_AVAILABLE_TLDS){
-            $breadcrumb[] = [
-                'title' => $app->getLang('tld_new_title'),
-                'link' => static::makeURL(static::VIEW_AVAILABLE_TLDS)
-            ];
-        }
-
-        if(!is_null($tld)){
-            $breadcrumb[] = [
-                'title' => $tld,
-                'link' => static::makeURL(static::VIEW_SETTINGS, ['tld' => $tld])
-            ];
-        }
-
-        return $breadcrumb;
     }
 }
