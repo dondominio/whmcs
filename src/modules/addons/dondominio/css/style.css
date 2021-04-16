@@ -110,8 +110,28 @@
   text-align: right;
 }
 
-.dd .form-table td{
+.dd .form-table td {
   padding: 3px 5px;
+}
+
+.dd-popup-header {
+  background-color: #ff9800;
+  border-color: #ff9800;
+}
+
+.dd-popup-body {
+  text-align: center;
+}
+
+.dd-update-btn {
+  color: #fff;
+  background-color: #ff9800;
+  border-color: #ff9800;
+}
+
+.dd-no-show-checkbox {
+  outline: none !important;
+  outline-offset: 0px !important;
 }
 
 #contentarea>div>h1:first-child {
