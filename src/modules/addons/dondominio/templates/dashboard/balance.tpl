@@ -20,11 +20,11 @@
                     </tr>
                     <tr>
                         <td style="width: 250px">{$LANG.balance_title}</td>
-                        <td data-balane>{$info.balance} {$info.currency}</td>
+                        <td><span data-balane>{$info.balance}</span> <span data-currency>{$info.currency}</span></td>
                     </tr>
                     <tr>
                         <td style="width: 250px">{$LANG.balance_threshold}</td>
-                        <td data-threshold>{$info.threshold} {$info.currency}</td>
+                        <td ><span data-threshold>{$info.threshold}</span> <span data-currency>{$info.currency}</span></td>
                     </tr>
                 </tbody>
             </table>
@@ -45,9 +45,9 @@
 
             $.get(link, function (response) {
                 $('[data-client]').text(response.clientName)
-                $('[data-balane]').text(response.balance_title)
-                $('[data-threshold]').text(response.balance_threshold)
-                $('[data-currency]').text(response.balance_currency)
+                $('[data-balane]').text(response.balance)
+                $('[data-threshold]').text(response.threshold)
+                $('[data-currency]').text(response.currency)
 
                 info.show();
             });
