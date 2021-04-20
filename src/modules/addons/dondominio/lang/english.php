@@ -295,6 +295,7 @@ $_ADDONLANG = array(
     'error_action' => 'Setting update failed',
     'config' => 'Configure',
     'active' => 'Activate',
+    'update' => 'Update',
 
     /**
      * UPDATE
@@ -406,6 +407,7 @@ $_ADDONLANG = array(
     'contact_type_city' => 'City',
     'contact_type_state' => 'State',
     'contact_type_country' => 'Country',
+    'contact_resend' => 'Resend verification email',
     'contact_success_resend' => 'Verification email resend successfully',
 
     /**

@@ -6,7 +6,7 @@
                 <h3 class="panel-title domain-title">{$LANG.balance_title}</h3>
             </div>
             <div class="col-xs-4">
-                <a data-update href="{$links.update}" class="btn btn-default pull-right">Actualizar</a>
+                <a data-update href="{$links.update}" class="btn btn-default pull-right">{$LANG.update}</a>
             </div>
         </div>
     </div>

@@ -295,6 +295,7 @@ $_ADDONLANG = array(
     'error_action' => 'Error al realizar la acción',
     'config' => 'Configurar',
     'active' => 'Activar',
+    'update' => 'Actualizar',
 
     /**
      * UPDATE
