@@ -6,7 +6,7 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.
 
 ## [Pendiente por lanzar]
 
-## [2.1.4] - 2021-04-16
+## [2.1.4] - 2021-04-21
 ### Changed
 - Mostrar el saldo disponible del usuario API.
 - Tabla con los contactos del usuario API.

@@ -35,7 +35,7 @@ $_ADDONLANG = array(
 
     //Menu
     'menu_home' => 'Inicio',
-    'menu_status' => 'Administracion',
+    'menu_status' => 'Administración',
     'menu_tlds_update' => 'TLDs y Tarifas',
     'menu_domains' => 'Gestión de dominios',
     'menu_whois' => 'Proxy Whois',
@@ -414,7 +414,7 @@ $_ADDONLANG = array(
     /**
      * CONTENT TITLES
      */
-    'content_title_admin' => 'DonDominio / Administracion',
+    'content_title_admin' => 'DonDominio / Administración',
     'content_title_tld' => 'DonDominio / TLDs y Tarifas',
     'content_title_domains' => 'DonDominio / Gestión de dominios',
     'content_title_whois' => 'DonDominio / Proxy Whois',

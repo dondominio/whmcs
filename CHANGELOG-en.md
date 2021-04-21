@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [2.1.4] - 2021-04-16
+## [2.1.4] - 2021-04-21
 ### Changed
 - Show available balance of API user.
 - Table with API user contacts.
