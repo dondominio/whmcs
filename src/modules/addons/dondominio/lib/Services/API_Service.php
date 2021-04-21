@@ -9,6 +9,9 @@ use Exception;
 
 class API_Service extends AbstractService implements APIService_Interface
 {
+    const USER_NO_EXIST = 1003;
+    const INVALID_PASSWORD = 1004;
+
     protected $api;
 
     /**
@@ -337,14 +340,9 @@ class API_Service extends AbstractService implements APIService_Interface
      */
     public function getContactInfo($contactID, $infoType = 'data')
     {
-        $params = [
-            'contactID' => $contactID,
-            'infoType' => $infoType,
-        ];
+        $response = $this->getApiConnection()->contact_getInfo($contactID, $infoType);
 
-        $response = $this->getApiConnection()->contact_getInfo($params);
-
-        return $this->parseResponse($response, $params);
+        return $this->parseResponse($response, ['contactID' => $contactID, 'infoType' => $infoType,]);
     }
 
     /**
@@ -358,13 +356,9 @@ class API_Service extends AbstractService implements APIService_Interface
      */
     public function getContactResendVerificationMail($contactID)
     {
-        $params = [
-            'contactID' => $contactID,
-        ];
+        $response = $this->getApiConnection()->contact_resendVerificationMail($contactID);
 
-        $response = $this->getApiConnection()->contact_resendVerificationMail($params);
-
-        return $this->parseResponse($response, $params);
+        return $this->parseResponse($response, ['contactID' => $contactID]);
     }
 
     public function printApiInfo()
@@ -385,16 +379,23 @@ class API_Service extends AbstractService implements APIService_Interface
      */
     public function parseResponse($response, array $params = [])
     {
+        $errorCode = (int) $response->getErrorCode();
+        $succes = 1;
+
         // Call internal WHMCS function logModuleCall
         if (function_exists('logModuleCall')) {
             logModuleCall($this->getApp()->getName(), $response->getAction(), $params, $response->getRawResponse(), $response->getArray());
         }
 
-        if (!$response->getSuccess()) {
-            throw new Exception($response->getErrorCodeMsg(), $response->getErrorCode());
+        if ($errorCode === static::USER_NO_EXIST || $errorCode == static::INVALID_PASSWORD){
+            $succes = 0;
         }
 
-        $this->getApp()->getService('settings')->setSetting('api_conexion', 1);
+        $this->getApp()->getService('settings')->setSetting('api_conexion', $succes);
+
+        if (!$response->getSuccess()) {
+            throw new Exception($response->getErrorCodeMsg(), $errorCode);
+        }
 
         return $response;
     }

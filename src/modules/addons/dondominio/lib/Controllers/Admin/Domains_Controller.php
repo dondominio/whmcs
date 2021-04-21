@@ -103,8 +103,8 @@ class Domains_Controller extends Controller
             'Fraud' => $this->getApp()->getLang('filter_fraud')
         ];
 
-        array_walk($statuses, function(&$status, $key) {
-            $status = empty($status) ? $key : $status; 
+        array_walk($statuses, function (&$status, $key) {
+            $status = empty($status) ? $key : $status;
         });
 
         $params = [
@@ -205,7 +205,7 @@ class Domains_Controller extends Controller
             $domains = $domainsInfo->get("domains");
             $totalRecords = $domainsInfo->get("queryInfo")['total'];
 
-            array_walk($domains, function(&$domain) use ($whmcsService) {
+            array_walk($domains, function (&$domain) use ($whmcsService) {
                 $domain['domain_found'] = $whmcsService->getDomain(['domain' => $domain['name']]);
             });
         } catch (Exception $e) {
@@ -220,7 +220,7 @@ class Domains_Controller extends Controller
 
         // PARAMS TO TEMPLATE
 
-         $params = [
+        $params = [
             'module_name' => $this->getApp()->getName(),
             '__c__' => static::CONTROLLER_NAME,
             'domains' => $domains,
@@ -261,7 +261,7 @@ class Domains_Controller extends Controller
 
             $domains = $response->get('domains');
             $totalRecords = $response->get("queryInfo")['total'];
-        } catch (\Throwable $e){
+        } catch (\Throwable $e) {
             $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
         }
 
@@ -270,7 +270,7 @@ class Domains_Controller extends Controller
             '__c__' => static::CONTROLLER_NAME,
             'domains' => $domains,
             'actions' => [
-                'view_deleted' => static::VIEW_DELETED,            
+                'view_deleted' => static::VIEW_DELETED,
             ],
             'links' => [
                 'prev_page' => static::makeUrl(static::VIEW_DELETED, ['page' => ($page - 1)]),
@@ -307,7 +307,7 @@ class Domains_Controller extends Controller
             $infoDNS = $app->getService('api')->getDomainInfo($domain, 'nameservers');
             $verification = $info->get('ownerverification');
 
-            if (isset($verificationTrans[$verification])){
+            if (isset($verificationTrans[$verification])) {
                 $verification = $app->getLang('contact_ver_verified');
             }
 
@@ -320,8 +320,7 @@ class Domains_Controller extends Controller
                 'ownerverification' => $verification,
                 'nameservers' => $infoDNS->get('nameservers'),
             ];
-
-        } catch (Exception $e){
+        } catch (Exception $e) {
             $params['error'] = $e->getMessage();
         }
 
@@ -339,9 +338,9 @@ class Domains_Controller extends Controller
         $id = $this->getRequest()->getParam('domain_id');
         $domain = $this->getApp()->getService('whmcs')->getDomainById($id);
 
-        if(is_null($domain)){
+        if (is_null($domain)) {
             $this->getResponse()->addError($this->getApp()->getLang('domain_not_found'));
-        }        
+        }
 
         $params = [
             'domain' => $domain,
@@ -379,7 +378,7 @@ class Domains_Controller extends Controller
 
             $history = $response->get('history');
             $totalRecords = $response->get("queryInfo")['total'];
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
         }
 
@@ -424,9 +423,16 @@ class Domains_Controller extends Controller
         $apiService = $app->getService('api');
         $whmcsService = $app->getService('whmcs');
         $limit = $whmcsService->getConfiguration('NumRecordstoDisplay');
+        $totalRecords = 0;
+        $contactsData = null;
 
-        $contacts = $apiService->getContactList($page, $limit, $name, $email, $verification, $daaccepted);
-        $totalRecords = $contacts->get('queryInfo')['total'];
+        try {
+            $contacts = $apiService->getContactList($page, $limit, $name, $email, $verification, $daaccepted);
+            $totalRecords = $contacts->get('queryInfo')['total'];
+            $contactsData =  $contacts->getResponseData()['contacts'];
+        } catch (Exception $e) {
+            $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
+        }
 
         $verificationOptions = [
             'verified' => $app->getLang('contact_ver_verified'),
@@ -450,7 +456,7 @@ class Domains_Controller extends Controller
         $params = [
             'module_name' => $this->getApp()->getName(),
             '__c__' => static::CONTROLLER_NAME,
-            'contacts' => $contacts->getResponseData()['contacts'],
+            'contacts' => $contactsData,
             'actions' => [
                 'view_contacts' => static::VIEW_CONTACTS,
             ],
@@ -481,14 +487,18 @@ class Domains_Controller extends Controller
     {
         $contactID = $this->getRequest()->getParam('contact_id');
         $api = $this->getApp()->getService('api');
-        $contact = $api->getContactInfo($contactID);
+        $contactData = null;
 
-        if(is_null($contact)){
-            $this->getResponse()->addError($this->getApp()->getLang('domain_not_found'));
+        try {
+            $contact = $api->getContactInfo($contactID);
+            $contactData = $contact->getResponseData();
+        } catch (Exception $e) {
+            $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
         }
 
+
         $params = [
-            'contact' => $contact->getResponseData(),
+            'contact' => $contactData,
             'links' => [
                 'contact_resend' => static::makeURL(static::action_RESENDVERIFICATIONMAIL, ['contact_id' => $contactID])
             ]
@@ -529,7 +539,7 @@ class Domains_Controller extends Controller
             $domainId = $this->getRequest()->getParam('domain_id');
             $ids = $this->getRequest()->getArrayParam('domain_checkbox');
 
-            if (!empty($domainId)){
+            if (!empty($domainId)) {
                 $ids[] = $domainId;
             }
 
@@ -668,8 +678,8 @@ class Domains_Controller extends Controller
             if (strlen($ddid) == 0) {
                 throw new Exception(
                     $this->getApp()->getLang('domains_error_dondominio_id') .
-                    ". <a href='https://dev.mrdomain.com/whmcs/docs/addon/#contacts' target='_api'>" .
-                    $this->getApp()->getLang('link_more_info') . "</a>"
+                        ". <a href='https://dev.mrdomain.com/whmcs/docs/addon/#contacts' target='_api'>" .
+                        $this->getApp()->getLang('link_more_info') . "</a>"
                 );
             }
 
@@ -838,7 +848,7 @@ class Domains_Controller extends Controller
                 'link' => static::makeURL(static::VIEW_CONTACTS),
                 'selected' => $this->checkActualView(static::VIEW_CONTACTS)
             ],
-        ];   
+        ];
 
         return parent::view($view, $params);
     }

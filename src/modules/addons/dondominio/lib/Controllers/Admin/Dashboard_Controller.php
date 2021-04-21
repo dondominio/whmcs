@@ -97,10 +97,17 @@ class Dashboard_Controller extends Controller
     {
         $app = App::getInstance();
         $api = $app->getService('api');
-        $info = $api->getAccountInfo();
+        $balance = null;
+
+        try {
+            $info = $api->getAccountInfo();
+            $balance = $info->getResponseData();
+        } catch (Exception $e) {
+            $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
+        }
 
         $params = [
-            'info' => $info->getResponseData(),
+            'info' => $balance,
             'links' => [
                 'update' => static::makeURL(static::VIEW_BALANCEUPDATE),
             ],
@@ -119,10 +126,17 @@ class Dashboard_Controller extends Controller
         $response = $this->getResponse();
         $app = App::getInstance();
         $api = $app->getService('api');
-        $info = $api->getAccountInfo();
+        $data = [];
+
+        try {
+            $info = $api->getAccountInfo();
+            $data = $info->getResponseData();
+        } catch (Exception $e) {
+            $data['error'] = $e->getMessage();
+        }
 
         $response->setContentType(Response::CONTENT_JSON);
-        $response->send(json_encode($info->getResponseData()), true);
+        $response->send(json_encode($data), true);
     }
 
     /**
