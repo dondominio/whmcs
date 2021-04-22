@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [2.1.4] - 2021-04-21
+## [2.1.4] - 2021-04-22
 ### Changed
 - Show available balance of API user.
 - Table with API user contacts.
@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - To be able to activate and configure the Registrar within the Addon.
 - Widget in WHMCS dashboard for update Addon/Registrar and access to Addon.
 - Popup in WHMCS dashboard for update Addon/Registrar.
+- To be able to synchronize the available TLDs and their pressure within WHMCS from the Addon.
+- Filters for the list of Price update.
   
 ### Fixed
 - Stay filters in Admin Domain lists pagination.

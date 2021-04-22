@@ -6,7 +6,7 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.
 
 ## [Pendiente por lanzar]
 
-## [2.1.4] - 2021-04-21
+## [2.1.4] - 2021-04-22
 ### Changed
 - Mostrar el saldo disponible del usuario API.
 - Tabla con los contactos del usuario API.
@@ -19,6 +19,8 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.
 - Poder activar y configurar el Registrador dentro del Addon.
 - Widget en dashboard de WHMCS para actualizar el Registrador/Addon y para acceder al Addon.
 - Popup en el dashboard de WHMCS que avisa de una nueva versión.
+- Poder sincronizar los TLDs disponibles y sus presión dentro de WHMCS desde el Addon.
+- Filtros para la lista de Actualizar tarifas.
   
 ### Fixed
 - Permanecer filtros al paginar en listas dentro del apartado de gestión de Dominios.
