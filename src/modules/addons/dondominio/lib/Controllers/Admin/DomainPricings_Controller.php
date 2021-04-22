@@ -24,6 +24,7 @@ class DomainPricings_Controller extends Controller
     const ACTION_CREATE = 'create';
     const ACTION_REORDER = 'reorder';
     const ACTION_SAVE_SETTINGS = 'savesettings';
+    const ACTION_SYNC_TLDS = 'synctlds';
 
     /**
      * Gets available actions for Controller
@@ -40,7 +41,8 @@ class DomainPricings_Controller extends Controller
             static::ACTION_SWITCH_REGISTRAR => 'action_SwitchRegistrar',
             static::ACTION_CREATE => 'action_Create',
             static::ACTION_REORDER => 'action_Reorder',
-            static::ACTION_SAVE_SETTINGS => 'action_SaveSettings'
+            static::ACTION_SAVE_SETTINGS => 'action_SaveSettings',
+            static::ACTION_SYNC_TLDS => 'action_SyncTLDs',
         ];
     }
 
@@ -355,6 +357,28 @@ class DomainPricings_Controller extends Controller
         return $this->view_Settings();
     }
 
+    /**
+     * Action for sync TLDs with the API
+     *
+     * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
+     */
+    public function action_SyncTLDs()
+    {
+        $app = $this->getApp();
+
+        try {
+            $this->getApp()->getService('pricing')->apiSync(false);
+        } catch (Exception $e) {
+            $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
+        }
+
+        if ((int) $app->getService('settings')->getSetting('prices_autoupdate') !== 0) {
+            $app->getService('pricing')->updateDomainPricing();
+        }
+
+        return $this->view_AvailableTlds();
+    }
+
      /**
      * Searchs and returns a template
      * 
@@ -378,6 +402,11 @@ class DomainPricings_Controller extends Controller
                 'title' => $app->getLang('tld_new_title'),
                 'link' => static::makeURL(static::VIEW_AVAILABLE_TLDS),
                 'selected' => $this->checkActualView(static::VIEW_AVAILABLE_TLDS)
+            ],
+            [
+                'title' => $app->getLang('sync_tlds'),
+                'link' => static::makeURL(static::ACTION_SYNC_TLDS),
+                'selected' => false
             ],
         ];
 

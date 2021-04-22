@@ -87,6 +87,7 @@ $_ADDONLANG = array(
     'tld_renew' => 'Renew',
     'tld_not_available' => 'Not Available',
     'tld_regenerate' => 'Rebuild TLD cache',
+    'sync_tlds' => 'Update TLDs',
 
     //Domains
     'domains_title' => 'Manage',

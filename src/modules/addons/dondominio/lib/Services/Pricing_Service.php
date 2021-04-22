@@ -220,4 +220,36 @@ class Pricing_Service extends AbstractService implements PricingService_Interfac
     {
         return Pricing_Model::select('tld')->pluck('tld')->toArray();
     }
+
+    /**
+     * Get Every pricing in mod_dondominio_pricing related to tbldomainpricing and update price
+     *
+     * @return array
+     */
+    public function updateDomainPricing()
+    {
+        $tldSetting = $this->getApp()->getService('tld_settings');
+        $whmcs = $this->getApp()->getService('whmcs');
+        $pricings = $this->findPricingsInDomainPricings();
+
+        if (count($pricings) == 0) {
+            return;
+        }
+
+        foreach ($pricings as $pricing) {
+            $tldSettings = $tldSetting->getTldSettingsByTld($pricing->tld);
+
+            if (!is_null($tldSettings) && $tldSettings->ignore == 1) {
+                continue;
+            }
+
+            // Update price from domain pricing
+
+            $whmcs->savePricingsForEur($pricing);
+        }
+
+        // Update prices from domains
+
+        $whmcs->updateDomainPrices();
+    }
 }
