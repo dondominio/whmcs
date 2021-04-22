@@ -2,6 +2,7 @@
 
 namespace WHMCS\Module\Addon\Dondominio\Controllers\Admin;
 
+use WHMCS\Module\Addon\Dondominio\App;
 use Exception;
 
 if (!defined("WHMCS")) {
@@ -114,16 +115,6 @@ class Settings_Controller extends Controller
             'whois_domain_placeholder' => $whoisDomainPlaceholder,
             'whois_ip_placeholder' => $whoisIpPlaceholder,
             'actions' => $actions,
-            'breadcrumbs' => [
-                [
-                    'title' => $this->getApp()->getLang('menu_status'),
-                    'link' => Dashboard_Controller::makeURL()
-                ],
-                [
-                    'title' => $this->getApp()->getLang('settings_title'),
-                    'link' => static::makeURL()
-                ]
-            ]
         ];
 
         if ($settings->get('register_increase_type') == 'fixed') {
@@ -299,6 +290,8 @@ class Settings_Controller extends Controller
      */
     public function view($view, array $params = [])
     {
+        $app = APP::getInstance();
+        $params['title'] = $app->getLang('content_title_admin');
         $params['nav']= Dashboard_Controller::getNavArray();          
         return parent::view($view, $params);
     }

@@ -34,7 +34,8 @@ $_ADDONLANG = array(
     'link_more_info' => 'Más información',
 
     //Menu
-    'menu_status' => 'Administracion',
+    'menu_home' => 'Inicio',
+    'menu_status' => 'Administración',
     'menu_tlds_update' => 'TLDs y Tarifas',
     'menu_domains' => 'Gestión de dominios',
     'menu_whois' => 'Proxy Whois',
@@ -86,9 +87,14 @@ $_ADDONLANG = array(
     'tld_renew' => 'Renovación',
     'tld_not_available' => 'No disponible',
     'tld_regenerate' => 'Reconstruir la caché de TLDs',
+    'sync_tlds' => 'Actualizar TLDs',
+    'sync_alert' => 'Advertencia: Activar esta opción causará que cambien los precios en WHMCS.',
+    'sync_message' => 'La sincronización de los TLDs afectará a los precios de los TLDs disponibles actuales.',
+    'sync_success' => 'TLDs sincronizados correctamente',
+    'sync_wait' => 'Esta operación puede tardar algunos minutos.',
 
     //Domains
-    'domains_title' => 'Gestión de dominios',
+    'domains_title' => 'Gestión',
     'domains_info' => 'Estos son los dominios actualmente registrados en tu instalación de WHMCS. Puedes actualizar su infromación usando la API de DonDominio y configurarlos para que usen el módulo de registro de Dondominio, si está instalado. También puedes actualizar su información de contacto usando un ID de contacto de DonDominio.',
     'domains_domain' => 'Dominio',
     'domains_status' => 'Estado',
@@ -129,7 +135,7 @@ $_ADDONLANG = array(
     'domain_more_info' => 'Más información',
 
     //Import
-    'import_title' => 'Importar dominios',
+    'import_title' => 'Importar',
     'import_info' => 'Estos son los dominios que hay en tu cuenta de DonDominio. Si un dominio no está en tu instalación de WHMCS, puedes importar su información y asignarlo a un cliente existente.',
     'import_btn_import' => 'Importar a WHMCS y asignar al cliente seleccionado',
     'import_imported' => 'Importado',
@@ -139,7 +145,7 @@ $_ADDONLANG = array(
     'import_error' => 'Los siguientes dominios no se han importado debido a un error:',
 
     //Transfer
-    'transfer_title' => 'Transferir dominios',
+    'transfer_title' => 'Transferir',
     'transfer_info' => 'Utiliza esta opción para transferir dominios a DonDominio desde otros registradores',
     'transfer_domain' => 'Nombre de dominio',
     'transfer_authcode' => 'Authcode/EPP',
@@ -282,6 +288,7 @@ $_ADDONLANG = array(
     'check_credentials' => 'Credenciales API',
     'check_api_status' => 'Consultar Estado',
     'success_api_conection' => 'Conexión correcta con la API de DonDominio',
+    'registrar_config_title' => 'Configuración del Registrador',
 
     /**
      * GENERIC
@@ -289,6 +296,11 @@ $_ADDONLANG = array(
     'ok' => 'OK',
     'error' => 'ERROR',
     'close' => 'Cerrar',
+    'success_action' => 'Acción realizada',
+    'error_action' => 'Error al realizar la acción',
+    'config' => 'Configurar',
+    'active' => 'Activar',
+    'update' => 'Actualizar',
 
     /**
      * UPDATE
@@ -320,7 +332,7 @@ $_ADDONLANG = array(
     /**
      * DELETED DOMAINS
      */
-    'deleted_domains_title' => 'Dominios Borrados',
+    'deleted_domains_title' => 'Borrados',
     'deleted_domains_ts' => 'Fecha de eliminacion',
     'deleted_domains_info' => 'Información',
 
@@ -329,7 +341,7 @@ $_ADDONLANG = array(
      */
     'premium_domains' => 'Dominios Premium',
     'enable' => 'Activados',
-    'disable' => 'Desavtivados',
+    'disable' => 'Desactivados',
 
     /**
      * WHOIS
@@ -358,9 +370,73 @@ $_ADDONLANG = array(
     'domain_status_view' => 'Estado',
     'domain_expire_view' => 'Fecha de expiración',
     'domain_create_view' => 'Fecha de creación',
+    'domain_verification' => 'Verificación del titular',
+    'domain_nameservers' => 'DNS',
     'domain_api_check_view' => 'Consulta a la API',
     'domain_actions_view' => 'Acciones',
     'domain_sync_view' => 'Sincronizar estado',
     'domain_check_view' => 'Consultar',
     'domain_history_view' => 'Historial',
+
+    /**
+     * BALANCE
+     */
+    'balance_title' => 'Saldo',
+    'balance_client_name' => 'Nombre del Cliente',
+    'balance_threshold' => 'Umbral de aviso',
+    'balance_currency' => 'Moneda',
+
+    /**
+     * CONTACTS
+     */
+    'contacts_title' => 'Contactos',
+    'contact_id' => 'ID',
+    'contact_type' => 'Tipo',
+    'contact_name' => 'Nombre',
+    'contact_email' => 'Correo',
+    'contact_country' => 'País',
+    'contact_verification' => 'Verificación',
+    'contact_daaccepted' => 'Designated Agent',
+    'contact_da_accepted' => 'Aceptado',
+    'contact_da_no_accepted' => 'No aceptado',
+    'contact_ver_verified' => 'Verificado',
+    'contact_ver_inprocess' => 'En proceso',
+    'contact_ver_notapplicable' => 'No Aplica/Innecesaria',
+    'contact_ver_failed' => 'Verificación fallida',
+    'contact_type_organization' => 'Organización',
+    'contact_type_individual' => 'Individuo',
+    'contact_type_phone' => 'Teléfono',
+    'contact_type_fax' => 'Fax',
+    'contact_type_address' => 'Dirección',
+    'contact_type_postal_code' => 'Código postal',
+    'contact_type_city' => 'Ciudad',
+    'contact_type_state' => 'Estado',
+    'contact_type_country' => 'País',
+    'contact_resend' => 'Reenviar email de verificación',
+    'contact_success_resend' => 'Email de verificación reenviado correctamente',
+    
+
+    /**
+     * CONTENT TITLES
+     */
+    'content_title_admin' => 'DonDominio / Administración',
+    'content_title_tld' => 'DonDominio / TLDs y Tarifas',
+    'content_title_domains' => 'DonDominio / Gestión de dominios',
+    'content_title_whois' => 'DonDominio / Proxy Whois',
+
+    /**
+     * HOME
+     */
+    'home_new_version' => 'Ya está disponible la nueva versión del Módulo de DonDominio',
+    'home_go_update' => 'Ir a Actualizar',
+    'home_api_error' => 'Se ha registrado un error en la última conexión con la API',
+    'home_check_credentials' => 'Comprobar credenciales API',
+    'home_no_problems' => 'No se han detectado problemas!',
+    'home_documentation' => 'Documentación',
+    'home_check_changelog' => 'Consultar cambios',
+    'home_domains_dd' => 'Dominios con DonDominio',
+    'home_tlds_dd' => 'TLDs con DonDominio',
+    'home_admin_tlds' => 'Administrar TLDs',
+    'home_admin_domains' => 'Administrar Dominios',
+
 );

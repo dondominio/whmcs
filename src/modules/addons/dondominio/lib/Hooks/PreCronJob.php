@@ -31,29 +31,6 @@ class PreCronJob
             return;
         }
 
-        // Get Every pricing in mod_dondominio_pricing related to tbldomainpricing
-        // and update price
-
-        $pricings = $app->getService('pricing')->findPricingsInDomainPricings();
-
-        if (count($pricings) == 0) {
-            return;
-        }
-
-        foreach ($pricings as $pricing) {
-            $tldSettings = $app->getService('tld_settings')->getTldSettingsByTld($pricing->tld);
-
-            if (!is_null($tldSettings) && $tldSettings->ignore == 1) {
-                continue;
-            }
-
-            // Update price from domain pricing
-
-            $app->getService('whmcs')->savePricingsForEur($pricing);
-        }
-
-        // Update prices from domains
-
-        $app->getService('whmcs')->updateDomainPrices();
+        $app->getService('pricing')->updateDomainPricing();
     }
 }

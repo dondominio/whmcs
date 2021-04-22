@@ -34,6 +34,7 @@ $_ADDONLANG = array(
     'link_more_info' => 'More information',
 
     //Menu
+    'menu_home' => 'Home',
     'menu_status' => 'Admin',
     'menu_tlds_update' => 'TLDs and Price',
     'menu_domains' => 'Manage domains',
@@ -86,9 +87,14 @@ $_ADDONLANG = array(
     'tld_renew' => 'Renew',
     'tld_not_available' => 'Not Available',
     'tld_regenerate' => 'Rebuild TLD cache',
+    'sync_tlds' => 'Update TLDs',
+    'sync_alert' => 'Warning: Enabling this option will cause prices in WHMCS to change.',
+    'sync_message' => 'The synchronization of the TLDs will affect the prices of the current available TLDs.',
+    'sync_success' => 'TLDs properly synced',
+    'sync_wait' => 'This may take a few minutes.',
 
     //Domains
-    'domains_title' => 'Manage domains',
+    'domains_title' => 'Manage',
     'domains_info' => 'These are the domains currently registered on your WHMCS installation. You can update their information using the DonDominio API and configure them to use the DonDominio Registrar addon, if installed. You can also update their contact information using a DonDominio Contact ID.',
     'domains_domain' => 'Domain',
     'domains_status' => 'Status',
@@ -129,7 +135,7 @@ $_ADDONLANG = array(
     'domain_more_info' => 'More information',
 
     //Import
-    'import_title' => 'Import domains',
+    'import_title' => 'Import',
     'import_info' => 'These are the domains that exist in your DonDominio account. If a domain is not on your WHMCS installation, you may import its information and assign it to an existing customer.',
     'import_btn_import' => 'Import to WHMCS and assign to selected customer',
     'import_imported' => 'Imported',
@@ -139,7 +145,7 @@ $_ADDONLANG = array(
     'import_error' => 'The following couldn\'t be imported because of an error:',
 
     //Transfer
-    'transfer_title' => 'Transfer domains',
+    'transfer_title' => 'Transfer',
     'transfer_info' => 'Use this option to transfer domains to DonDominio/MrDomain from other registrars',
     'transfer_domain' => 'Domain name',
     'transfer_authcode' => 'Authcode/EPP',
@@ -282,6 +288,7 @@ $_ADDONLANG = array(
     'check_credentials' => 'API credentials',
     'check_api_status' => 'Check Status',
     'success_api_conection' => 'Correct connection with DonDominio API',
+    'registrar_config_title' => 'Registrar Configuration',
 
     /**
      * GENERIC
@@ -289,6 +296,11 @@ $_ADDONLANG = array(
     'ok' => 'OK',
     'error' => 'ERROR',
     'close' => 'Close',
+    'success_action' => 'Action successful',
+    'error_action' => 'Setting update failed',
+    'config' => 'Configure',
+    'active' => 'Activate',
+    'update' => 'Update',
 
     /**
      * UPDATE
@@ -320,7 +332,7 @@ $_ADDONLANG = array(
     /**
      * DELETED DOMAINS
      */
-    'deleted_domains_title' => 'Deleted domain list',
+    'deleted_domains_title' => 'Deleted',
     'deleted_domains_ts' => 'Delete date',
     'deleted_domains_info' => 'Info',
 
@@ -358,9 +370,71 @@ $_ADDONLANG = array(
     'domain_status_view' => 'Status',
     'domain_expire_view' => 'Expiration date',
     'domain_create_view' => 'Creation date',
+    'domain_verification' => 'Holder verification',
+    'domain_nameservers' => 'DNS',
     'domain_api_check_view' => 'API Check',
     'domain_actions_view' => 'Actions',
     'domain_sync_view' => 'Sync status',
     'domain_check_view' => 'Check',
     'domain_history_view' => 'History',
+
+    /**
+     * BALANCE
+     */
+    'balance_title' => 'Balance',
+    'balance_client_name' => 'Client name',
+    'balance_threshold' => 'Warning threshold',
+    'balance_currency' => 'Currency',
+
+     /**
+     * CONTACTS
+     */
+    'contacts_title' => 'Contacts',
+    'contact_id' => 'ID',
+    'contact_type' => 'Type',
+    'contact_name' => 'Name',
+    'contact_email' => 'Email',
+    'contact_country' => 'Country',
+    'contact_verification' => 'Verification',
+    'contact_daaccepted' => 'Designated Agent ',
+    'contact_da_accepted' => 'Accepted',
+    'contact_da_no_accepted' => 'No accepted',
+    'contact_ver_verified' => 'Verified',
+    'contact_ver_inprocess' => 'In process',
+    'contact_ver_notapplicable' => 'Not Applicable/Unnecessary',
+    'contact_ver_failed' => 'Verification failed',
+    'contact_type_organization' => 'Organization',
+    'contact_type_individual' => 'Individual',
+    'contact_type_phone' => 'Phone',
+    'contact_type_fax' => 'Fax',
+    'contact_type_address' => 'Address',
+    'contact_type_postal_code' => 'Postal Code',
+    'contact_type_city' => 'City',
+    'contact_type_state' => 'State',
+    'contact_type_country' => 'Country',
+    'contact_resend' => 'Resend verification email',
+    'contact_success_resend' => 'Verification email resend successfully',
+
+    /**
+     * CONTENT TITLES
+     */
+    'content_title_admin' => 'DonDominio / Admin',
+    'content_title_tld' => 'DonDominio / TLDs and Price',
+    'content_title_domains' => 'DonDominio / Manage domains',
+    'content_title_whois' => 'DonDominio / Proxy Whois',
+
+    /**
+     * HOME
+     */
+    'home_new_version' => 'The new version of the MrDomain Module is now available',
+    'home_go_update' => 'Go to Update',
+    'home_api_error' => 'An error was logged in the last connection to the API',
+    'home_check_credentials' => 'Check API credentials',
+    'home_no_problems' => 'No issues detected!',
+    'home_documentation' => 'Documentation',
+    'home_check_changelog' => 'Check changes',
+    'home_domains_dd' => 'Domains with MrDomain/DonDominio',
+    'home_tlds_dd' => 'TLDs with MrDomain/DonDominio',
+    'home_admin_tlds' => 'Manage TLDs',
+    'home_admin_domains' => 'Manage Domains',
 );

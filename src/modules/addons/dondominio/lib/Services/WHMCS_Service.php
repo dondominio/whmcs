@@ -9,6 +9,8 @@ use WHMCS\Module\Addon\Dondominio\Services\Contracts\WHMCSService_Interface;
 use WHMCS\Module\Addon\Dondominio\Models\Pricing_Model;
 use Exception;
 
+use function PHPUnit\Framework\isEmpty;
+
 class WHMCS_Service extends AbstractService implements WHMCSService_Interface
 {
 
@@ -642,9 +644,19 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
      *
      * @return int Number of domain pricing
      */
-    public function getDomainPricingsCount()
+    public function getDomainPricingsCount($tld = '', $registrar = '')
     {
-        return Capsule::table('tbldomainpricing')->count();
+        $queryBuilder = Capsule::table('tbldomainpricing');
+
+        if (!empty($tld)){
+            $queryBuilder->where('extension', 'LIKE', sprintf('%%%s%%', $tld));
+        }
+
+        if (!empty($registrar)){
+            $queryBuilder->where('autoreg', '=', $registrar);
+        }
+
+        return  $queryBuilder->count();
     }
 
     /**
@@ -662,6 +674,10 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
 
         if (array_key_exists('autoreg', $filters) && !empty($filters['autoreg'])) {
             $queryBuilder->where(['autoreg' => $filters['autoreg']]);
+        }
+
+        if (array_key_exists('tld', $filters) && !empty($filters['tld'])) {
+            $queryBuilder->where('extension', 'LIKE', sprintf('%%%s%%', $filters['tld']));
         }
 
         if (!is_null($offset)) {

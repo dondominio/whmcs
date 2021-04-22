@@ -3,7 +3,7 @@
     <div class="panel-heading">
         <div class="row">
             <div class="col-xs-8">
-                <h3 class="panel-title domain-title">{$LANG.domains_domain}: {$domain.domain}</h3>
+                <h3 class="panel-title domain-title">{$domain.domain}</h3>
             </div>
             <div class="col-xs-4">
                 <div class="dropdown pull-right">
@@ -27,10 +27,6 @@
         <div class="widget-content-padded">
             <table class="datatable domain-table" style="width: 100%;">
                 <tbody>
-                    <tr>
-                        <td>{$LANG.domain_name_view}</td>
-                        <td>{$domain.domain}</td>
-                    </tr>
                     <tr>
                         <td>{$LANG.domain_register_view}</td>
                         <td>{$domain.registrar}</td>
@@ -118,6 +114,14 @@
                         <td>{$LANG.domain_create_view}</td>
                         <td data-get-info="ts-create"></td>
                     </tr>
+                    <tr>
+                        <td>{$LANG.domain_verification}</td>
+                        <td data-get-info="verification"></td>
+                    </tr>
+                    <tr>
+                        <td>{$LANG.domain_nameservers}</td>
+                        <td data-get-info="nameservers" class="dns-row"></td>
+                    </tr>
                 </tbody>
                 <tbody data-get-info="error" style="display: none;">
                     <tr class="text-danger">
@@ -128,7 +132,21 @@
             </table>
         </div>
     </div>
+</div>
+{/if}
 
+{if $action eq 'viewhistory'}
+<div class="panel panel-default" data-get-info="table">
+
+    <div class="panel-heading">
+        <h3 class="panel-title">{$LANG.domain_history_view}</h3>
+    </div>
+
+    <div class="panel-body">
+        <div class="widget-content-padded">
+            {include file='../domains/history.tpl'}
+        </div>
+    </div>
 </div>
 {/if}
 
@@ -159,6 +177,17 @@
                 $('[data-get-info="status"]').text(response.status)
                 $('[data-get-info="ts-expire"]').text(response.tsExpire)
                 $('[data-get-info="ts-create"]').text(response.tsCreate)
+                $('[data-get-info="verification"]').text(response.ownerverification)
+
+                let dnsList = $('[data-get-info="nameservers"]');
+                dnsList.empty();
+
+                if (Array.isArray(response.nameservers)) {
+                    response.nameservers.forEach(dns => {
+                        dnsList.append($('<span></span>').text(dns.name + ' (' + dns.ipv4 + ')'));
+                    });
+                }
+
             })
 
         });

@@ -9,6 +9,9 @@ use Exception;
 
 class API_Service extends AbstractService implements APIService_Interface
 {
+    const USER_NO_EXIST = 1003;
+    const INVALID_PASSWORD = 1004;
+
     protected $api;
 
     /**
@@ -81,9 +84,9 @@ class API_Service extends AbstractService implements APIService_Interface
      *
      * @return \Dondominio\API\Response\Response
      */
-    public function getDomainInfo($domain)
+    public function getDomainInfo($domain, $infoType = 'status')
     {
-        $params = ['infoType' => 'status'];
+        $params = ['infoType' => $infoType];
         $response = $this->getApiConnection()->domain_getInfo($domain, $params);
 
         $paramsToLog = ['domain' => $domain, 'params' => $params];
@@ -167,22 +170,22 @@ class API_Service extends AbstractService implements APIService_Interface
         /*
 		 * Building parameter array for DonDominio's API
 		 */
-		$params = [
-			'nameservers' => 'keepns',
-			'authcode' => $authCode,
-			'ownerContactType' => ( $orgType == "1" || $extDomain->country != 'ES' ) ? 'individual' : 'organization',
-			'ownerContactFirstName' =>$extDomain->firstname,
-			'ownerContactLastName' => $extDomain->lastname,
-			'ownerContactOrgName' => $extDomain->companyname,
-			'ownerContactOrgType' => $orgType,
-			'ownerContactIdentNumber' => $extDomain->vatnumber,
-			'ownerContactEmail' => $extDomain->email,
-			'ownerContactPhone' => '+' . $clientDetails['client']['phonecc'] . '.' . $clientDetails['client']['phonenumber'],
-			'ownerContactAddress' => $extDomain->address1,
-			'ownerContactPostalCode' => $extDomain->postcode,
-			'ownerContactCity' => $extDomain->city,
-			'ownerContactState' => $extDomain->state,
-			'ownerContactCountry' => $clientDetails['client']['countrycode']
+        $params = [
+            'nameservers' => 'keepns',
+            'authcode' => $authCode,
+            'ownerContactType' => ($orgType == "1" || $extDomain->country != 'ES') ? 'individual' : 'organization',
+            'ownerContactFirstName' => $extDomain->firstname,
+            'ownerContactLastName' => $extDomain->lastname,
+            'ownerContactOrgName' => $extDomain->companyname,
+            'ownerContactOrgType' => $orgType,
+            'ownerContactIdentNumber' => $extDomain->vatnumber,
+            'ownerContactEmail' => $extDomain->email,
+            'ownerContactPhone' => '+' . $clientDetails['client']['phonecc'] . '.' . $clientDetails['client']['phonenumber'],
+            'ownerContactAddress' => $extDomain->address1,
+            'ownerContactPostalCode' => $extDomain->postcode,
+            'ownerContactCity' => $extDomain->city,
+            'ownerContactState' => $extDomain->state,
+            'ownerContactCountry' => $clientDetails['client']['countrycode']
         ];
 
         $response = $this->getApiConnection()->domain_transfer($extDomain->domain, $params);
@@ -225,6 +228,20 @@ class API_Service extends AbstractService implements APIService_Interface
     }
 
     /**
+     * Get Account Info
+     *
+     * @see https://dev.dondominio.com/api/docs/sdk-php/#info-account-info
+     *
+     * @return \Dondominio\API\Response\Response
+     */
+    public function getAccountInfo()
+    {
+        $response = $this->getApiConnection()->account_info();
+
+        return $this->parseResponse($response);
+    }
+
+    /**
      * Gets deleted domains list
      *
      * @see https://dev.dondominio.com/api/docs/api/#list-deleted-domain-listdeleted
@@ -238,11 +255,11 @@ class API_Service extends AbstractService implements APIService_Interface
     {
         $params = [];
 
-        if(!is_null($page)){
+        if (!is_null($page)) {
             $params['page'] = $page;
         }
 
-        if(!is_null($page)){
+        if (!is_null($page)) {
             $params['pageLength'] = $pageLength;
         }
 
@@ -266,17 +283,82 @@ class API_Service extends AbstractService implements APIService_Interface
     {
         $params = [];
 
-        if(!is_null($page)){
+        if (!is_null($page)) {
             $params['page'] = $page;
         }
 
-        if(!is_null($page)){
+        if (!is_null($page)) {
             $params['pageLength'] = $pageLength;
         }
 
         $response = $this->getApiConnection()->domain_getHistory($domain, $params);
 
         return $this->parseResponse($response, $params);
+    }
+
+    /**
+     * Gets the contacts of your account
+     *
+     * @see https://dev.dondominio.com/api/docs/api/#list-contact-list
+     *
+     * @param int $page Offset where query starts
+     * @param int $pageLength Limit where query ends
+     *
+     * @return \Dondominio\API\Response\Response
+     */
+    public function getContactList($page = null, $pageLength = null, $name = null, $email = null, $verification = null, $daaccepted = null)
+    {
+        $params = [
+            'page' => $page,
+            'pageLength' => $pageLength,
+            'name' => $name,
+            'email' => $email,
+            'verificationstatus' => $verification,
+            'daaccepted' => $daaccepted,
+        ];
+
+        foreach ($params as $key => $param){
+            if(is_null($param)){
+                unset($params[$key]);
+            }
+        }
+
+        $response = $this->getApiConnection()->contact_getList($params);
+
+        return $this->parseResponse($response, $params);
+    }
+
+    /**
+     * Gets the contacts of your account
+     *
+     * @see https://dev.dondominio.com/api/docs/api/#get-info-contact-getinfo
+     *
+     * @param int $contactID ID of contact
+     * @param int $infoType Type of information
+     *
+     * @return \Dondominio\API\Response\Response
+     */
+    public function getContactInfo($contactID, $infoType = 'data')
+    {
+        $response = $this->getApiConnection()->contact_getInfo($contactID, $infoType);
+
+        return $this->parseResponse($response, ['contactID' => $contactID, 'infoType' => $infoType,]);
+    }
+
+    /**
+     *  Resend the contact details verification email
+     *
+     * @see https://dev.dondominio.com/api/docs/api/#esend-verification-mail-contact-resendverificationmail
+     *
+     * @param int $page Offset where query starts
+     *
+     * @return \Dondominio\API\Response\Response
+     */
+    public function getContactResendVerificationMail($contactID)
+    {
+        $response = $this->getApiConnection()->contact_resendVerificationMail($contactID);
+
+        return $this->parseResponse($response, ['contactID' => $contactID]);
     }
 
     public function printApiInfo()
@@ -297,16 +379,23 @@ class API_Service extends AbstractService implements APIService_Interface
      */
     public function parseResponse($response, array $params = [])
     {
-         // Call internal WHMCS function logModuleCall
+        $errorCode = (int) $response->getErrorCode();
+        $succes = 1;
+
+        // Call internal WHMCS function logModuleCall
         if (function_exists('logModuleCall')) {
-            logModuleCall($this->getApp()->getName(), $response->getAction(), $params, $response->getRawResponse(),$response->getArray());
+            logModuleCall($this->getApp()->getName(), $response->getAction(), $params, $response->getRawResponse(), $response->getArray());
         }
+
+        if ($errorCode === static::USER_NO_EXIST || $errorCode == static::INVALID_PASSWORD){
+            $succes = 0;
+        }
+
+        $this->getApp()->getService('settings')->setSetting('api_conexion', $succes);
 
         if (!$response->getSuccess()) {
-            throw new Exception($response->getErrorCodeMsg(), $response->getErrorCode());
+            throw new Exception($response->getErrorCodeMsg(), $errorCode);
         }
-
-        $this->getApp()->getService('settings')->setSetting('api_conexion', 1);
 
         return $response;
     }
@@ -320,7 +409,7 @@ class API_Service extends AbstractService implements APIService_Interface
     {
         $settingService = $this->getApp()->getService('settings');
 
-        if ($checkApi){
+        if ($checkApi) {
 
             try {
                 $this->doHello();

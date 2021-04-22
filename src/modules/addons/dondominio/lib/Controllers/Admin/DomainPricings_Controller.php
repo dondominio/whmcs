@@ -6,8 +6,8 @@ use WHMCS\Module\Addon\Dondominio\Models\TldSettings_Model;
 use Exception;
 use WHMCS\Module\Addon\Dondominio\App;
 
-if(!defined("WHMCS")){
-	die("This file cannot be accessed directly");
+if (!defined("WHMCS")) {
+    die("This file cannot be accessed directly");
 }
 
 class DomainPricings_Controller extends Controller
@@ -18,12 +18,14 @@ class DomainPricings_Controller extends Controller
     const VIEW_INDEX = '';
     const VIEW_AVAILABLE_TLDS = 'viewavailabletlds';
     const VIEW_SETTINGS = 'viewsettings';
+    const VIEW_SYNC = 'viewsync';
 
     const ACTION_UPDATE_PRICES = 'updateprices';
     const ACTION_SWITCH_REGISTRAR = 'switchregistrar';
     const ACTION_CREATE = 'create';
     const ACTION_REORDER = 'reorder';
     const ACTION_SAVE_SETTINGS = 'savesettings';
+    const ACTION_SYNC_TLDS = 'synctlds';
 
     /**
      * Gets available actions for Controller
@@ -36,11 +38,13 @@ class DomainPricings_Controller extends Controller
             static::VIEW_INDEX => 'view_Index',
             static::VIEW_AVAILABLE_TLDS => 'view_AvailableTlds',
             static::VIEW_SETTINGS => 'view_Settings',
+            static::VIEW_SYNC => 'view_Sync',
             static::ACTION_UPDATE_PRICES => 'action_UpdatePrices',
             static::ACTION_SWITCH_REGISTRAR => 'action_SwitchRegistrar',
             static::ACTION_CREATE => 'action_Create',
             static::ACTION_REORDER => 'action_Reorder',
-            static::ACTION_SAVE_SETTINGS => 'action_SaveSettings'
+            static::ACTION_SAVE_SETTINGS => 'action_SaveSettings',
+            static::ACTION_SYNC_TLDS => 'action_SyncTLDs',
         ];
     }
 
@@ -51,39 +55,34 @@ class DomainPricings_Controller extends Controller
      */
     public function view_Index()
     {
+        $app = $this->getApp();
+        $whmcsService = $app->getService('whmcs');
         $page = $this->getRequest()->getParam('page', 1);
+        $tld = $this->getRequest()->getParam('tld', '');
+        $registrar = $this->getRequest()->getParam('registrar', '');
+
+        $filters = [
+            'tld' => $tld,
+            'autoreg' => $registrar,
+        ];
 
         // GET TLDS BY PAGINATION
 
-        $totalTlds = $this->getApp()->getService('whmcs')->getDomainPricingsCount();
-        $limit = $this->getApp()->getService('whmcs')->getConfiguration('NumRecordstoDisplay');
-
-        $total_pages = ceil($totalTlds / $limit);
-
-        if ($total_pages == 0) {
-            $total_pages = 1;
-        }
-
-        if ($page > $total_pages) {
-            $page = $total_pages;
-        }
-
+        $totalTlds = $whmcsService->getDomainPricingsCount($tld);
+        $limit = $whmcsService->getConfiguration('NumRecordstoDisplay');
         $offset = (($page - 1) * $limit);
 
-        $tlds = $this->getApp()->getService('whmcs')->getDomainPricings([], $offset, $limit);
+        $tlds = $whmcsService->getDomainPricings($filters, $offset, $limit);
+        $registrars = $whmcsService->getDisctintRegistrars()->toArray();
 
         // PARAMS TO TEMPLATE
 
         $params = [
-            'module_name' => $this->getApp()->getName(),
+            'module_name' => $app->getName(),
             '__c__' => static::CONTROLLER_NAME,
             'local_tlds' => $tlds,
-            'pagination' => [
-                'page' => $page,
-                'limit' => $limit,
-                'total' => $totalTlds,
-                'total_pages' => $total_pages
-            ],
+            'filters' => $filters,
+            'registrars' => $registrars,
             'actions' => [
                 'index' => static::VIEW_INDEX,
                 'update_prices' => static::ACTION_UPDATE_PRICES,
@@ -92,18 +91,13 @@ class DomainPricings_Controller extends Controller
             ],
             'links' => [
                 'view_settings' => static::makeURL(static::VIEW_SETTINGS, ['tld' => '']),
-                'prev_page' => static::makeUrl(static::VIEW_INDEX, ['page' => ($page - 1)]),
-                'next_page' => static::makeUrl(static::VIEW_INDEX, ['page' => ($page + 1)])
+                'prev_page' => static::makeUrl(static::VIEW_INDEX, ['page' => ($page - 1)] + $filters),
+                'next_page' => static::makeUrl(static::VIEW_INDEX, ['page' => ($page + 1)] + $filters)
             ],
-            'breadcrumbs' => $this->getBreadcrumbs()
         ];
 
-        $paginationSelect = [];
-        for ($i = 1; $i <= $total_pages; $i++) {
-            $paginationSelect[$i] = $i;
-        }
-
-        $params['pagination_select'] = $paginationSelect;
+        $this->setPagination($params, $limit, $page, $totalTlds);
+        $this->setActualView(static::VIEW_INDEX);
 
         return $this->view('index', $params);
     }
@@ -127,14 +121,8 @@ class DomainPricings_Controller extends Controller
 
         $total_pages = ceil($availableTldsCount / $limit);
 
-        if ($total_pages == 0) {
-            $total_pages = 1;
-        }
-
-        if ($page > $total_pages) {
-            $page = $total_pages;
-        }
-
+        $total_pages = (int) $total_pages === 0 ? 1 : $total_pages;
+        $page = $page > $total_pages ? $total_pages : $page;
         $offset = (($page - 1) * $limit);
 
         $availableTlds = $this->getApp()->getService('pricing')->getAvailableTlds($filters, $offset, $limit);
@@ -160,15 +148,10 @@ class DomainPricings_Controller extends Controller
                 'prev_page' => static::makeUrl(static::VIEW_AVAILABLE_TLDS, array_merge($filters, ['page' => ($page - 1)])),
                 'next_page' => static::makeUrl(static::VIEW_AVAILABLE_TLDS, array_merge($filters, ['page' => ($page + 1)])),
             ],
-            'breadcrumbs' => $this->getBreadcrumbs(static::VIEW_AVAILABLE_TLDS)
         ];
 
-        $paginationSelect = [];
-        for ($i = 1; $i <= $total_pages; $i++) {
-            $paginationSelect[$i] = $i;
-        }
-
-        $params['pagination_select'] = $paginationSelect;
+        $this->setPagination($params, $limit, $page, $availableTldsCount);
+        $this->setActualView(static::VIEW_AVAILABLE_TLDS);
 
         return $this->view('availables', $params);
     }
@@ -192,6 +175,7 @@ class DomainPricings_Controller extends Controller
         $params = [
             'module_name' => $this->getApp()->getName(),
             '__c__' => static::CONTROLLER_NAME,
+            'tld' => $tld,
             'tld_settings' => $tldSettings,
             'actions' => [
                 'save_settings' => static::ACTION_SAVE_SETTINGS
@@ -199,10 +183,31 @@ class DomainPricings_Controller extends Controller
             'links' => [
                 'tlds_index' => static::makeURL()
             ],
-            'breadcrumbs' => $this->getBreadcrumbs(static::VIEW_SETTINGS, $tld)
         ];
 
         return $this->view('settings', $params);
+    }
+
+    /**
+     * View for Sync TLDs
+     *
+     * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
+     */
+    public function view_Sync()
+    {
+        $settings = $this->getApp()->getService('settings')->findSettingsAsKeyValue();
+        $this->setActualView(static::VIEW_SYNC);
+
+        $params = [
+            'module_name' => $this->getApp()->getName(),
+            '__c__' => static::CONTROLLER_NAME,
+            'update_prices' => $settings->get('prices_autoupdate') == '1' ? "checked='checked'" : "",
+            'links' => [
+                'sync' => static::makeURL(static::ACTION_SYNC_TLDS)
+            ],
+        ];
+
+        return $this->view('sync', $params);
     }
 
     /**
@@ -384,7 +389,33 @@ class DomainPricings_Controller extends Controller
         return $this->view_Settings();
     }
 
-     /**
+    /**
+     * Action for sync TLDs with the API
+     *
+     * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
+     */
+    public function action_SyncTLDs()
+    {
+        $updatePrices = (bool) $this->getRequest()->getParam('update_prices', false);
+        $app = $this->getApp();
+
+        try {
+            $this->getApp()->getService('pricing')->apiSync(false);
+            $this->getResponse()->addSuccess($this->getApp()->getLang('sync_success'));
+        } catch (Exception $e) {
+            $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
+        
+            return $this->view_Sync();
+        }
+
+        if ($updatePrices) {
+            $app->getService('pricing')->updateDomainPricing();
+        }
+
+        return $this->view_AvailableTlds();
+    }
+
+    /**
      * Searchs and returns a template
      * 
      * @param string $view View in format "folder.file" or "file"
@@ -395,56 +426,26 @@ class DomainPricings_Controller extends Controller
     public function view($view, array $params = [])
     {
         $app = App::getInstance();
-        $action = $this->getRequest()->getParam('__a__', '');
 
+        $params['title'] = $app->getLang('content_title_tld');
         $params['nav'] = [
             [
                 'title' => $app->getLang('tld_title'),
                 'link' => static::makeURL(static::VIEW_INDEX),
-                'selected' => static::VIEW_INDEX === $action || static::VIEW_SETTINGS === $action,
+                'selected' => $this->checkActualView(static::VIEW_INDEX)
             ],
             [
                 'title' => $app->getLang('tld_new_title'),
                 'link' => static::makeURL(static::VIEW_AVAILABLE_TLDS),
-                'selected' => static::VIEW_AVAILABLE_TLDS === $action,
+                'selected' => $this->checkActualView(static::VIEW_AVAILABLE_TLDS)
+            ],
+            [
+                'title' => $app->getLang('sync_tlds'),
+                'link' => static::makeURL(static::VIEW_SYNC),
+                'selected' =>  $this->checkActualView(static::VIEW_SYNC)
             ],
         ];
 
         return parent::view($view, $params);
-    }
-
-    /**
-     * Return array with the breadcrumbs
-     * 
-     * @param string $action Controller action
-     * @param string $tld TLD of the view
-     * 
-     * @return array
-     */
-    protected function getBreadcrumbs($action = null, $tld = null)
-    {
-        $app = $this->getApp();
-        $breadcrumb = [];
-
-        $breadcrumb[] = [
-            'title' => $app->getLang('tld_title'),
-            'link' => static::makeURL()
-        ];
-
-        if($action === static::VIEW_AVAILABLE_TLDS){
-            $breadcrumb[] = [
-                'title' => $app->getLang('tld_new_title'),
-                'link' => static::makeURL(static::VIEW_AVAILABLE_TLDS)
-            ];
-        }
-
-        if(!is_null($tld)){
-            $breadcrumb[] = [
-                'title' => $tld,
-                'link' => static::makeURL(static::VIEW_SETTINGS, ['tld' => $tld])
-            ];
-        }
-
-        return $breadcrumb;
     }
 }

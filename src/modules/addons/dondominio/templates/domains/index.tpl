@@ -1,10 +1,10 @@
-<h2>{$LANG.domains_title} <i class="fad fa-question-circle title-icon" data-toggle="modal" data-target="#domains"></i></h2>
+<i class="fad fa-question-circle title-icon pull-right" data-toggle="modal" data-target="#domains"></i>
 
 <div class="modal" id="domains" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5  class="modal-title" >{$LANG.domains_title}</h5>
+                <h5 class="modal-title">{$LANG.domains_title}</h5>
             </div>
             <div class="modal-body">
                 <p>{$LANG.domains_info}</p>
@@ -57,93 +57,90 @@
     </div>
 </div>
 
-<div id='tabs'>
-    <ul class='nav nav-tabs admin-tabs' role='tablist'>
-        <li id='tab0' class='tab tabselected'>
-            <a href='javascript:;'>{$LANG.filter_title}</a>
-        </li>
-    </ul>
-</div>
-<div id='tab0box' class='tabbox'>
-    <div id='tab_content'>
-        <form action='' method='get'>
-            <input type="hidden" name="module" value="{$module_name}">
-            <input type="hidden" name="__c__" value="{$__c__}">
-            <input type="hidden" name="__a__" value="{$actions.index}">
-            <table class='form' width='100%' border='0' cellspacing='2' cellpadding='3'>
-                <tbody>
-                    <tr>
-                        <td width='15%' class='fieldlabel'>
-                            {$LANG.filter_domain}
-                        </td>
+<form action='' method='get'>
+    <input type="hidden" name="module" value="{$module_name}">
+    <input type="hidden" name="__c__" value="{$__c__}">
+    <input type="hidden" name="__a__" value="{$actions.index}">
+    <table class='form' width='100%' border='0' cellspacing='2' cellpadding='3'>
+        <tbody>
+            <tr>
+                <td width='15%' class='fieldlabel'>
+                    {$LANG.filter_domain}
+                </td>
 
-                        <td class='fieldarea'>
-                            <input type='text' name='domain' size='30' value='{$filters.domain}'>
-                        </td>
+                <td class='fieldarea'>
+                    <input type='text' name='domain' size='30' value='{$filters.domain}'>
+                </td>
 
-                        <td width='15%' class='fieldlabel'>
-                            {$LANG.filter_tld}
-                        </td>
+                <td width='15%' class='fieldlabel'>
+                    {$LANG.filter_tld}
+                </td>
 
-                        <td class='fieldarea'>
-                            <select name='tld' id='tldDropDown'>
-                                <option value=''>{$LANG.filter_any}</option>
-                                {html_options options=$tlds selected=$filters.tld}
-                            </select>
-                        </td>
-                    </tr>
+                <td class='fieldarea'>
+                    <select name='tld' id='tldDropDown'>
+                        <option value=''>{$LANG.filter_any}</option>
+                        {html_options options=$tlds selected=$filters.tld}
+                    </select>
+                </td>
+            </tr>
 
-                    <tr>
-                        <td class='fieldlabel'>
-                            {$LANG.filter_registrar}
-                        </td>
+            <tr>
+                <td class='fieldlabel'>
+                    {$LANG.filter_registrar}
+                </td>
 
-                        <td class='fieldarea'>
-                            <select name='registrar' id='registrarsDropDown'>
-                                <option value=''>{$LANG.filter_any}</option>
-                                {html_options options=$registrars selected=$filters.registrar}
-                            </select>
-                        </td>
+                <td class='fieldarea'>
+                    <select name='registrar' id='registrarsDropDown'>
+                        <option value=''>{$LANG.filter_any}</option>
+                        {html_options options=$registrars selected=$filters.registrar}
+                    </select>
+                </td>
 
-                        <td class='fieldlabel'>
-                            {$LANG.filter_status}
-                        </td>
+                <td class='fieldlabel'>
+                    {$LANG.filter_status}
+                </td>
 
-                        <td class='fieldarea'>
-                            {html_options name=status options=$statuses selected=$filters.status}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                <td class='fieldarea'>
+                    {html_options name=status options=$statuses selected=$filters.status}
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
-            <p align='center'>
-                <input type='submit' id='search-clients' value='{$LANG.filter_search}' class='button'>
-            </p>
-    </div>
-</div>
-
-<br />
-
-<table width='100%' border='0' cellpadding='3' cellspacing='0'>
-    <tbody>
-        <tr>
-            <td width='50%' align='left'>
-                {$pagination.total} {$LANG.pagination_results_found}, {$LANG.pagination_page} {$pagination.page} {$LANG.pagination_of} {$pagination.total_pages}
-            </td>
-
-            <td width='50%' align='right'>
-                {$LANG.pagination_go_to}
-                <select name='page' onchange='submit()'>
-                    {html_options options=$pagination_select selected=$pagination.page}
-                </select>
-
-                <input type='submit' value={$LANG.pagination_go} class='btn-small'>
-            </td>
-        </tr>
-    </tbody>
-</table>
+    <p align='center'>
+        <input type='submit' id='search-clients' value='{$LANG.filter_search}' class='button'>
+    </p>
 </form>
-	
+
+<form>
+    <input type="hidden" name="module" value="{$module_name}">
+    <input type="hidden" name="__c__" value="{$__c__}">
+    <input type="hidden" name="__a__" value="{$actions.index}">
+    <input type='hidden' name='domain' size='30' value='{$filters.domain}'>
+    <input type='hidden' name='tld' size='30' value='{$filters.tld}'>
+    <input type='hidden' name='registrar' size='30' value='{$filters.registrar}'>
+    <input type='hidden' name='status' size='30' value='{$filters.status}'>
+    <table width='100%' border='0' cellpadding='3' cellspacing='0'>
+        <tbody>
+            <tr>
+                <td width='50%' align='left'>
+                    {$pagination.total} {$LANG.pagination_results_found}, {$LANG.pagination_page} {$pagination.page}
+                    {$LANG.pagination_of} {$pagination.total_pages}
+                </td>
+
+                <td width='50%' align='right'>
+                    {$LANG.pagination_go_to}
+                    <select name='page' onchange='submit()'>
+                        {html_options options=$pagination_select selected=$pagination.page}
+                    </select>
+
+                    <input type='submit' value={$LANG.pagination_go} class='btn-small'>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+
 <form action='' method='post'>
     <input type="hidden" name="module" value="{$module_name}">
     <input type="hidden" name="__c__" value="{$__c__}">
@@ -178,88 +175,91 @@
         </thead>
         <tbody>
 
-        {if count($domains) gt 0}
+            {if count($domains) gt 0}
             {foreach $domains item=domain}
-                <tr>
-                    <td>
-                        <input class='domain_checkbox' name='domain_checkbox[]' value="{$domain.id}" type='checkbox' />
-                    </td>
+            <tr>
+                <td>
+                    <input class='domain_checkbox' name='domain_checkbox[]' value="{$domain.id}" type='checkbox' />
+                </td>
 
-                    <td>
-                        {if $domain.registrar eq $module_name}
-                        <a href="{$links.domain_view}&domain_id={$domain.id}">{$domain.domain}</a>
-                        {else}
-                        {$domain.domain}
-                        {/if}
-                    </td>
-
-                    <td>
-                        {$domain.registrar}
-                    </td>
- 
-                    <td>
-                        {assign var='status_class' value=''}
-
-                        {if $domain.status eq 'Active'}
-                            {assign var='status_class' value="active"}
-                        {/if}
-                        {if $domain.status eq 'Pending'}
-                            {assign var='status_class' value="pending"}
-                        {/if}
-                        {if $domain.status eq 'Pending Transfer'}
-                            {assign var='status_class' value="pending"}
-                        {/if}
-                        {if $domain.status eq 'Expired'}
-                            {assign var='status_class' value="expired"}
-                        {/if}
-                        {if $domain.status eq 'Cancelled'}
-                            {assign var='status_class' value="cancelled"}
-                        {/if}
-                        {if $domain.status eq 'Fraud'}
-                            {assign var='status_class' value="fraud"}
-                        {/if}
-                        {if $domain.status eq 'Transferred Away'}
-                            {assign var='status_class' value="transferred-away"}
-                        {/if}
-                        {if $domain.status eq 'Grace'}
-                            {assign var='status_class' value="grace"}
-                        {/if}
-                        {if $domain.status eq 'Redemption'}
-                            {assign var='status_class' value="redemption"}
-                        {/if}
-
-                        {if strlen($status_class) gt 0}
-                            <div style='text-align: center;' class='label {$status_class}'>{$domain.status}</div>
-                        {else}
-                            <div style='text-align: center;'>{$domain.status}</div>
-                        {/if}
-                    </td>
-
+                <td>
                     {if $domain.registrar eq $module_name}
-                    <td class="text-center">
-                        <a title="{$LANG.domain_more_info}" href="{$links.domain_view}&domain_id={$domain.id}"><img src='images/icons/add.png'></a>
-                    </td>
-                    
-                    <td class="text-center">
-                        <a title="{$LANG.domain_sync_view}" href='{$links.sync_domain}&domain_checkbox[]={$domain.id}'><img src='images/icons/navrotate.png'></a>
-                    </td>
-
+                    <a href="{$links.domain_view}&domain_id={$domain.id}">{$domain.domain}</a>
                     {else}
-
-                    <td colspan="2">
-                        <a data-domain='{$domain.id}' data-transfer data-toggle="modal" data-target="#transfer" class="btn btn-xs btn-success">{$LANG.domain_transfer}</a>
-                    </td>
-
+                    {$domain.domain}
                     {/if}
-                </tr>
+                </td>
+
+                <td>
+                    {$domain.registrar}
+                </td>
+
+                <td>
+                    {assign var='status_class' value=''}
+
+                    {if $domain.status eq 'Active'}
+                    {assign var='status_class' value="active"}
+                    {/if}
+                    {if $domain.status eq 'Pending'}
+                    {assign var='status_class' value="pending"}
+                    {/if}
+                    {if $domain.status eq 'Pending Transfer'}
+                    {assign var='status_class' value="pending"}
+                    {/if}
+                    {if $domain.status eq 'Expired'}
+                    {assign var='status_class' value="expired"}
+                    {/if}
+                    {if $domain.status eq 'Cancelled'}
+                    {assign var='status_class' value="cancelled"}
+                    {/if}
+                    {if $domain.status eq 'Fraud'}
+                    {assign var='status_class' value="fraud"}
+                    {/if}
+                    {if $domain.status eq 'Transferred Away'}
+                    {assign var='status_class' value="transferred-away"}
+                    {/if}
+                    {if $domain.status eq 'Grace'}
+                    {assign var='status_class' value="grace"}
+                    {/if}
+                    {if $domain.status eq 'Redemption'}
+                    {assign var='status_class' value="redemption"}
+                    {/if}
+
+                    {if strlen($status_class) gt 0}
+                    <div style='text-align: center;' class='label {$status_class}'>{$domain.status}</div>
+                    {else}
+                    <div style='text-align: center;'>{$domain.status}</div>
+                    {/if}
+                </td>
+
+                {if $domain.registrar eq $module_name}
+                <td class="text-center">
+                    <a title="{$LANG.domain_more_info}" href="{$links.domain_view}&domain_id={$domain.id}"><img
+                            src='images/icons/add.png'></a>
+                </td>
+
+                <td class="text-center">
+                    <a title="{$LANG.domain_sync_view}" href='{$links.sync_domain}&domain_checkbox[]={$domain.id}'><img
+                            src='images/icons/navrotate.png'></a>
+                </td>
+
+                {else}
+
+                <td colspan="2">
+                    <a data-domain='{$domain.id}' data-transfer data-toggle="modal" data-target="#transfer"
+                        class="btn btn-xs btn-success">{$LANG.domain_transfer}</a>
+                </td>
+
+                {/if}
+            </tr>
             {/foreach}
-        {else}
+            {else}
             <tr>
                 <td colspan='6'>
                     {$LANG.info_no_results}
                 </td>
             </tr>
-        {/if}
+            {/if}
 
         </tbody>
         <tfoot>
@@ -293,9 +293,12 @@
 
     <br />
 
-    {$LANG.info_with_selected} <button id='domain_dondominio' name='form_action' value='registrar' class='btn' data-action="{$actions.switch_registrar}">{$LANG.domains_set_dondominio}</button>
-    <button id='domain_sync' name='form_action' value='sync' class='btn' data-action="{$actions.sync}">{$LANG.domains_sync}</button>
-    <button id='domain_price' name='form_action' value='price' class='btn' data-action="{$actions.update_price}">{$LANG.domains_price}</button>
+    {$LANG.info_with_selected} <button id='domain_dondominio' name='form_action' value='registrar' class='btn'
+        data-action="{$actions.switch_registrar}">{$LANG.domains_set_dondominio}</button>
+    <button id='domain_sync' name='form_action' value='sync' class='btn'
+        data-action="{$actions.sync}">{$LANG.domains_sync}</button>
+    <button id='domain_price' name='form_action' value='price' class='btn'
+        data-action="{$actions.update_price}">{$LANG.domains_price}</button>
 
     <br />
     <br />
@@ -308,7 +311,9 @@
                 </td>
 
                 <td class='fieldarea'>
-                    <input type='text' name='ddid' size='30' value='{$filters.ddid}' placeholder='XXX-00000' /> <a href='https://dev.mrdomain.com/whmcs/docs/addon/#contacts' target='_api'>{$LANG.link_more_info}</a>
+                    <input type='text' name='ddid' size='30' value='{$filters.ddid}' placeholder='XXX-00000' /> <a
+                        href='https://dev.mrdomain.com/whmcs/docs/addon/#contacts'
+                        target='_api'>{$LANG.link_more_info}</a>
                 </td>
             </tr>
 
@@ -318,10 +323,14 @@
                 </td>
 
                 <td class='fieldarea'>
-                    <button id='domain_owner' name='form_action' value='owner' class='btn updateContact' data-action="{$actions.update_contact}">{$LANG.domains_set_owner}</button>
-                    <button id='domain_owner' name='form_action' value='admin' class='btn updateContact' data-action="{$actions.update_contact}">{$LANG.domains_set_admin}</button>
-                    <button id='domain_owner' name='form_action' value='tech' class='btn updateContact' data-action="{$actions.update_contact}">{$LANG.domains_set_tech}</button>
-                    <button id='domain_owner' name='form_action' value='billing' class='btn updateContact' data-action="{$actions.update_contact}">{$LANG.domains_set_billing}</button>
+                    <button id='domain_owner' name='form_action' value='owner' class='btn updateContact'
+                        data-action="{$actions.update_contact}">{$LANG.domains_set_owner}</button>
+                    <button id='domain_owner' name='form_action' value='admin' class='btn updateContact'
+                        data-action="{$actions.update_contact}">{$LANG.domains_set_admin}</button>
+                    <button id='domain_owner' name='form_action' value='tech' class='btn updateContact'
+                        data-action="{$actions.update_contact}">{$LANG.domains_set_tech}</button>
+                    <button id='domain_owner' name='form_action' value='billing' class='btn updateContact'
+                        data-action="{$actions.update_contact}">{$LANG.domains_set_billing}</button>
                 </td>
             </tr>
         </tbody>
@@ -330,65 +339,65 @@
 
 <p align='center'>
     {if $pagination.page gt 1}
-        <a href='{$links.prev_page}'>« {$LANG.pagination_previous}</a>
+    <a href='{$links.prev_page}'>« {$LANG.pagination_previous}</a>
     {else}
-        « {$LANG.pagination_previous}
+    « {$LANG.pagination_previous}
     {/if}
 
     &nbsp;
 
     {if $pagination.page lt $pagination.total_pages}
-        <a href='{$links.next_page}'>{$LANG.pagination_next} »</a>
+    <a href='{$links.next_page}'>{$LANG.pagination_next} »</a>
     {else}
-        {$LANG.pagination_next} »
+    {$LANG.pagination_next} »
     {/if}
 </p>
 
 {literal}
 <script type='text/javascript'>
-function toggleadvsearch() {
-    if (document.getElementById('searchbox').style.visibility == "hidden") {
-        document.getElementById('searchbox').style.visibility = "";
-    } else {
-        document.getElementById('searchbox').style.visibility = "hidden";
-    }
-}
-
-$(document).ready(function() {
-    var selectedTab = $("#tab0").attr("id");
-    
-    $(".tab").click(function() {
-        var elid = $(this).attr("id");
-        $(".tab").removeClass("tabselected");
-        $("#"+elid).addClass("tabselected");
-        $(".tabbox").slideUp();
-        if (elid != selectedTab) {
-            selectedTab = elid;
-            $("#"+elid+"box").slideDown();
+    function toggleadvsearch() {
+        if (document.getElementById('searchbox').style.visibility == "hidden") {
+            document.getElementById('searchbox').style.visibility = "";
         } else {
-            selectedTab = null;
-            $(".tab").removeClass("tabselected");
+            document.getElementById('searchbox').style.visibility = "hidden";
         }
-        $("#tab").val(elid.substr(3));
+    }
+
+    $(document).ready(function () {
+        var selectedTab = $("#tab0").attr("id");
+
+        $(".tab").click(function () {
+            var elid = $(this).attr("id");
+            $(".tab").removeClass("tabselected");
+            $("#" + elid).addClass("tabselected");
+            $(".tabbox").slideUp();
+            if (elid != selectedTab) {
+                selectedTab = elid;
+                $("#" + elid + "box").slideDown();
+            } else {
+                selectedTab = null;
+                $(".tab").removeClass("tabselected");
+            }
+            $("#tab").val(elid.substr(3));
+        });
+
+        $('.domains_check_all').bind('change', function (e) {
+            $('.domain_checkbox').prop('checked', $(this).prop('checked'));
+            $('.domains_check_all').prop('checked', $(this).prop('checked'));
+        });
+
+        $('button[name="form_action"]').on('click', function (e) {
+            const form = $(e.target).parents('form');
+            $(form).children('[name="__a__"]').val($(e.target).data('action'));
+        });
+
+        $('[data-transfer]').on('click', function (e) {
+            e.preventDefault();
+            let domain = $(this).data('domain');
+
+            $('[data-transfer="domain"]').val(domain);
+
+        })
     });
-
-    $('.domains_check_all').bind('change', function(e) {
-        $('.domain_checkbox').prop('checked', $(this).prop('checked'));
-        $('.domains_check_all').prop('checked', $(this).prop('checked'));
-    });
-
-    $('button[name="form_action"]').on('click', function(e) {
-        const form = $(e.target).parents('form');
-        $(form).children('[name="__a__"]').val($(e.target).data('action'));
-    });
-
-    $('[data-transfer]').on('click', function(e) {
-        e.preventDefault();
-        let domain = $(this).data('domain');
-
-        $('[data-transfer="domain"]').val(domain);
-        
-    })
-});
 </script>
 {/literal}

@@ -1,14 +1,20 @@
-.navbar-selected {
-    color: #333 !important;
+.dd {}
+
+.dd .navbar-selected {
+  color: #333 !important;
+  border-bottom: solid #ff9800;
 }
 
-.title-icon {
-    vertical-align: middle;
-    margin-right: 5px;
-    cursor: pointer;
-  }
+.dd .nav a:hover:not(.navbar-selected) {
+  color: #333 !important;
+  border-bottom: solid #666666;
+}
 
-.text-ellipsis {
+.dd .nav a:not(:hover):not(.navbar-selected) {
+  border-bottom: solid transparent;
+}
+
+.dd .text-ellipsis {
   display: inline-block;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -19,48 +25,82 @@
   box-sizing: border-box;
 }
 
-.log-message-icon {
-    display: inline-block;
-    overflow: auto;
+.dd .log-message-icon {
+  display: inline-block;
+  overflow: auto;
 }
 
-.dd-breadcrumb {
-	color: #A4A7C0;
-	font-size: 13px;
-	list-style: none;
-	margin: 0 0 10px 0;
-	padding: 0 0 0 5px;
-}
-
-.dd-breadcrumb li {
-	display: inline;
-}
-
-.dd-breadcrumb li:first-of-type a {
-	padding: 0 12px 0 0;
-}
-
-.dd-breadcrumb li + li a {
-	padding: 0 10px;
-}
-
-.dd-breadcrumb li a {
-	color: #A4A7C0;
-}
-
-.dd-breadcrumb li a:hover {
-	color: #5158fb;
-	text-decoration: none;
-}
-
-.dd-breadcrumb li:last-of-type .fa {
-	display: none;
-}
-
-.domain-table tr td:first-child {
+.dd .domain-table tr td:first-child {
   width: 12em;
 }
 
-.domain-title {
+.dd .domain-title {
   margin-top: .5em;
+}
+
+.dd .dns-row span {
+  display: block;
+}
+
+.dd .tab-content {
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  padding: 10px;
+}
+
+.dd .selected {
+  background-color: #1a4d80;
+}
+
+.dd .selected a {
+  color: #ffffff;
+}
+
+.dd .btn-transparent {
+  background: transparent;
+  border-color: #4ba1f6;
+  color: #0066cc !important;
+}
+
+.dd .btn-dd {
+  background: transparent;
+  border-color: #ff9800;
+  color: #ff9800;
+}
+
+.dd .form-footer {
+  text-align: right;
+}
+
+.dd .form-label {
+  text-align: right;
+}
+
+.dd .form-table td {
+  padding: 3px 5px;
+}
+
+.dd-popup-header {
+  background-color: #ff9800;
+  border-color: #ff9800;
+}
+
+.dd-popup-body {
+  text-align: center;
+}
+
+.dd-update-btn {
+  color: #fff;
+  background-color: #ff9800;
+  border-color: #ff9800;
+}
+
+.dd-no-show-checkbox {
+  outline: none !important;
+  outline-offset: 0px !important;
+}
+
+#contentarea>div>h1:first-child {
+  display: none;
 }
