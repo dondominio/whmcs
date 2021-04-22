@@ -1,6 +1,8 @@
 <?php
 
 namespace WHMCS\Module\Addon\Dondominio\Controllers\Admin;
+
+use Dondominio\API\Wrappers\Domain;
 use WHMCS\Module\Addon\Dondominio\App;
 
 if (!defined("WHMCS")) {
@@ -34,6 +36,12 @@ class Home_Controller extends Controller
     public function view_Index()
     {
         $app = App::getInstance();
+        $whmcs = $app->getService('whmcs');
+        $appName = $app->getName();
+
+        $domainFilters = ['registrar' => $appName];
+        $totalDomains = $whmcs->getDomainsCount($domainFilters);
+        $totalTLDs = $whmcs->getDomainPricingsCount('', $appName);
 
         $checkAPI = (bool) $this->getRequest()->getParam('check_api');
         $info = $app->getInformation($checkAPI);
@@ -41,10 +49,13 @@ class Home_Controller extends Controller
         $params = [
             'new_version' => isset($info['version']['success']) ? !$info['version']['success'] : false,
             'conection_erro' => isset($info['api']['success']) ? !$info['api']['success'] : true,
-            'title' => 'DonDominio',
+            'total_domains' => $totalDomains,
+            'total_tlds' => $totalTLDs,
             'links' => [
                 'admin' => Dashboard_Controller::makeURL(),
                 'settings' => Settings_Controller::makeURL(),
+                'domains' => Domains_Controller::makeURL(Domains_Controller::VIEW_INDEX, $domainFilters),
+                'tlds' => DomainPricings_Controller::makeURL(DomainPricings_Controller::VIEW_INDEX, ['autoreg' => $appName]),
             ],
             'nav' => static::getNavArray(),
             'print_nav' => false,

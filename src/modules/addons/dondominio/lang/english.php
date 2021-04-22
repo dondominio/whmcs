@@ -88,6 +88,10 @@ $_ADDONLANG = array(
     'tld_not_available' => 'Not Available',
     'tld_regenerate' => 'Rebuild TLD cache',
     'sync_tlds' => 'Update TLDs',
+    'sync_alert' => 'Warning: Enabling this option will cause prices in WHMCS to change.',
+    'sync_message' => 'The synchronization of the TLDs will affect the prices of the current available TLDs.',
+    'sync_success' => 'TLDs properly synced',
+    'sync_wait' => 'This may take a few minutes.',
 
     //Domains
     'domains_title' => 'Manage',
@@ -429,4 +433,8 @@ $_ADDONLANG = array(
     'home_no_problems' => 'No issues detected!',
     'home_documentation' => 'Documentation',
     'home_check_changelog' => 'Check changes',
+    'home_domains_dd' => 'Domains with MrDomain/DonDominio',
+    'home_tlds_dd' => 'TLDs with MrDomain/DonDominio',
+    'home_admin_tlds' => 'Manage TLDs',
+    'home_admin_domains' => 'Manage Domains',
 );

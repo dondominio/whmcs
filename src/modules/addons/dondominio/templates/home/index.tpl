@@ -3,12 +3,12 @@
     <div class="col-sm-8">
         <div class="panel panel-default">
             <div class="panel-body">
-                {if ($new_version eq true) or ($conection_erro eq true)}
                 <table class="datatable" style="width: 100%;">
                     <tbody>
+                        {if ($new_version eq true) or ($conection_erro eq true)}
                         {if $new_version eq true}
                         <tr>
-                            <td>{$LANG.home_new_version}</td>
+                            <td colspan="2">{$LANG.home_new_version}</td>
                             <td>
                                 <a class="btn btn-warning" href="{$links.admin}">{$LANG.home_go_update}</a>
                                 <div class="note">
@@ -19,17 +19,26 @@
                         {/if}
                         {if $conection_erro eq true}
                         <tr>
-                            <td>{$LANG.home_api_error}</td>
+                            <td colspan="2">{$LANG.home_api_error}</td>
                             <td>
                                 <a type="button" class="btn btn-danger"
                                     href="{$links.settings}">{$LANG.home_check_credentials}</a>
                             </td>
                         </tr>
                         {/if}
+                        {/if}
+                        <tr>
+                            <td style="width: 250px">{$LANG.home_domains_dd}</td>
+                            <td><a href="{$links.domains}">{$total_domains}</a></td>
+                            <td><a href="{$links.domains}" class="btn btn-primary">{$LANG.home_admin_domains}</a></td>
+                        </tr>
+                        <tr>
+                            <td style="width: 250px">{$LANG.home_tlds_dd}</td>
+                            <td><a href="{$links.tlds}">{$total_tlds}</a></td>
+                            <td><a href="{$links.tlds}" class="btn btn-primary">{$LANG.home_admin_tlds}</a></td>
+                        </tr>
+                    </tbody>
                 </table>
-                {else}
-                <h1>{$LANG.home_no_problems}</h1>
-                {/if}
             </div>
         </div>
     </div>
@@ -45,4 +54,5 @@
             </div>
         </div>
     </div>
+
 </div>
