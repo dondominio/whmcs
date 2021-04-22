@@ -401,15 +401,16 @@ class DomainPricings_Controller extends Controller
 
         try {
             $this->getApp()->getService('pricing')->apiSync(false);
+            $this->getResponse()->addSuccess($this->getApp()->getLang('sync_success'));
         } catch (Exception $e) {
             $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
+        
+            return $this->view_Sync();
         }
 
         if ($updatePrices) {
             $app->getService('pricing')->updateDomainPricing();
         }
-
-        $this->getResponse()->addSuccess($this->getApp()->getLang('sync_success'));
 
         return $this->view_AvailableTlds();
     }
