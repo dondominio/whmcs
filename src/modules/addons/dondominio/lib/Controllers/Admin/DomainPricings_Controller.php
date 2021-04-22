@@ -52,19 +52,17 @@ class DomainPricings_Controller extends Controller
     public function view_Index()
     {
         $page = $this->getRequest()->getParam('page', 1);
+        $tld = $this->getRequest()->getParam('tld', '');
+
+        $filters = ['tld' => $tld];
 
         // GET TLDS BY PAGINATION
 
-        $totalTlds = $this->getApp()->getService('whmcs')->getDomainPricingsCount();
+        $totalTlds = $this->getApp()->getService('whmcs')->getDomainPricingsCount($tld);
         $limit = $this->getApp()->getService('whmcs')->getConfiguration('NumRecordstoDisplay');
-
-        $total_pages = ceil($totalTlds / $limit);
-
-        $total_pages = (int) $total_pages === 0 ? 1 : $total_pages;
-        $page = $page > $total_pages ? $total_pages : $page;
         $offset = (($page - 1) * $limit);
 
-        $tlds = $this->getApp()->getService('whmcs')->getDomainPricings([], $offset, $limit);
+        $tlds = $this->getApp()->getService('whmcs')->getDomainPricings($filters, $offset, $limit);
 
         // PARAMS TO TEMPLATE
 
@@ -72,12 +70,7 @@ class DomainPricings_Controller extends Controller
             'module_name' => $this->getApp()->getName(),
             '__c__' => static::CONTROLLER_NAME,
             'local_tlds' => $tlds,
-            'pagination' => [
-                'page' => $page,
-                'limit' => $limit,
-                'total' => $totalTlds,
-                'total_pages' => $total_pages
-            ],
+            'filters' => $filters,
             'actions' => [
                 'index' => static::VIEW_INDEX,
                 'update_prices' => static::ACTION_UPDATE_PRICES,
@@ -86,8 +79,8 @@ class DomainPricings_Controller extends Controller
             ],
             'links' => [
                 'view_settings' => static::makeURL(static::VIEW_SETTINGS, ['tld' => '']),
-                'prev_page' => static::makeUrl(static::VIEW_INDEX, ['page' => ($page - 1)]),
-                'next_page' => static::makeUrl(static::VIEW_INDEX, ['page' => ($page + 1)])
+                'prev_page' => static::makeUrl(static::VIEW_INDEX, ['page' => ($page - 1)] + $filters),
+                'next_page' => static::makeUrl(static::VIEW_INDEX, ['page' => ($page + 1)] + $filters)
             ],
         ];
 

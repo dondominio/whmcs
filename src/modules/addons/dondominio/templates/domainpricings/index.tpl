@@ -4,6 +4,35 @@
     <input type="hidden" name="module" value="{$module_name}">
     <input type="hidden" name="__c__" value="{$__c__}">
     <input type="hidden" name="__a__" value="{$actions.index}">
+
+    <div id='tab0box' class='tabbox'>
+        <div id='tab_content'>
+            <table class='form' width='100%' border='0' cellspacing='2' cellpadding='3'>
+                <tbody>
+                    <tr>
+                        <td width='15%' class='fieldlabel'>
+                            {$LANG.filter_tld}
+                        </td>
+
+                        <td class='fieldarea'>
+                            <input type='text' name='tld' value='{$filters.tld}' />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p align='center'>
+                <input type='submit' id='search-clients' value='{$LANG.filter_search}' class='button'>
+            </p>
+        </div>
+    </div>
+</form>
+
+<form action='' method='get'>
+    <input type="hidden" name="module" value="{$module_name}">
+    <input type="hidden" name="__c__" value="{$__c__}">
+    <input type="hidden" name="__a__" value="">
+    <input type='hidden' name='tld' value='{$filters.tld}' />
     <table width='100%' border='0' cellpadding='3' cellspacing='0'>
         <tbody>
             <tr>
@@ -17,7 +46,7 @@
                         {html_options options=$pagination_select selected=$pagination.page}
                     </select>
 
-                    <input type='submit' value={$LANG.pagination_go} class='btn-small'>
+                    <input type='submit' value='{$LANG.pagination_go}' class='btn-small'>
                 </td>
             </tr>
         </tbody>
