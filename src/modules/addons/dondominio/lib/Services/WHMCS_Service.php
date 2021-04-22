@@ -644,12 +644,16 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
      *
      * @return int Number of domain pricing
      */
-    public function getDomainPricingsCount($tld = '')
+    public function getDomainPricingsCount($tld = '', $registrar = '')
     {
         $queryBuilder = Capsule::table('tbldomainpricing');
 
         if (!empty($tld)){
             $queryBuilder->where('extension', 'LIKE', sprintf('%%%s%%', $tld));
+        }
+
+        if (!empty($registrar)){
+            $queryBuilder->where('autoreg', '=', $registrar);
         }
 
         return  $queryBuilder->count();

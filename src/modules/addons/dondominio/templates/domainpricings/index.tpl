@@ -17,6 +17,18 @@
                         <td class='fieldarea'>
                             <input type='text' name='tld' value='{$filters.tld}' />
                         </td>
+
+                        <td class='fieldlabel'>
+                            {$LANG.filter_registrar}
+                        </td>
+        
+                        <td class='fieldarea'>
+                            <select name='registrar' id='registrarsDropDown'>
+                                <option value=''>{$LANG.filter_any}</option>
+                                {html_options options=$registrars selected=$filters.autoreg}
+                            </select>
+                        </td>
+
                     </tr>
                 </tbody>
             </table>
@@ -33,6 +45,7 @@
     <input type="hidden" name="__c__" value="{$__c__}">
     <input type="hidden" name="__a__" value="">
     <input type='hidden' name='tld' value='{$filters.tld}' />
+    <input type='hidden' name='registrar' value='{$filters.autoreg}' />
     <table width='100%' border='0' cellpadding='3' cellspacing='0'>
         <tbody>
             <tr>

@@ -6,8 +6,8 @@ use WHMCS\Module\Addon\Dondominio\Models\TldSettings_Model;
 use Exception;
 use WHMCS\Module\Addon\Dondominio\App;
 
-if(!defined("WHMCS")){
-	die("This file cannot be accessed directly");
+if (!defined("WHMCS")) {
+    die("This file cannot be accessed directly");
 }
 
 class DomainPricings_Controller extends Controller
@@ -53,26 +53,34 @@ class DomainPricings_Controller extends Controller
      */
     public function view_Index()
     {
+        $app = $this->getApp();
+        $whmcsService = $app->getService('whmcs');
         $page = $this->getRequest()->getParam('page', 1);
         $tld = $this->getRequest()->getParam('tld', '');
+        $registrar = $this->getRequest()->getParam('registrar', '');
 
-        $filters = ['tld' => $tld];
+        $filters = [
+            'tld' => $tld,
+            'autoreg' => $registrar,
+        ];
 
         // GET TLDS BY PAGINATION
 
-        $totalTlds = $this->getApp()->getService('whmcs')->getDomainPricingsCount($tld);
-        $limit = $this->getApp()->getService('whmcs')->getConfiguration('NumRecordstoDisplay');
+        $totalTlds = $whmcsService->getDomainPricingsCount($tld);
+        $limit = $whmcsService->getConfiguration('NumRecordstoDisplay');
         $offset = (($page - 1) * $limit);
 
-        $tlds = $this->getApp()->getService('whmcs')->getDomainPricings($filters, $offset, $limit);
+        $tlds = $whmcsService->getDomainPricings($filters, $offset, $limit);
+        $registrars = $whmcsService->getDisctintRegistrars()->toArray();
 
         // PARAMS TO TEMPLATE
 
         $params = [
-            'module_name' => $this->getApp()->getName(),
+            'module_name' => $app->getName(),
             '__c__' => static::CONTROLLER_NAME,
             'local_tlds' => $tlds,
             'filters' => $filters,
+            'registrars' => $registrars,
             'actions' => [
                 'index' => static::VIEW_INDEX,
                 'update_prices' => static::ACTION_UPDATE_PRICES,
@@ -379,7 +387,7 @@ class DomainPricings_Controller extends Controller
         return $this->view_AvailableTlds();
     }
 
-     /**
+    /**
      * Searchs and returns a template
      * 
      * @param string $view View in format "folder.file" or "file"
@@ -390,7 +398,7 @@ class DomainPricings_Controller extends Controller
     public function view($view, array $params = [])
     {
         $app = App::getInstance();
-        
+
         $params['title'] = $app->getLang('content_title_tld');
         $params['nav'] = [
             [
