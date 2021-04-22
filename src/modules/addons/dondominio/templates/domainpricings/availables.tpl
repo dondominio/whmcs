@@ -26,15 +26,18 @@
             </p>
         </div>
     </div>
+</form>
 
-    <br />
-
+<form action='' method='get'>
+    <input type="hidden" name="module" value="{$module_name}">
+    <input type="hidden" name="__c__" value="{$__c__}">
+    <input type="hidden" name="__a__" value="{$actions.availables}">
+    <input type='hidden' name='tld' value='{$filters.tld}' />
     <table width='100%' border='0' cellpadding='3' cellspacing='0'>
         <tbody>
             <tr>
                 <td width='50%' align='left'>
-                    {$pagination.total} {$LANG.pagination_results_found}, {$LANG.pagination_page} {$pagination.page}
-                    {$LANG.pagination_of} {$pagination.total_pages}
+                    {$pagination.total} {$LANG.pagination_results_found}, {$LANG.pagination_page} {$pagination.page} {$LANG.pagination_of} {$pagination.total_pages}
                 </td>
 
                 <td width='50%' align='right'>
@@ -43,7 +46,7 @@
                         {html_options options=$pagination_select selected=$pagination.page}
                     </select>
 
-                    <input type='submit' value={$LANG.pagination_go} class='btn-small'>
+                    <input type='submit' value='{$LANG.pagination_go}' class='btn-small'>
                 </td>
             </tr>
         </tbody>

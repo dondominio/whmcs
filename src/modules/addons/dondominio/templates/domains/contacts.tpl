@@ -60,6 +60,10 @@
     <input type="hidden" name="module" value="{$module_name}">
     <input type="hidden" name="__c__" value="{$__c__}">
     <input type="hidden" name="__a__" value="{$actions.view_contacts}">
+    <input type='hidden' name='name' size='30' value='{$filters.name}'>
+    <input type='hidden' name='email' size='30' value='{$filters.email}'>
+    <input type='hidden' name='verification' size='30' value='{$filters.verification}'>
+    <input type='hidden' name='daaccepted' size='30' value='{$filters.daaccepted}'>
     <table width='100%' border='0' cellpadding='3' cellspacing='0'>
         <tbody>
             <tr>

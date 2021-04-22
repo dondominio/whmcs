@@ -110,10 +110,16 @@
     <p align='center'>
         <input type='submit' id='search-clients' value='{$LANG.filter_search}' class='button'>
     </p>
+</form>
 
-
-    <br />
-
+<form>
+    <input type="hidden" name="module" value="{$module_name}">
+    <input type="hidden" name="__c__" value="{$__c__}">
+    <input type="hidden" name="__a__" value="{$actions.index}">
+    <input type='hidden' name='domain' size='30' value='{$filters.domain}'>
+    <input type='hidden' name='tld' size='30' value='{$filters.tld}'>
+    <input type='hidden' name='registrar' size='30' value='{$filters.registrar}'>
+    <input type='hidden' name='status' size='30' value='{$filters.status}'>
     <table width='100%' border='0' cellpadding='3' cellspacing='0'>
         <tbody>
             <tr>

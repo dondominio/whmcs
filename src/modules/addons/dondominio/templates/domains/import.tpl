@@ -36,6 +36,8 @@
     <input type="hidden" name="module" value="{$module_name}">
     <input type="hidden" name="__c__" value="{$__c__}">
     <input type="hidden" name="__a__" value="{$actions.view_import}">
+    <input type='hidden' name='domain' size='30' value='{$filters.domain}'>
+    <input type='hidden' name='tld' size='30' value='{$filters.tld}'>
     <table width='100%' border='0' cellpadding='3' cellspacing='0'>
         <tbody>
             <tr>
