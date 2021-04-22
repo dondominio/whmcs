@@ -2,7 +2,6 @@
 
 namespace WHMCS\Module\Addon\Dondominio\Controllers\Admin;
 
-use Dondominio\API\Wrappers\Domain;
 use WHMCS\Module\Addon\Dondominio\App;
 
 if (!defined("WHMCS")) {

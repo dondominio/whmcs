@@ -18,6 +18,7 @@ class DomainPricings_Controller extends Controller
     const VIEW_INDEX = '';
     const VIEW_AVAILABLE_TLDS = 'viewavailabletlds';
     const VIEW_SETTINGS = 'viewsettings';
+    const VIEW_SYNC = 'viewsync';
 
     const ACTION_UPDATE_PRICES = 'updateprices';
     const ACTION_SWITCH_REGISTRAR = 'switchregistrar';
@@ -37,6 +38,7 @@ class DomainPricings_Controller extends Controller
             static::VIEW_INDEX => 'view_Index',
             static::VIEW_AVAILABLE_TLDS => 'view_AvailableTlds',
             static::VIEW_SETTINGS => 'view_Settings',
+            static::VIEW_SYNC => 'view_Sync',
             static::ACTION_UPDATE_PRICES => 'action_UpdatePrices',
             static::ACTION_SWITCH_REGISTRAR => 'action_SwitchRegistrar',
             static::ACTION_CREATE => 'action_Create',
@@ -184,6 +186,28 @@ class DomainPricings_Controller extends Controller
         ];
 
         return $this->view('settings', $params);
+    }
+
+    /**
+     * View for Sync TLDs
+     *
+     * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
+     */
+    public function view_Sync()
+    {
+        $settings = $this->getApp()->getService('settings')->findSettingsAsKeyValue();
+        $this->setActualView(static::VIEW_SYNC);
+
+        $params = [
+            'module_name' => $this->getApp()->getName(),
+            '__c__' => static::CONTROLLER_NAME,
+            'update_prices' => $settings->get('prices_autoupdate') == '1' ? "checked='checked'" : "",
+            'links' => [
+                'sync' => static::makeURL(static::ACTION_SYNC_TLDS)
+            ],
+        ];
+
+        return $this->view('sync', $params);
     }
 
     /**
@@ -372,6 +396,7 @@ class DomainPricings_Controller extends Controller
      */
     public function action_SyncTLDs()
     {
+        $updatePrices = (bool) $this->getRequest()->getParam('update_prices', false);
         $app = $this->getApp();
 
         try {
@@ -380,9 +405,11 @@ class DomainPricings_Controller extends Controller
             $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
         }
 
-        if ((int) $app->getService('settings')->getSetting('prices_autoupdate') !== 0) {
+        if ($updatePrices) {
             $app->getService('pricing')->updateDomainPricing();
         }
+
+        $this->getResponse()->addSuccess($this->getApp()->getLang('sync_success'));
 
         return $this->view_AvailableTlds();
     }
@@ -413,8 +440,8 @@ class DomainPricings_Controller extends Controller
             ],
             [
                 'title' => $app->getLang('sync_tlds'),
-                'link' => static::makeURL(static::ACTION_SYNC_TLDS),
-                'selected' => false
+                'link' => static::makeURL(static::VIEW_SYNC),
+                'selected' =>  $this->checkActualView(static::VIEW_SYNC)
             ],
         ];
 
