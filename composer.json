@@ -2,7 +2,7 @@
     "name": "dondominio/whmcs",
     "description": "DonDominio - WHCMCS Modules Integration",
     "version": "2.1.4",
-    "license": "proprietary",
+    "license": "LGPL-3.0-only",
     "type": "project",
     "minimum-stability": "dev",
     "prefer-stable": true,
