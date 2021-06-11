@@ -62,9 +62,11 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
         $now = new DateTime();
 
         if ($versionUpdate < $now){
-            $latestVersion = $this->getLatestVersion();
+            try {
+                $latestVersion = $this->getLatestVersion();
+                $settingsService->setSetting('last_version', $latestVersion);
+            } catch (\Exception $e){}
 
-            $settingsService->setSetting('last_version', $latestVersion);
             $settingsService->setSetting('last_version_ts_update', new \DateTime());
         }
 

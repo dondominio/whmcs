@@ -963,7 +963,7 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
             WHERE
                 (type = 'domainregister' OR type = 'domaintransfer' OR type = 'domainrenew')
                 AND relid IN (SELECT id FROM tbldomainpricing WHERE autoreg = 'dondominio')
-                AND currency = (SELECT id FROM tblcurrencies WHERE code = 'EUR')
+                AND currency IN (SELECT id FROM tblcurrencies WHERE code = 'EUR')
             ORDER BY relid ASC
         ";
 
@@ -1068,8 +1068,9 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
                 UPDATE tbldomains SET recurringamount = (
                     SELECT msetupfee FROM tblpricing 
                     WHERE type = 'domainrenew' 
-                    AND currency = (SELECT id FROM tblcurrencies WHERE code = 'EUR')
-                    AND relid = (SELECT id FROM tbldomainpricing WHERE extension = '." . $tld . "')
+                    AND currency IN (SELECT id FROM tblcurrencies WHERE code = 'EUR')
+                    AND relid IN (SELECT id FROM tbldomainpricing WHERE extension = '." . $tld . "')
+                    LIMIT 1
                 )
                 WHERE id = $domain->id
             ");

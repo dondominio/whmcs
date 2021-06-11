@@ -6,6 +6,13 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.
 
 ## [Pendiente por lanzar]
 
+## [2.1.5] - 2021-06-1
+### Changed
+- No mostrar errores si falla la petición para comprobar nuevas actualizaciones del Registrador/Addon.
+  
+### Fixed
+- Corregir error al actualizar precios de dominio si el código de moneda 'EUR' está duplicado.
+
 ## [2.1.4] - 2021-04-22
 ### Changed
 - Mostrar el saldo disponible del usuario API.
