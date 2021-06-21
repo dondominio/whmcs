@@ -361,6 +361,34 @@ class API_Service extends AbstractService implements APIService_Interface
         return $this->parseResponse($response, ['contactID' => $contactID]);
     }
 
+    /**
+     * Gets the SSL Products
+     *
+     * @see https://dev.dondominio.com/api/docs/api/#ssl-product-list-ssl-productlist
+     *
+     * @param int $page Offset where query starts
+     * @param int $pageLength Limit where query ends
+     *
+     * @return \Dondominio\API\Response\Response
+     */
+    public function getSSLProductList($page = null, $pageLength = null)
+    {
+        $params = [
+            'page' => $page,
+            'pageLength' => $pageLength,
+        ];
+
+        foreach ($params as $key => $param) {
+            if (is_null($param)) {
+                unset($params[$key]);
+            }
+        }
+
+        $response = $this->getApiConnection()->ssl_productList($params);
+
+        return $this->parseResponse($response, $params);
+    }
+
     public function printApiInfo()
     {
         $this->getApiConnection()->info();

@@ -40,6 +40,7 @@ $_ADDONLANG = array(
     'menu_domains' => 'Manage domains',
     'menu_whois' => 'Whois Proxy',
     'menu_help' => 'Help & Documentation',
+    'menu_ssl' => 'SSL Certificates',
 
     //Filter
     'filter_title' => 'Filter/Search',
@@ -414,6 +415,23 @@ $_ADDONLANG = array(
     'contact_type_country' => 'Country',
     'contact_resend' => 'Resend verification email',
     'contact_success_resend' => 'Verification email resend successfully',
+    
+    /**
+     * SSL
+     */
+    'ssl_products' => 'SSL Products',
+    'ssl_label_product_name' => 'Product Name',
+    'ssl_label_product_multi_domain' => 'Multidomain',
+    'ssl_label_product_wildcard' => 'Wildcard',
+    'ssl_label_product_trial' => 'Is Trial',
+    'ssl_product_id' => 'ID',
+    'ssl_product_name' => 'Name',
+    'ssl_product_price_create' => 'Creation Price',
+    'ssl_product_price_renew' => 'Renew Price',
+    'ssl_sync_message' => 'Sync SSL',
+    'ssl_sync_message' => 'Synchronize products with MrDomain\'s API.',
+    'ssl_sync_success' => 'SSL products synced successfully.',
+    'ssl_sync_wait' => 'This operation may take a few seconds.',
 
     /**
      * CONTENT TITLES
@@ -421,6 +439,7 @@ $_ADDONLANG = array(
     'content_title_admin' => 'DonDominio / Admin',
     'content_title_tld' => 'DonDominio / TLDs and Price',
     'content_title_domains' => 'DonDominio / Manage domains',
+    'content_title_ssl' => 'DonDominio / Manage SSL Certificates',
     'content_title_whois' => 'DonDominio / Proxy Whois',
 
     /**

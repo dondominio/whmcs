@@ -168,6 +168,9 @@ class Migrations
             if (version_compare($version, '2.1.3', '<')) {
                 static::upgrade213();
             }
+            if (version_compare($version, '2.2.0', '<')) {
+                static::upgrade220();
+            }
         } catch (Exception $e) {
             logModuleCall(App::NAME, __FUNCTION__, '', $e->getMessage());
 
@@ -320,5 +323,41 @@ class Migrations
         Capsule::table('mod_dondominio_settings')->updateOrInsert(['key' => 'api_conexion'], ['value' => 1]);
         Capsule::table('mod_dondominio_settings')->updateOrInsert(['key' => 'last_version'], ['value' => '']);
         Capsule::table('mod_dondominio_settings')->updateOrInsert(['key' => 'last_version_ts_update'], ['value' => '0000-00-00 00:00:00']);
+    }
+
+
+    /**
+     * Upgrades database schema for version 2.2.0
+     *
+     * Tables for SSL Module
+     *
+     * @return void
+     */
+    protected static function upgrade220()
+    {
+        if (!Capsule::schema()->hasTable('mod_dondominio_ssl_products')) {
+            Capsule::schema()->create('mod_dondominio_ssl_products', function($table) {
+                $table->integer('dd_product_id');
+                $table->primary('dd_product_id');
+                $table->integer('tblproducts_id')->default(0);
+                $table->string('product_name', 255)->default('');
+                $table->string('brand_name', 255)->default('');
+                $table->string('validation_type', 255)->default('');
+                $table->tinyInteger('is_multi_domain')->default(0);
+                $table->tinyInteger('is_wildcard')->default(0);
+                $table->tinyInteger('is_trial')->default(0);
+                $table->integer('num_domains')->default(1);
+                $table->integer('min_years')->default(1);
+                $table->integer('max_years')->default(0);
+                $table->integer('key_length')->default(0);
+                $table->string('encryption', 255)->default('');
+                $table->decimal('price_create')->default(0);
+                $table->decimal('price_renew')->default(0);
+                $table->integer('trial_period')->default(0);
+                $table->integer('san_max_domains')->default(0);
+                $table->decimal('san_price')->default(0);
+                $table->tinyInteger('status')->default(0);
+            });
+        }
     }
 }

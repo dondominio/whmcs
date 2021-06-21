@@ -56,40 +56,10 @@ class Home_Controller extends Controller
                 'domains' => Domains_Controller::makeURL(Domains_Controller::VIEW_INDEX, $domainFilters),
                 'tlds' => DomainPricings_Controller::makeURL(DomainPricings_Controller::VIEW_INDEX, ['autoreg' => $appName]),
             ],
-            'nav' => static::getNavArray(),
             'print_nav' => false,
         ];
 
         return $this->view('index', $params);
-    }
-
-    /**
-     * Return array to mount the dashboard navbar
-     * 
-     * @return array
-     */
-    public static function getNavArray()
-    {
-        $app = App::getInstance();
-
-        return [
-            [
-                'title' => $app->getLang('menu_status'),
-                'link' => Dashboard_Controller::makeURL(),
-            ],
-            [
-                'title' => $app->getLang('menu_tlds_update'),
-                'link' => DomainPricings_Controller::makeURL(),
-            ],
-            [
-                'title' => $app->getLang('menu_domains'),
-                'link' => Domains_Controller::makeURL(),
-            ],
-            [
-                'title' => $app->getLang('menu_whois'),
-                'link' => Whois_Controller::makeURL(),
-            ],
-        ];
     }
     
 }

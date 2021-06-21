@@ -171,6 +171,11 @@ class Dashboard_Controller extends Controller
                 'selected' => Domains_Controller::CONTROLLER_NAME === $controller
             ],
             [
+                'link' => SSL_Controller::makeURL(),
+                'title' => $app->getLang('menu_ssl'),
+                'selected' => SSL_Controller::CONTROLLER_NAME === $controller
+            ],
+            [
                 'link' => Whois_Controller::makeURL(),
                 'title' => $app->getLang('menu_whois'),
                 'selected' => Whois_Controller::CONTROLLER_NAME === $controller

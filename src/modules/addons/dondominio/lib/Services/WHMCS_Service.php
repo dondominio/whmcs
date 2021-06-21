@@ -142,6 +142,54 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
         return $queryBuilder->get();
     }
 
+    protected function getSSLProductsQuery(array $filters = [])
+    {
+        $queryBuilder = \WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::select();
+
+        if (array_key_exists('product_name', $filters) && !empty($filters['product_name'])) {
+            $queryBuilder->where('product_name', 'like', '%' . $filters['product_name'] . '%');
+        }
+
+        if (array_key_exists('product_multi_domain', $filters) && !is_null($filters['product_multi_domain'])) {
+            $queryBuilder->where('is_multi_domain', '=', $filters['product_multi_domain']);
+        }
+
+        if (array_key_exists('product_wildcard', $filters) && !is_null($filters['product_wildcard'])) {
+            $queryBuilder->where('is_wildcard', '=', $filters['product_wildcard']);
+        }
+
+        if (array_key_exists('product_trial', $filters) && !is_null($filters['product_trial'])) {
+            $queryBuilder->where('is_trial', '=', $filters['product_trial']);
+        }
+
+        return $queryBuilder;
+    }
+
+    public function getSSLProducts(array $filters = [], $offset = null, $limit = null)
+    {
+        $queryBuilder = $this->getSSLProductsQuery($filters);
+
+        if (!is_null($offset)) {
+            $queryBuilder->offset($offset);
+        }
+
+        if (!is_null($limit)) {
+            $queryBuilder->limit($limit);
+        }
+
+        $queryBuilder->orderBy('product_name', 'DESC');
+
+        //var_dump($queryBuilder->toSql());
+
+        return $queryBuilder->get();
+    }
+
+    public function getSSLProductsTotal(array $filters = [])
+    {
+        return $this->getSSLProductsQuery($filters)->count();
+    }
+
+
     /**
      * Retrieves count for `tbldomains`
      *

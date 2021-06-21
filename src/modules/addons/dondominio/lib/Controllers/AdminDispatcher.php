@@ -10,6 +10,7 @@ use WHMCS\Module\Addon\Dondominio\Controllers\Admin\Settings_Controller;
 use WHMCS\Module\Addon\Dondominio\Controllers\Admin\Domains_Controller;
 use WHMCS\Module\Addon\Dondominio\Controllers\Admin\Whois_Controller;
 use WHMCS\Module\Addon\Dondominio\Controllers\Admin\Home_Controller;
+use WHMCS\Module\Addon\Dondominio\Controllers\Admin\SSL_Controller;
 use WHMCS\Module\Addon\Dondominio\Helpers\Template;
 
 class AdminDispatcher implements Dispatcher_Interface
@@ -28,6 +29,7 @@ class AdminDispatcher implements Dispatcher_Interface
             Domains_controller::CONTROLLER_NAME => Domains_controller::class,
             Settings_Controller::CONTROLLER_NAME => Settings_Controller::class,
             Whois_Controller::CONTROLLER_NAME => Whois_controller::class,
+            SSL_Controller::CONTROLLER_NAME => SSL_controller::class,
         ];
     }
 

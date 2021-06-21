@@ -159,6 +159,9 @@ class App
                 case 'utils':
                     $this->setUtilsService(new Utils_Service());
                 break;
+                case 'ssl':
+                    return $this->getSSLService();
+                break;
                 default:
                     throw new Exception('[Fatal error] Service ' . $key . ' doesnt exists.');
                 break;
@@ -274,6 +277,15 @@ class App
     public function setUtilsService(UtilsService_Interface $service)
     {
         $this->services['utils'] = $service;
+    }
+
+    public function getSSLService(): \WHMCS\Module\Addon\Dondominio\Services\Contracts\SSLService_Interface
+    {
+        if (!$this->services['ssl'] instanceof \WHMCS\Module\Addon\Dondominio\Services\SSL_Service){
+            $this->services['ssl'] = new \WHMCS\Module\Addon\Dondominio\Services\SSL_Service();
+        }
+
+        return $this->services['ssl'];
     }
 
     /**

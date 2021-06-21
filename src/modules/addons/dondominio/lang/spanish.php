@@ -40,6 +40,7 @@ $_ADDONLANG = array(
     'menu_domains' => 'Gestión de dominios',
     'menu_whois' => 'Proxy Whois',
     'menu_help' => 'Ayuda y documentación',
+    'menu_ssl' => 'Certificados SSL',
 
     //Filter
     'filter_title' => 'Filtro/Búsqueda',
@@ -415,6 +416,23 @@ $_ADDONLANG = array(
     'contact_resend' => 'Reenviar email de verificación',
     'contact_success_resend' => 'Email de verificación reenviado correctamente',
     
+    /**
+     * SSL
+     */
+    'ssl_products' => 'Productos SSL',
+    'ssl_label_product_name' => 'Nombre de Producto',
+    'ssl_label_product_multi_domain' => 'Multidominio',
+    'ssl_label_product_wildcard' => 'Wildcard',
+    'ssl_label_product_trial' => 'De Prueba',
+    'ssl_product_id' => 'ID',
+    'ssl_product_name' => 'Nombre',
+    'ssl_product_price_create' => 'Precio de Creacion',
+    'ssl_product_price_renew' => 'Precio de Renovacion',
+    'ssl_sync' => 'Sincronizar SSL',
+    'ssl_sync_message' => 'Sincronizar los productos con la API de DonDominio.',
+    'ssl_sync_success' => 'Productos SSL sincronizados correctamente.',
+    'ssl_sync_wait' => 'Esta operación puede tardar algunos segundos.',
+
 
     /**
      * CONTENT TITLES
@@ -422,6 +440,7 @@ $_ADDONLANG = array(
     'content_title_admin' => 'DonDominio / Administración',
     'content_title_tld' => 'DonDominio / TLDs y Tarifas',
     'content_title_domains' => 'DonDominio / Gestión de dominios',
+    'content_title_ssl' => 'DonDominio / Gestión de Certificados SSL',
     'content_title_whois' => 'DonDominio / Proxy Whois',
 
     /**
