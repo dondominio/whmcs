@@ -432,6 +432,10 @@ $_ADDONLANG = array(
     'ssl_sync_message' => 'Synchronize products with MrDomain\'s API.',
     'ssl_sync_success' => 'SSL products synced successfully.',
     'ssl_sync_wait' => 'This operation may take a few seconds.',
+    'ssl_product_group' => 'Product group',
+    'ssl_product_name' => 'Product name',
+    'ssl_price_increment' => 'Creation price increase',
+    'ssl_product_create_succesful' => 'Product created/edited successfully',
 
     /**
      * CONTENT TITLES

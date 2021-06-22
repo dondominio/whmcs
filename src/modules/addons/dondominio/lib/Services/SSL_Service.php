@@ -8,13 +8,6 @@ use WHMCS\Database\Capsule;
 class SSL_Service extends AbstractService implements SSLService_Interface
 {
 
-    protected function validProduct(int $productID): int
-    {
-        $validProducts = [55, 56];
-
-        return (int) in_array($productID, $validProducts);
-    }
-
     public function apiSync(int $page = 0): void
     {
         $apiService = $this->getApp()->getService('api');
@@ -31,6 +24,22 @@ class SSL_Service extends AbstractService implements SSLService_Interface
         if ($results === $limit) {
             $this->apiSync($page++);
         }
+    }
+
+    public function getProduct(int $id): \WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model
+    {
+        return \WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::where(['dd_product_id' => $id])->first();
+    }
+
+    public function getProductGroups(): array
+    {
+        $groups = [];
+
+        foreach (\WHMCS\Product\Group::cursor() as $group){
+            $groups[$group->id] = $group->name;
+        }
+
+        return $groups;
     }
 
     public function createProduct(array $args): void
@@ -63,5 +72,13 @@ class SSL_Service extends AbstractService implements SSLService_Interface
         if (isset($response[$responseKey])){
             $insert[$insertKey] = $response[$responseKey];
         }
+    }
+
+    protected function validProduct(int $productID): int
+    {
+        return true;
+        $validProducts = [55, 56];
+
+        return (int) in_array($productID, $validProducts);
     }
 }

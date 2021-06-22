@@ -336,7 +336,10 @@ class Migrations
     protected static function upgrade220()
     {
         if (!Capsule::schema()->hasTable('mod_dondominio_ssl_products')) {
-            Capsule::schema()->create('mod_dondominio_ssl_products', function($table) {
+
+            $priceIncrementsType = \WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::getPriceIncrementTypes();
+
+            Capsule::schema()->create('mod_dondominio_ssl_products', function($table) use ($priceIncrementsType) {
                 $table->integer('dd_product_id');
                 $table->primary('dd_product_id');
                 $table->integer('tblproducts_id')->default(0);
@@ -357,6 +360,8 @@ class Migrations
                 $table->integer('san_max_domains')->default(0);
                 $table->decimal('san_price')->default(0);
                 $table->tinyInteger('status')->default(0);
+                $table->decimal('price_create_increment')->default(0);
+                $table->enum('price_create_increment_type', $priceIncrementsType)->default('');
             });
         }
     }

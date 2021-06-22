@@ -23,7 +23,8 @@
                         </td>
 
                         <td class='fieldarea'>
-                            <input type='checkbox' name='product_multi_domain' value='1' {if $filters.product_multi_domain}checked{/if} />
+                            <input type='checkbox' name='product_multi_domain' value='1' {if
+                                $filters.product_multi_domain}checked{/if} />
                         </td>
 
                         <td width='15%' class='fieldlabel'>
@@ -31,7 +32,8 @@
                         </td>
 
                         <td class='fieldarea'>
-                            <input type='checkbox' name='product_wildcard'  value='1' {if $filters.product_wildcard}checked{/if} />
+                            <input type='checkbox' name='product_wildcard' value='1' {if
+                                $filters.product_wildcard}checked{/if} />
                         </td>
 
                         <td width='15%' class='fieldlabel'>
@@ -39,7 +41,8 @@
                         </td>
 
                         <td class='fieldarea'>
-                            <input type='checkbox' name='product_trial'  value='1' {if $filters.product_trial}checked{/if} />
+                            <input type='checkbox' name='product_trial' value='1' {if
+                                $filters.product_trial}checked{/if} />
                         </td>
                     </tr>
                 </tbody>
@@ -95,6 +98,8 @@
             <th>
                 {$LANG.ssl_product_price_renew}
             </th>
+
+            <th style="width: 20px;"></th>
         </tr>
     </thead>
 
@@ -115,6 +120,13 @@
 
             <td>
                 {$product.price_renew}
+            </td>
+
+            <td>
+                <a href="{$links.create_whmcs_product}{$product.dd_product_id}">
+                    <img src='images/icons/add.png' class="add_tld" width='16' height='16' border='0'
+                        alt='{$LANG.btn_add}' style="cursor: pointer;" />
+                </a>
             </td>
 
         </tr>
@@ -138,6 +150,8 @@
             <th>
                 {$LANG.ssl_product_price_renew}
             </th>
+
+            <th style="width: 20px;"></th>
         </tr>
     </tfoot>
 </table>

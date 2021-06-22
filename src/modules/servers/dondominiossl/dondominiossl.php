@@ -96,14 +96,6 @@ function dondominiossl_ConfigOptions()
     }
 
     return [
-        'API User' => [
-            'Type' => 'text',
-            'Size' => 20,
-        ],
-        'API Password' => [
-            'Type' => 'text',
-            'Size' => 20,
-        ],
         'Product' => [
             'Type' => 'dropdown',
             'Options' => $productOptions,

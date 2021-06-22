@@ -14,8 +14,10 @@ class SSL_Controller extends Controller
     const DEFAULT_TEMPLATE_FOLDER = 'ssl';
 
     const VIEW_INDEX = '';
+    const VIEW_EDIT_PRODUCT = 'editproduct';
     const VIEW_SYNC = 'sync';
     const ACTION_SYNC = 'viewsync';
+    const ACTION_UPDATEPRODUCT = 'updateproduct';
 
     /**
      * Gets available actions for Controller
@@ -26,8 +28,10 @@ class SSL_Controller extends Controller
     {
         return [
             static::VIEW_INDEX => 'view_Index',
+            static::VIEW_EDIT_PRODUCT => 'view_EditProduct',
             static::VIEW_SYNC => 'view_Sync',
             static::ACTION_SYNC => 'action_Sync',
+            static::ACTION_UPDATEPRODUCT => 'action_UpdateProduct',
         ];
     }
 
@@ -63,7 +67,8 @@ class SSL_Controller extends Controller
             ],
             'links' => [
                 'prev_page' => static::makeUrl(static::VIEW_INDEX, array_merge(['page' => ($page - 1)])),
-                'next_page' => static::makeUrl(static::VIEW_INDEX, array_merge(['page' => ($page + 1)]))
+                'next_page' => static::makeUrl(static::VIEW_INDEX, array_merge(['page' => ($page + 1)])),
+                'create_whmcs_product' => static::makeURL(static::VIEW_EDIT_PRODUCT, ['productid' => '']),
             ],
             'filters' => $filters,
         ];
@@ -103,6 +108,70 @@ class SSL_Controller extends Controller
         ];
 
         return $this->view('sync', $params);
+    }
+
+    public function view_EditProduct()
+    {
+        $sslService = $this->getApp()->getSSLService();
+        $id = $this->getRequest()->getParam('productid', 0);
+        $product = $sslService->getProduct($id);
+
+        $whmcsProductGroups = $sslService->getProductGroups();
+        $whmcsProduct = $product->getWhmcsProduct();
+        $productName = $this->getRequest()->getParam('name', '');
+        $productGroup = $this->getRequest()->getParam('group', '');;
+
+        if (is_object($whmcsProduct)) {
+            $productName = $whmcsProduct->name;
+            $productGroup = $whmcsProduct->gid;
+        }
+
+        $params = [
+            'module_name' => $this->getApp()->getName(),
+            '__c__' => static::CONTROLLER_NAME,
+            'product' => $product,
+            'product_name' => $productName,
+            'product_group' => $productGroup,
+            'groups' => $whmcsProductGroups,
+            'increment_type' => $product->price_create_increment_type,
+            'links' => [
+                'ssl_index' => static::makeURL(static::VIEW_INDEX),
+                'create_group' => 'configproducts.php?action=creategroup',
+            ],
+            'actions' => [
+                'update_product' => static::ACTION_UPDATEPRODUCT,
+            ],
+        ];
+
+        $this->setActualView(static::VIEW_INDEX);
+        return $this->view('editproduct', $params);
+    }
+
+    public function action_UpdateProduct()
+    {
+        $app = $this->getApp();
+        $sslService = $app->getSSLService();
+
+        $id = $this->getRequest()->getParam('productid', 0);
+        $group = $this->getRequest()->getParam('group', 0);
+        $name = $this->getRequest()->getParam('name', '');
+        $increment = $this->getRequest()->getParam('increment', 0);
+        $incrementType = $this->getRequest()->getParam('increment_type', '');
+
+        $product = $sslService->getProduct($id);
+        $product->price_create_increment = $increment;
+        $product->price_create_increment_type = $incrementType;
+
+        try {
+            $product->updateWhmcsProduct($group, $name);
+            $product->save();
+            $this->getResponse()->addSuccess($app->getLang('ssl_product_create_succesful'));
+        } catch (\Exception $e) {
+            $this->getResponse()->addError($app->getLang($e->getMessage()));
+            return $this->view_EditProduct();
+        }
+
+        return $this->view_Index();
     }
 
     /**
