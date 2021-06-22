@@ -131,10 +131,8 @@ function dondominiossl_ConfigOptions()
 function dondominiossl_CreateAccount(array $params)
 {
     try {
-        $app = new \WHMCS\Module\Server\Dondominiossl\App();
-        $app->createAccount(); 
-
-        return 'xd';
+        $app = new \WHMCS\Module\Server\Dondominiossl\App($params);
+        return $app->createAccount();
     } catch (Exception $e) {
         // Record the error in WHMCS's module log.
         logModuleCall(

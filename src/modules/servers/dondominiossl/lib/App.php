@@ -25,7 +25,6 @@ class App
             $config = [
                 'apiuser' => \WHMCS\Database\Capsule::table('mod_dondominio_settings')->where(['key' => 'api_username'])->value('value'),
                 'apipasswd' => \WHMCS\Database\Capsule::table('mod_dondominio_settings')->where(['key' => 'api_password'])->value('value'),
-                'throwExceptions' => true
             ];
             $this->api = new \WHMCS\Module\Server\Dondominiossl\Services\API_Service($config);
         }
@@ -33,10 +32,11 @@ class App
         return $this->api;
     }
 
-    public function createAccount(): array
+    public function createAccount(): string
     {
-        $creator = new \Whmcs\Module\Server\Dondominiossl\Actions\CreateAccount($this->getApiService(), $this->getParams());
+        $creator = new \WHMCS\Module\Server\Dondominiossl\Actions\CreateAccount($this->getApiService(), $this->getParams());
         return $creator->execute();
     }
+
 }
 

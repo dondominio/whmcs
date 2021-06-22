@@ -124,7 +124,7 @@ class API
                 'autoValidate' => false,
                 'versionCheck' => true,
                 'response' => [
-                    'throwExceptions' => false
+                    'throwExceptions' => true
                 ]
             ]);
 

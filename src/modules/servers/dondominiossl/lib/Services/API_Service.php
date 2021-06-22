@@ -11,7 +11,6 @@ class API_Service implements \WHMCS\Module\Server\Dondominiossl\Services\Contrac
      * Sets API attribute
      *
      * @param array $options API Options
-     * @param WHMCS\Module\Registrar\Dondominio\App App
      */
     public function __construct(array $options = [])
     {
@@ -21,7 +20,7 @@ class API_Service implements \WHMCS\Module\Server\Dondominiossl\Services\Contrac
     /**
      * Gets App
      *
-     * @return WHMCS\Module\Registrar\Dondominio\App
+     * @return WHMCS\Module\Server\Dondominio\App
      */
     public function getApp()
     {
@@ -31,7 +30,7 @@ class API_Service implements \WHMCS\Module\Server\Dondominiossl\Services\Contrac
     /**
      * Gets API attribute
      *
-     * @return WHMCS\Module\Registrar\Dondominio\Helpers\API
+     * @return WHMCS\Module\Server\Dondominio\Helpers\API
      */
     public function getApi()
     {
@@ -67,9 +66,10 @@ class API_Service implements \WHMCS\Module\Server\Dondominiossl\Services\Contrac
         return [];
     }
 
-    public function createCertificate(array $args): array
+    public function createCertificate(array $args): \Dondominio\API\Response\Response
     {
-        return [];
+        $connection = $this->getApiConnection();
+        return $connection->ssl_create($args);
     }
 
 }
