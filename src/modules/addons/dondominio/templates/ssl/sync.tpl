@@ -2,7 +2,8 @@
     <form data-sync-form action='{$links.sync}' method='post'>
         <div class="panel-body">
             <p>{$LANG.ssl_sync_message}</p>
-
+            
+            <label><input name="update_prices" id="update_prices" type="checkbox" {$update_prices}> {$LANG.sync_alert}</label>
         </div>
         <div class="panel-footer">
             <input data-sync-submit class='btn btn-primary' type="submit" value="{$LANG.ssl_sync}" />

@@ -8,7 +8,7 @@ use WHMCS\Database\Capsule;
 class SSL_Service extends AbstractService implements SSLService_Interface
 {
 
-    public function apiSync(int $page = 0): void
+    public function apiSync(bool $updatePrices = false, int $page = 0): void
     {
         $apiService = $this->getApp()->getService('api');
         $productResponse = $apiService->getSSLProductList($page);
@@ -16,13 +16,18 @@ class SSL_Service extends AbstractService implements SSLService_Interface
 
         foreach ($products as $product) {
             $this->createProduct($product);
+            $productObj = $this->getProduct($product['productID']);
+
+            if (is_object($productObj) && $updatePrices){
+                $product->updateWhmcsProductPrice();
+            }
         }
 
         $limit = $productResponse->get('queryInfo')['pageLength'];
         $results = $productResponse->get('queryInfo')['results'];
 
         if ($results === $limit) {
-            $this->apiSync($page++);
+            $this->apiSync($updatePrices, $page++);
         }
     }
 

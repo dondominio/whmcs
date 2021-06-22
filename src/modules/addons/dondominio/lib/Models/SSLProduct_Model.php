@@ -39,6 +39,15 @@ class SSLProduct_Model extends AbstractModel
         ];
     }
 
+    protected static function getCurrencyID(): int
+    {
+        return \WHMCS\Database\Capsule::table('tblcurrencies')
+            ->where(['code' => 'EUR'])
+            ->orderBy('id', 'ASC')
+            ->limit(1)
+            ->value('id');
+    }
+
     public function getWhmcsProduct()
     {
         if (empty($this->tblproducts_id)) {
@@ -61,14 +70,12 @@ class SSLProduct_Model extends AbstractModel
         $whmcsProduct->name = $name;
         $whmcsProduct->save();
 
-        \WHMCS\Database\Capsule::table('tblpricing')->update([
-            'type' => 'product', 'relid' => $whmcsProduct->id
-        ], ['monthly' => $this->getWhmcsProductCreatePriceCalc()]);
+        $this->updateWhmcsProductPrice();
     }
 
     public function createWhmcsProduct(int $groupID, string $name): void
     {
-        $currencyID =  \WHMCS\Database\Capsule::table('tblcurrencies')->where(['code' => 'EUR'])->value('id');
+        $currencyID = static::getCurrencyID();
         $command = 'AddProduct';
         $postData = [
             'type' => 'other',
@@ -84,7 +91,7 @@ class SSLProduct_Model extends AbstractModel
 
         $results = localAPI($command, $postData);
 
-        if ($results['result'] === 'error'){
+        if ($results['result'] === 'error') {
             throw new \Exception($results['message']);
         }
 
@@ -110,14 +117,14 @@ class SSLProduct_Model extends AbstractModel
     }
 
     public function createCustomFields(): void
-    {        
-        if (empty($this->tblproducts_id)){
+    {
+        if (empty($this->tblproducts_id)) {
             return;
         }
-     
-        $customFields = static::getCustomFields(); 
 
-        foreach ($customFields as $key => $cf){
+        $customFields = static::getCustomFields();
+
+        foreach ($customFields as $key => $cf) {
             $customField = new \WHMCS\CustomField();
 
             $customField->type = 'product';
@@ -128,6 +135,23 @@ class SSLProduct_Model extends AbstractModel
 
             $customField->save();
         }
+    }
 
+    public function updateWhmcsProductPrice(): void
+    {
+        $whmcsProduct = $this->getWhmcsProduct();
+        $currencyID = static::getCurrencyID();
+
+        if (is_null($whmcsProduct)) {
+            return;
+        }
+
+        \WHMCS\Database\Capsule::table('tblpricing')->updateOrInsert([
+            'type' => 'product',
+            'relid' => $whmcsProduct->id,
+            'currency' => $currencyID,
+        ], [
+            'monthly' => $this->getWhmcsProductCreatePriceCalc()
+        ]);
     }
 }

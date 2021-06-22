@@ -424,6 +424,7 @@ $_ADDONLANG = array(
     'ssl_label_product_multi_domain' => 'Multidomain',
     'ssl_label_product_wildcard' => 'Wildcard',
     'ssl_label_product_trial' => 'Is Trial',
+    'ssl_label_product_imported' => 'Imported',
     'ssl_product_id' => 'ID',
     'ssl_product_name' => 'Name',
     'ssl_product_price_create' => 'Creation Price',

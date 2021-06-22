@@ -19,30 +19,35 @@
                         </td>
 
                         <td width='15%' class='fieldlabel'>
-                            <label for='product_name'>{$LANG.ssl_label_product_multi_domain}</label>
-                        </td>
-
-                        <td class='fieldarea'>
-                            <input type='checkbox' name='product_multi_domain' value='1' {if
-                                $filters.product_multi_domain}checked{/if} />
-                        </td>
-
-                        <td width='15%' class='fieldlabel'>
-                            <label for='product_name'>{$LANG.ssl_label_product_wildcard}</label>
-                        </td>
-
-                        <td class='fieldarea'>
-                            <input type='checkbox' name='product_wildcard' value='1' {if
-                                $filters.product_wildcard}checked{/if} />
+                            <label for='product_imported'>
+                                <input type='checkbox' name='product_imported' value='1' {if
+                                    $filters.product_imported}checked{/if} />
+                                {$LANG.ssl_label_product_imported}
+                            </label>
                         </td>
 
                         <td width='15%' class='fieldlabel'>
-                            <label for='product_name'>{$LANG.ssl_label_product_trial}</label>
+                            <label for='product_multi_domain'>
+                                <input type='checkbox' name='product_multi_domain' value='1' {if
+                                    $filters.product_multi_domain}checked{/if} />
+                                {$LANG.ssl_label_product_multi_domain}
+                            </label>
                         </td>
 
-                        <td class='fieldarea'>
-                            <input type='checkbox' name='product_trial' value='1' {if
-                                $filters.product_trial}checked{/if} />
+                        <td width='15%' class='fieldlabel'>
+                            <label for='product_wildcard'>
+                                <input type='checkbox' name='product_wildcard' value='1' {if
+                                    $filters.product_wildcard}checked{/if} />
+                                {$LANG.ssl_label_product_wildcard}
+                            </label>
+                        </td>
+
+                        <td width='15%' class='fieldlabel'>
+                            <label for='product_trial'>
+                                <input type='checkbox' name='product_trial' value='1' {if
+                                    $filters.product_trial}checked{/if} />
+                                {$LANG.ssl_label_product_trial}
+                            </label>
                         </td>
                     </tr>
                 </tbody>
@@ -124,8 +129,13 @@
 
             <td>
                 <a href="{$links.create_whmcs_product}{$product.dd_product_id}">
+                    {if $product.tblproducts_id == 0}
                     <img src='images/icons/add.png' class="add_tld" width='16' height='16' border='0'
                         alt='{$LANG.btn_add}' style="cursor: pointer;" />
+                    {else}
+                    <img src='images/edit.gif' class="add_tld" width='16' height='16' border='0'
+                        alt='{$LANG.btn_edit}' style="cursor: pointer;" />
+                    {/if}
                 </a>
             </td>
 

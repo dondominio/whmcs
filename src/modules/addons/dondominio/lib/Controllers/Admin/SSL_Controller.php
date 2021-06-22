@@ -49,6 +49,7 @@ class SSL_Controller extends Controller
             'product_multi_domain' => $this->getRequest()->getParam('product_multi_domain'),
             'product_wildcard' => $this->getRequest()->getParam('product_wildcard'),
             'product_trial' => $this->getRequest()->getParam('product_trial'),
+            'product_imported' => $this->getRequest()->getParam('product_imported'),
         ];
 
         $page = $this->getRequest()->getParam('page', 1);
@@ -82,9 +83,10 @@ class SSL_Controller extends Controller
     public function action_Sync()
     {
         $app = $this->getApp();
+        $updatePrices = (bool) $this->getRequest()->getParam('update_prices', false);
 
         try {
-            $app->getSSLService()->apiSync();
+            $app->getSSLService()->apiSync($updatePrices);
             $this->getResponse()->addSuccess($app->getLang('ssl_sync_success'));
         } catch (\Exception $e) {
             $this->getResponse()->addError($app->getLang($e->getMessage()));
