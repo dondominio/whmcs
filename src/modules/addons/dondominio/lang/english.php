@@ -257,6 +257,7 @@ $_ADDONLANG = array(
     'import-error' => 'The provided Whois Servers file is invalid or you don\'t have enough permissions to updated the file',
     'settings-ok' => 'Settings modified successfully',
     'settings-error' => 'Could not save settings',
+    'currency_error' => 'A currency with the code EUR was not found',
 
     // 8.0
     'no_domain_provided' => 'no domain provided.',

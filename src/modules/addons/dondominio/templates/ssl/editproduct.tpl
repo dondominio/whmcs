@@ -24,7 +24,7 @@
                                         <option value=''></option>
                                         {html_options options=$groups selected=$product_group}
                                     </select>
-                                    <a href="{$links.create_group}">Crear un nuevo Grupo</a>
+                                    <a target="_blank" href="{$links.create_group}">Crear un nuevo Grupo</a>
                                 </td>
                             </tr>
                             <tr>

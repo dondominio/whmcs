@@ -10,6 +10,7 @@ class SSLProduct_Model extends AbstractModel
     const PRICE_INCREMENT_TYPE_FIX = 'FIX';
     const CUSTOM_FIELD_CSR = 'CSR';
     const CUSTOM_FIELD_ADMIN_ID = 'Admin User ID';
+    const CUSTOM_FIELD_CERTIFICATE_ID = 'CertificateID';
 
     protected $table = 'mod_dondominio_ssl_products';
     protected $primaryKey = 'dd_product_id';
@@ -29,22 +30,35 @@ class SSLProduct_Model extends AbstractModel
         return [
             static::CUSTOM_FIELD_CSR => [
                 'type' => 'textarea',
-                'required' => true
+                'required' => true,
+                'showorder' => true
             ],
             static::CUSTOM_FIELD_ADMIN_ID => [
                 'type' => 'text',
-                'required' => true
-            ]
+                'required' => true,
+                'showorder' => true
+            ],
+            static::CUSTOM_FIELD_CERTIFICATE_ID => [
+                'type' => 'text',
+                'required' => false,
+                'showorder' => false
+            ],
         ];
     }
 
     protected static function getCurrencyID(): int
     {
-        return \WHMCS\Database\Capsule::table('tblcurrencies')
+        $currencyID = \WHMCS\Database\Capsule::table('tblcurrencies')
             ->where(['code' => 'EUR'])
             ->orderBy('id', 'ASC')
             ->limit(1)
             ->value('id');
+
+        if (empty($currencyID)){
+            throw new \Exception('currency_error');
+        }
+
+        return (int) $currencyID;
     }
 
     public function getWhmcsProduct()
@@ -131,7 +145,7 @@ class SSLProduct_Model extends AbstractModel
             $customField->fieldname = $key;
             $customField->fieldtype = $cf['type'];
             $customField->required = $cf['required'] ? 'on' : '';
-            $customField->showorder = 'on';
+            $customField->showorder = $cf['showorder'] ? 'on' : '';
 
             $customField->save();
         }

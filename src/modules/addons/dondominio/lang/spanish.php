@@ -257,6 +257,7 @@ $_ADDONLANG = array(
     'import-error' => 'El fichero proporcionado no es válido o no tienes permisos suficientes para modificar el fichero',
     'settings-ok' => 'La configuración se ha modificado correctamente',
     'settings-error' => 'No se ha podido modificar la configuración',
+    'currency_error' => 'No se ha encontrado una moneda con el código EUR',
 
     // 8.0
     'no_domain_provided' => 'El campo dominio está vacío.',
