@@ -202,8 +202,8 @@ class DomainPricings_Controller extends Controller
             'module_name' => $this->getApp()->getName(),
             '__c__' => static::CONTROLLER_NAME,
             'update_prices' => $settings->get('prices_autoupdate') == '1' ? "checked='checked'" : "",
-            'links' => [
-                'sync' => static::makeURL(static::ACTION_SYNC_TLDS)
+            'actions' => [
+                'sync' => static::ACTION_SYNC_TLDS
             ],
         ];
 

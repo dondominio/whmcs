@@ -11,7 +11,6 @@ class SSLProduct_Model extends AbstractModel
     const CUSTOM_FIELD_CSR = 'CSR';
     const CUSTOM_FIELD_ADMIN_ID = 'Admin User ID';
 
-
     protected $table = 'mod_dondominio_ssl_products';
     protected $primaryKey = 'dd_product_id';
 
@@ -132,6 +131,7 @@ class SSLProduct_Model extends AbstractModel
             $customField->fieldname = $key;
             $customField->fieldtype = $cf['type'];
             $customField->required = $cf['required'] ? 'on' : '';
+            $customField->showorder = 'on';
 
             $customField->save();
         }

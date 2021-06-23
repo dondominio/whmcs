@@ -1,5 +1,8 @@
 <div class="panel panel-default">
-    <form data-sync-form action='{$links.sync}' method='post'>
+    <form data-sync-form action='' method='post'>
+        <input type="hidden" name="module" value="{$module_name}">
+        <input type="hidden" name="__c__" value="{$__c__}">
+        <input type="hidden" name="__a__" value="{$actions.sync}">
         <div class="panel-body">
             <p>{$LANG.sync_message}</p>
 
@@ -16,11 +19,9 @@
 <script>
     $(document).ready(function () {
 
-        $('[data-sync-submit]').on('click', function (event) {
-            event.preventDefault();
+        $('[data-sync-form]').submit(function (event) {
             $('[data-sync-message]').show();
-            $('[data-sync-form]').find('input').attr('disabled', true);
-            $('[data-sync-form]').submit();
+            $('[data-sync-submit]').attr('disabled', true);
         });
 
     });

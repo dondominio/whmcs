@@ -16,7 +16,7 @@ class SSL_Controller extends Controller
     const VIEW_INDEX = '';
     const VIEW_EDIT_PRODUCT = 'editproduct';
     const VIEW_SYNC = 'sync';
-    const ACTION_SYNC = 'viewsync';
+    const ACTION_SYNC = 'actionsync';
     const ACTION_UPDATEPRODUCT = 'updateproduct';
 
     /**
@@ -91,7 +91,7 @@ class SSL_Controller extends Controller
         } catch (\Exception $e) {
             $this->getResponse()->addError($app->getLang($e->getMessage()));
 
-            return $this->view_Index();
+            return $this->view_Sync();
         }
 
         return $this->view_Index();
@@ -104,8 +104,8 @@ class SSL_Controller extends Controller
         $params = [
             'module_name' => $this->getApp()->getName(),
             '__c__' => static::CONTROLLER_NAME,
-            'links' => [
-                'sync' => static::makeURL(static::ACTION_SYNC)
+            'actions' => [
+                'sync' => static::ACTION_SYNC
             ],
         ];
 
