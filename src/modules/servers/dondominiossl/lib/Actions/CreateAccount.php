@@ -40,7 +40,7 @@ class CreateAccount
             'adminContactID' => $this->params['customfields'][$this->fieldAdminID],
         ];
 
-        $customFieldValue = $this->getCustomFieldValue();
+        $customFieldValue = $this->getCertificateIDCustomFieldValue();
 
         if (empty($customFieldValue)){
             return sprintf('Custom Field %s not found', $this->fieldCertificateID);
@@ -58,23 +58,19 @@ class CreateAccount
         return 'success';
     }
 
-    protected function getCustomFieldValue()
+    protected function getCertificateIDCustomFieldValue()
     {
-        $customField = \WHMCS\CustomField::where([
-            'relid' => $this->params['pid'],
-            'type' => 'product',
-            'fieldname' => $this->fieldCertificateID
-        ])->first();
+        $service = $this->params['model'];
+        $customFieldValues = $service->customFieldValues;
 
-        if (empty($customField)){
-            return null;
+        foreach ($customFieldValues as $value){
+            $customField = $value->customField;
+         
+            if ($customField->fieldName === $this->fieldCertificateID){
+                return $value;
+            }
         }
 
-        $customFieldValue = \WHMCS\CustomField\CustomFieldValue::where([
-            'fieldid' => $customField->id,
-            'relid' => $this->params['serviceid'],
-        ])->first();
-
-        return $customFieldValue;
+        return null;
     }
 }
