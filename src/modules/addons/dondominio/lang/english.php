@@ -438,6 +438,7 @@ $_ADDONLANG = array(
     'ssl_product_name' => 'Product name',
     'ssl_price_increment' => 'Creation price increase',
     'ssl_product_create_succesful' => 'Product created/edited successfully',
+    'ssl_whmcs_edit_product' => 'Editing via WHMCS',
 
     /**
      * CONTENT TITLES

@@ -8,8 +8,7 @@ class SSLProduct_Model extends AbstractModel
 
     const PRICE_INCREMENT_TYPE_PERCENTAGE = 'PERCENTAGE';
     const PRICE_INCREMENT_TYPE_FIX = 'FIX';
-    const CUSTOM_FIELD_CSR = 'CSR';
-    const CUSTOM_FIELD_ADMIN_ID = 'Admin User ID';
+    const CUSTOM_FIELD_COMMON_NAME = 'Common Name';
     const CUSTOM_FIELD_CERTIFICATE_ID = 'CertificateID';
 
     protected $table = 'mod_dondominio_ssl_products';
@@ -28,12 +27,7 @@ class SSLProduct_Model extends AbstractModel
     public static function getCustomFields(): array
     {
         return [
-            static::CUSTOM_FIELD_CSR => [
-                'type' => 'textarea',
-                'required' => true,
-                'showorder' => true
-            ],
-            static::CUSTOM_FIELD_ADMIN_ID => [
+            static::CUSTOM_FIELD_COMMON_NAME => [
                 'type' => 'text',
                 'required' => true,
                 'showorder' => true
@@ -54,7 +48,7 @@ class SSLProduct_Model extends AbstractModel
             ->limit(1)
             ->value('id');
 
-        if (empty($currencyID)){
+        if (empty($currencyID)) {
             throw new \Exception('currency_error');
         }
 
@@ -70,12 +64,12 @@ class SSLProduct_Model extends AbstractModel
         return \WHMCS\Product\Product::where(['id' => $this->tblproducts_id])->first();
     }
 
-    public function updateWhmcsProduct(int $groupID, string $name): void
+    public function updateWhmcsProduct(int $groupID, string $name, int $vatNumberID): void
     {
         $whmcsProduct = $this->getWhmcsProduct();
 
         if (is_null($whmcsProduct)) {
-            $this->createWhmcsProduct($groupID, $name);
+            $this->createWhmcsProduct($groupID, $name, $vatNumberID);
             return;
         }
 
@@ -86,7 +80,7 @@ class SSLProduct_Model extends AbstractModel
         $this->updateWhmcsProductPrice();
     }
 
-    public function createWhmcsProduct(int $groupID, string $name): void
+    public function createWhmcsProduct(int $groupID, string $name, int $vatNumberID): void
     {
         $currencyID = static::getCurrencyID();
         $command = 'AddProduct';
@@ -95,11 +89,21 @@ class SSLProduct_Model extends AbstractModel
             'gid' => $groupID,
             'name' => $name,
             'welcomeemail' => '0',
-            'paytype' => 'onetime',
+            'paytype' => 'recurring',
             'module' => static::SSL_MODULE_NAME,
             'autosetup' => 'on',
             'configoption1' => $this->dd_product_id,
-            'pricing' => [$currencyID => ['monthly' => $this->getWhmcsProductCreatePriceCalc()]],
+            'configoption2' => $vatNumberID,
+            'pricing' => [
+                $currencyID => [
+                    'monthly' => -1,
+                    'quarterly' => -1,
+                    'semiannually' => -1,
+                    'annually' => $this->getWhmcsProductCreatePriceCalc(),
+                    'biennially' => -1,
+                    'triennially' => -1,
+                ]
+            ]
         ];
 
         $results = localAPI($command, $postData);
@@ -165,7 +169,12 @@ class SSLProduct_Model extends AbstractModel
             'relid' => $whmcsProduct->id,
             'currency' => $currencyID,
         ], [
-            'monthly' => $this->getWhmcsProductCreatePriceCalc()
+            'annually' => $this->getWhmcsProductCreatePriceCalc()
         ]);
+    }
+
+    public function hasWhmcsProduct(): bool
+    {
+        return is_object($this->getWhmcsProduct());
     }
 }

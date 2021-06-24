@@ -24,7 +24,7 @@ class App
         if (is_null($this->api)){
             $config = [
                 'apiuser' => \WHMCS\Database\Capsule::table('mod_dondominio_settings')->where(['key' => 'api_username'])->value('value'),
-                'apipasswd' => \WHMCS\Database\Capsule::table('mod_dondominio_settings')->where(['key' => 'api_password'])->value('value'),
+                'apipasswd' => base64_decode(\WHMCS\Database\Capsule::table('mod_dondominio_settings')->where(['key' => 'api_password'])->value('value')),
             ];
             $this->api = new \WHMCS\Module\Server\Dondominiossl\Services\API_Service($config);
         }

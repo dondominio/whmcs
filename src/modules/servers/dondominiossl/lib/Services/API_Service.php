@@ -2,7 +2,6 @@
 
 namespace WHMCS\Module\Server\Dondominiossl\Services;
 
-
 class API_Service implements \WHMCS\Module\Server\Dondominiossl\Services\Contracts\APIService_Interface
 {
     protected $api;
@@ -66,10 +65,21 @@ class API_Service implements \WHMCS\Module\Server\Dondominiossl\Services\Contrac
         return [];
     }
 
-    public function createCertificate(array $args): \Dondominio\API\Response\Response
+    public function createCertificate(int $productID, array $args): \Dondominio\API\Response\Response
     {
         $connection = $this->getApiConnection();
-        return $connection->ssl_create($args);
+        return $connection->ssl_create($productID, $args);
     }
 
+    public function getCertificateInfo(int $certificateID): \Dondominio\API\Response\Response
+    {
+        $connection = $this->getApiConnection();
+        return $connection->ssl_getInfo($certificateID, ['infoType' => 'ssldata']);
+    }
+
+    public function createCSRData(array $args): \Dondominio\API\Response\Response
+    {
+        $connection = $this->getApiConnection();
+        return $connection->ssl_csrCreate($args);
+    }
 }

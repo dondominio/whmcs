@@ -129,12 +129,12 @@
 
             <td>
                 <a href="{$links.create_whmcs_product}{$product.dd_product_id}">
-                    {if $product.tblproducts_id == 0}
+                    {if $product->hasWhmcsProduct()}
+                    <img src='images/edit.gif' class="add_tld" width='16' height='16' border='0'
+                        alt='{$LANG.btn_edit}' style="cursor: pointer;" />                    
+                    {else}
                     <img src='images/icons/add.png' class="add_tld" width='16' height='16' border='0'
                         alt='{$LANG.btn_add}' style="cursor: pointer;" />
-                    {else}
-                    <img src='images/edit.gif' class="add_tld" width='16' height='16' border='0'
-                        alt='{$LANG.btn_edit}' style="cursor: pointer;" />
                     {/if}
                 </a>
             </td>

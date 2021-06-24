@@ -115,13 +115,14 @@ class SSL_Controller extends Controller
     public function view_EditProduct()
     {
         $sslService = $this->getApp()->getSSLService();
+        $whmcsService = $this->getApp()->getService('whmcs');
         $id = $this->getRequest()->getParam('productid', 0);
         $product = $sslService->getProduct($id);
 
         $whmcsProductGroups = $sslService->getProductGroups();
         $whmcsProduct = $product->getWhmcsProduct();
         $productName = $this->getRequest()->getParam('name', '');
-        $productGroup = $this->getRequest()->getParam('group', '');;
+        $productGroup = $this->getRequest()->getParam('group', '');
 
         if (is_object($whmcsProduct)) {
             $productName = $whmcsProduct->name;
@@ -136,9 +137,13 @@ class SSL_Controller extends Controller
             'product_group' => $productGroup,
             'groups' => $whmcsProductGroups,
             'increment_type' => $product->price_create_increment_type,
+            'has_whmcs_product' => $product->hasWhmcsProduct(),
+            'client_custom_field' => $whmcsService->getCustomClientFields(),
+            'vat_number_id' => $whmcsService->getVatNumberID(),
             'links' => [
                 'ssl_index' => static::makeURL(static::VIEW_INDEX),
                 'create_group' => 'configproducts.php?action=creategroup',
+                'whmcs_product_edit' => sprintf('configproducts.php?action=edit&id=%d', $product->tblproducts_id),
             ],
             'actions' => [
                 'update_product' => static::ACTION_UPDATEPRODUCT,
@@ -158,6 +163,7 @@ class SSL_Controller extends Controller
         $group = $this->getRequest()->getParam('group', 0);
         $name = $this->getRequest()->getParam('name', '');
         $increment = $this->getRequest()->getParam('increment', 0);
+        $vatNumber = $this->getRequest()->getParam('vat_number', 0);
         $incrementType = $this->getRequest()->getParam('increment_type', '');
 
         $product = $sslService->getProduct($id);
@@ -165,7 +171,7 @@ class SSL_Controller extends Controller
         $product->price_create_increment_type = $incrementType;
 
         try {
-            $product->updateWhmcsProduct($group, $name);
+            $product->updateWhmcsProduct($group, $name, $vatNumber);
             $product->save();
             $this->getResponse()->addSuccess($app->getLang('ssl_product_create_succesful'));
         } catch (\Exception $e) {

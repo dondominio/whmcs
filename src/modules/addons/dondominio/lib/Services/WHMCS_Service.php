@@ -164,6 +164,7 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
 
         if (array_key_exists('product_imported', $filters) && !is_null($filters['product_imported'])) {
             $queryBuilder->where('tblproducts_id', '!=', 0);
+            $queryBuilder->join('tblproducts', 'tblproducts.id', '=', 'tblproducts_id', 'inner');
         }
 
         return $queryBuilder;
@@ -182,8 +183,6 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
         }
 
         $queryBuilder->orderBy('product_name', 'DESC');
-
-        //var_dump($queryBuilder->toSql());
 
         return $queryBuilder->get();
     }
@@ -1218,5 +1217,38 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
         }
 
         Capsule::table('tbldomainpricing')->insert($fields);
+    }
+
+    /**
+     * Retrieve client custom fields from DDBB
+     *
+     * @return array
+     */
+    public function getCustomClientFields()
+    {
+        $customFieldsArray = [];
+        $customFields = Capsule::table('tblcustomfields')->where('type', 'client')->orderBy('fieldname')->get();
+
+        foreach ($customFields as $cf){
+            $customFieldsArray[$cf->id] = $cf->fieldname;
+        }
+
+        return $customFieldsArray;
+    }
+
+    /**
+     * Retrieve Vat Number CustomField ID
+     *
+     * @return int
+     */
+    public function getVatNumberID()
+    {
+        $vatNumber = Capsule::table('tblcustomfields')->where(['type' => 'client', 'fieldname' => 'Vat Number'])->first();
+
+        if (empty($vatNumber)){
+            return 0;
+        }
+
+        return $vatNumber->id;
     }
 }
