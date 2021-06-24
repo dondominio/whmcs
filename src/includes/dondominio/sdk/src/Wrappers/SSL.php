@@ -7,7 +7,7 @@
  * @package DonDominioPHP
  * @subpackage Wrappers
  */
- 
+
 namespace Dondominio\API\Wrappers;
 
 class SSL extends \Dondominio\API\Wrappers\AbstractWrapper
@@ -190,7 +190,7 @@ class SSL extends \Dondominio\API\Wrappers\AbstractWrapper
      * - keyData		            string		Private key of CSR data (including -----BEGIN PRIVATE KEY----- and -----END PRIVATE KEY-----)
      * - period		                integer		Certificate period
      * - validationMethod           integer		Certificate validation method for the domain at CommonName
-     * ! adminContact[Data]         array		Administrative contact data  (ID Required)
+     * ! adminContact[Data]         array		Administrative contact data
      * - techContact[Data]          array		Technical contact data
      * - orgContact[Data]           array		Organization contact data
      * - alt_name_[Number]          string      Alternative Name of the certificate (Just for multi-domain certificates)
@@ -207,14 +207,175 @@ class SSL extends \Dondominio\API\Wrappers\AbstractWrapper
     {
         $args['productID'] = $productID;
 
+        $map = $this->getCreateSSLMap();
+        $map[] = ['name' => 'productID', 'type' => 'integer', 'required' => true];
+
+        return $this->execute('ssl/create/', $this->flattenContacts($args), $map);
+    }
+
+    /**
+     * List all the validation email for a Certificate and his alternative methods
+     *
+     *  ! = required
+     * - includeAlternativeMethods  string  The response includes alternative validation methods to emails
+     *
+     * @link https://dev.dondominio.com/api/docs/api/#ssl-get-validation-emails-ssl-getvalidationemails
+     *
+     * @param string    $productId CommonName of the Certificate
+     * @param array     $args
+     *
+     * @return	\Dondominio\API\Response\Response
+     */
+    protected function getValidationEmails($commonName, array $args = [])
+    {
+        $args['commonName'] = $commonName;
+
         $map = [
-            ['name' => 'productID',                 'type' => 'integer',    'required' => true],
+            ['name' => 'commonName',                'type' => 'string', 'required' => true],
+            ['name' => 'includeAlternativeMethods', 'type' => 'bool',   'required' => false],
+        ];
+
+        return $this->execute('ssl/getvalidationemails/', $args, $map);
+    }
+
+    /**
+     * Change the validation method of a commonName of a certificate that is in process or in reissue
+     *
+     *  ! = required
+     * ! certificateID              integer     Certificate ID
+     * ! commonName                 string      Certificate commonName
+     * ! validationMethod           string      New Validation method
+     *
+     * @link https://dev.dondominio.com/api/docs/api/#ssl-change-validation-method-ssl-changevalidationmethod
+     *
+     * @param array $args
+     *
+     * @return	\Dondominio\API\Response\Response
+     */
+    protected function changeValidationMethod(array $args = [])
+    {
+
+        $map = [
+            ['name' => 'certificateID',             'type' => 'integer',    'required' => true],
+            ['name' => 'commonName',                'type' => 'string',     'required' => true],
+            ['name' => 'validationMethod',          'type' => 'list',       'required' => false,    'list' => ['http', 'https', 'dns', 'mail']],
+        ];
+
+        return $this->execute('ssl/changevalidationmethod/', $args, $map);
+    }
+
+    /**
+     * Renew Cerfificate
+     *
+     *  ! = required
+     * ! csrData		            string		CSR data (including -----BEGIN CERTIFICATE REQUEST----- and -----END CERTIFICATE REQUEST-----)
+     * ! certificateID		        integer		Certificate ID
+     * - keyData		            string		Private key of CSR data (including -----BEGIN PRIVATE KEY----- and -----END PRIVATE KEY-----)
+     * - period		                integer		Certificate period
+     * - validationMethod           integer		Certificate validation method for the domain at CommonName
+     * ! adminContact[Data]         array		Administrative contact data
+     * - techContact[Data]          array		Technical contact data
+     * - orgContact[Data]           array		Organization contact data
+     * - alt_name_[Number]          string      Alternative Name of the certificate (Just for multi-domain certificates)
+     * - alt_validation_[Number]    string      Validation method of the Alternative Name (Just for multi-domain certificates)
+     *
+     * @link https://dev.dondominio.com/api/docs/api/#ssl-renew-ssl-renew
+     *
+     * @param int $certificateID Certificate ID
+     * @param array $args
+     *
+     * @return	\Dondominio\API\Response\Response
+     */
+    protected function renew($certificateID, array $args = [])
+    {
+        $args['certificateID'] = $certificateID;
+
+        $map = $this->getCreateSSLMap();
+        $map[] = ['name' => 'certificateID', 'type' => 'integer', 'required' => true];
+
+        return $this->execute('ssl/renew/', $this->flattenContacts($args), $map);
+    }
+
+    /**
+     * Resend Validation Mail
+     *
+     * @link https://dev.dondominio.com/api/docs/api/#ssl-resend-validation-mail-ssl-resendvalidationmail
+     *
+     * @param int $productId Certificate ID
+     * @param array $args
+     *
+     * @return	\Dondominio\API\Response\Response
+     */
+    protected function resendValidationMail($certificateID, $commonName)
+    {
+        $args['certificateID'] = $certificateID;
+        $args['commonName'] = $commonName;
+        
+        $map = [
+            ['name' => 'certificateID',    'type' => 'integer',    'required' => true],
+            ['name' => 'commonName',       'type' => 'string',     'required' => true],
+        ];
+
+        return $this->execute('ssl/resendvalidationmail/', $args, $map);
+    }
+
+    /**
+     * SSL Certificate Reissue
+     *
+     * @link https://dev.dondominio.com/api/docs/api/#ssl-reissue-ssl-reissue
+     *
+     * @param int $certificateID Certificate ID
+     * @param array $args
+     *
+     * @return	\Dondominio\API\Response\Response
+     */
+    protected function reissue($certificateID, array $args)
+    {
+        $args['certificateID'] = $certificateID;
+
+        $map = $this->getCreateSSLMap();
+        $map[] = ['name' => 'certificateID',    'type' => 'integer',    'required' => true];
+
+        return $this->execute('ssl/reissue/', $args, $map);
+    }
+
+    /**
+     * Multi Domain Add San
+     *
+     * @link https://dev.dondominio.com/api/docs/api/#ssl-multidomain-add-san-ssl-multidomainaddsan
+     *
+     * @param int $certificateID Certificate ID
+     * @param array $args
+     *
+     * @return	\Dondominio\API\Response\Response
+     */
+    protected function multiDomainAddSan($certificateID, $extraSAN)
+    {
+        $args['certificateID'] = $certificateID;
+        $args['extraSAN'] = $extraSAN;
+
+        $map = [
+            ['name' => 'certificateID',    'type' => 'integer',    'required' => true],
+            ['name' => 'extraSAN',         'type' => 'string',    'required' => true],
+        ];
+
+        return $this->execute('ssl/multidomainaddsan/', $args, $map);
+    }
+
+    /**
+     * Return a map to validate params for create and renew SSL Certificates
+     *
+     * @return	array
+     */
+    protected function getCreateSSLMap(): array
+    {
+        return [
             ['name' => 'csrData',                   'type' => 'string',     'required' => true],
             ['name' => 'keyData',                   'type' => 'string',     'required' => false],
             ['name' => 'period',                    'type' => 'integer',    'required' => false],
-            ['name' => 'validationMethod',          'type' => 'string',     'required' => false],
+            ['name' => 'validationMethod',          'type' => 'list',       'required' => false,    'list' => ['http', 'https', 'dns', 'mail']],
 
-            ['name' => 'adminContactID',            'type' => 'contactID',  'required' => true],
+            ['name' => 'adminContactID',            'type' => 'contactID',  'required' => false],
             ['name' => 'adminContactType',          'type' => 'list',       'required' => false,    'list' => ['individual', 'organization']],
             ['name' => 'adminContactFirstName',     'type' => 'string',     'required' => false],
             ['name' => 'adminContactLastName',      'type' => 'string',     'required' => false],
@@ -262,58 +423,5 @@ class SSL extends \Dondominio\API\Wrappers\AbstractWrapper
             ['name' => 'orgContactState',           'type' => 'string',     'required' => false],
             ['name' => 'orgContactCountry',         'type' => 'string',     'required' => false],
         ];
-
-        return $this->execute('ssl/create/', $this->flattenContacts($args), $map);
-    }
-
-    /**
-     * List all the validation email for a Certificate and his alternative methods
-     * 
-     *  ! = required
-     * - includeAlternativeMethods  string  The response includes alternative validation methods to emails
-     *
-     * @link https://dev.dondominio.com/api/docs/api/#ssl-get-validation-emails-ssl-getvalidationemails
-     *
-     * @param string    $productId CommonName of the Certificate
-     * @param array     $args
-     *
-     * @return	\Dondominio\API\Response\Response
-     */
-    protected function getValidationEmails($commonName, array $args = [])
-    {
-        $args['commonName'] = $commonName;
-
-        $map = [
-            ['name' => 'commonName',                'type' => 'string',  'required' => true],
-            ['name' => 'includeAlternativeMethods', 'type' => 'bool',   'required' => false],
-        ];
-
-        return $this->execute('ssl/getvalidationemails/', $args, $map);
-    }
-
-    /**
-     * Change the validation method of a commonName of a certificate that is in process or in reissue
-     * 
-     *  ! = required
-     * ! certificateID              integer     Certificate ID
-     * ! commonName                 string      Certificate commonName
-     * ! includeAlternativeMethods  string      Alternative validation methods to emails
-     *
-     * @link https://dev.dondominio.com/api/docs/api/
-     *
-     * @param array $args
-     *
-     * @return	\Dondominio\API\Response\Response
-     */
-    protected function changeValidationMethod(array $args = [])
-    {
-
-        $map = [
-            ['name' => 'certificateID',             'type' => 'integer',    'required' => true],
-            ['name' => 'commonName',                'type' => 'string',     'required' => true],
-            ['name' => 'includeAlternativeMethods', 'type' => 'string',     'required' => true],
-        ];
-
-        return $this->execute('ssl/changevalidationmethod/', $args, $map);
     }
 }
