@@ -1,7 +1,7 @@
 <p>{$LANG.tld_new_info}</p>
 
 
-<form action='' method='get'>
+<form data-ssl-form action='' method='get'>
     <input type="hidden" name="module" value="{$module_name}">
     <input type="hidden" name="__c__" value="{$__c__}">
     <input type="hidden" name="__a__" value="{$actions.view_index}">
@@ -20,7 +20,7 @@
 
                         <td width='15%' class='fieldlabel'>
                             <label for='product_imported'>
-                                <input type='checkbox' name='product_imported' value='1' {if
+                                <input type='checkbox' name='product_imported' id="product_imported" value='1' {if
                                     $filters.product_imported}checked{/if} />
                                 {$LANG.ssl_label_product_imported}
                             </label>
@@ -28,7 +28,7 @@
 
                         <td width='15%' class='fieldlabel'>
                             <label for='product_multi_domain'>
-                                <input type='checkbox' name='product_multi_domain' value='1' {if
+                                <input type='checkbox' name='product_multi_domain' id="product_multi_domain" value='1' {if
                                     $filters.product_multi_domain}checked{/if} />
                                 {$LANG.ssl_label_product_multi_domain}
                             </label>
@@ -36,7 +36,7 @@
 
                         <td width='15%' class='fieldlabel'>
                             <label for='product_wildcard'>
-                                <input type='checkbox' name='product_wildcard' value='1' {if
+                                <input type='checkbox' name='product_wildcard' id="product_wildcard" value='1' {if
                                     $filters.product_wildcard}checked{/if} />
                                 {$LANG.ssl_label_product_wildcard}
                             </label>
@@ -44,7 +44,7 @@
 
                         <td width='15%' class='fieldlabel'>
                             <label for='product_trial'>
-                                <input type='checkbox' name='product_trial' value='1' {if
+                                <input type='checkbox' name='product_trial' id="product_trial" value='1' {if
                                     $filters.product_trial}checked{/if} />
                                 {$LANG.ssl_label_product_trial}
                             </label>
@@ -181,3 +181,13 @@
     {$LANG.pagination_next} »
     {/if}
 </p>
+
+{literal}
+<script>
+    $(document).ready(function () {
+        $('form[data-ssl-form] input[type="checkbox"]').on('change', function (event) {
+            $('form[data-ssl-form]').submit();
+        });
+    });
+</script>
+{/literal}
