@@ -144,7 +144,8 @@ function dondominiossl_CreateAccount(array $params)
 function dondominiossl_Renew(array $params)
 {
     try {
-
+        $app = new \WHMCS\Module\Server\Dondominiossl\App($params);
+        return $app->renew();
     } catch (Exception $e) {
         // Record the error in WHMCS's module log.
         logModuleCall(

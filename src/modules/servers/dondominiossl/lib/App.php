@@ -38,5 +38,10 @@ class App
         return $creator->execute();
     }
 
+    public function renew(): string
+    {
+        $renew = new \WHMCS\Module\Server\Dondominiossl\Actions\Renew($this->getApiService(), $this->getParams());
+        return $renew->execute();
+    }
 }
 

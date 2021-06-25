@@ -19,7 +19,7 @@ class SSL_Service extends AbstractService implements SSLService_Interface
             $productObj = $this->getProduct($product['productID']);
 
             if (is_object($productObj) && $updatePrices){
-                $product->updateWhmcsProductPrice();
+                $productObj->updateWhmcsProductPrice();
             }
         }
 

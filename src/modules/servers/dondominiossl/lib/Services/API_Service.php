@@ -82,4 +82,11 @@ class API_Service implements \WHMCS\Module\Server\Dondominiossl\Services\Contrac
         $connection = $this->getApiConnection();
         return $connection->ssl_csrCreate($args);
     }
+
+    public function renewCertificate(int $certificateID, array $args): \Dondominio\API\Response\Response
+    {
+        $connection = $this->getApiConnection();
+        return $connection->ssl_renew($certificateID, $args);
+    }
+
 }
