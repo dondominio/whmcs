@@ -82,28 +82,40 @@ class SSLProduct_Model extends AbstractModel
 
     public function createWhmcsProduct(int $groupID, string $name, int $vatNumberID): void
     {
+        $price = $this->getWhmcsProductCreatePriceCalc();
         $currencyID = static::getCurrencyID();
         $command = 'AddProduct';
+
+        $pricing = [$currencyID => [
+            'monthly' => -1,
+            'quarterly' => -1,
+            'semiannually' => -1,
+            'annually' => $price,
+            'biennially' => -1,
+            'triennially' => -1,
+        ]];
+        $paytype = 'recurring';
+
+        if ($this->is_trial) {
+            $pricing = [$currencyID => ['monthly' => $price]];
+            $paytype = 'onetime';
+        }
+
+        if ($price <= 0){
+            $paytype = 'free';
+        }
+
         $postData = [
             'type' => 'other',
             'gid' => $groupID,
             'name' => $name,
             'welcomeemail' => '0',
-            'paytype' => 'recurring',
+            'paytype' => $paytype,
             'module' => static::SSL_MODULE_NAME,
             'autosetup' => 'on',
             'configoption1' => $this->dd_product_id,
             'configoption2' => $vatNumberID,
-            'pricing' => [
-                $currencyID => [
-                    'monthly' => -1,
-                    'quarterly' => -1,
-                    'semiannually' => -1,
-                    'annually' => $this->getWhmcsProductCreatePriceCalc(),
-                    'biennially' => -1,
-                    'triennially' => -1,
-                ]
-            ]
+            'pricing' => $pricing
         ];
 
         $results = localAPI($command, $postData);
