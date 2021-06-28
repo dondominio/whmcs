@@ -150,7 +150,6 @@ class SSL_Controller extends Controller
             ],
         ];
 
-        $this->setActualView(static::VIEW_INDEX);
         return $this->view('editproduct', $params);
     }
 

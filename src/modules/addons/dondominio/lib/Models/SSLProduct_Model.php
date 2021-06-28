@@ -8,6 +8,8 @@ class SSLProduct_Model extends AbstractModel
 
     const PRICE_INCREMENT_TYPE_PERCENTAGE = 'PERCENTAGE';
     const PRICE_INCREMENT_TYPE_FIX = 'FIX';
+    const PRICE_INCREMENT_TYPE_NONE = '';
+
     const CUSTOM_FIELD_COMMON_NAME = 'Common Name';
     const CUSTOM_FIELD_CERTIFICATE_ID = 'CertificateID';
 
@@ -21,6 +23,7 @@ class SSLProduct_Model extends AbstractModel
         return [
             static::PRICE_INCREMENT_TYPE_FIX,
             static::PRICE_INCREMENT_TYPE_PERCENTAGE,
+            static::PRICE_INCREMENT_TYPE_NONE,
         ];
     }
 
@@ -101,7 +104,7 @@ class SSLProduct_Model extends AbstractModel
             $paytype = 'onetime';
         }
 
-        if ($price <= 0){
+        if ($price <= 0) {
             $paytype = 'free';
         }
 
@@ -111,6 +114,7 @@ class SSLProduct_Model extends AbstractModel
             'name' => $name,
             'welcomeemail' => '0',
             'paytype' => $paytype,
+            'hidden' => false,
             'module' => static::SSL_MODULE_NAME,
             'autosetup' => 'on',
             'configoption1' => $this->dd_product_id,

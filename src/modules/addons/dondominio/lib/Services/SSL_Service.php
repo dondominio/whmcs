@@ -51,32 +51,35 @@ class SSL_Service extends AbstractService implements SSLService_Interface
     {
         $insert = [];
 
-        $this->setIfExists($insert, 'dd_product_id', $args, 'productID');
-        $this->setIfExists($insert, 'product_name', $args, 'productName');
-        $this->setIfExists($insert, 'brand_name', $args, 'brandName');
-        $this->setIfExists($insert, 'validation_type', $args, 'validationType');
-        $this->setIfExists($insert, 'is_multi_domain', $args, 'isMultiDomain');
-        $this->setIfExists($insert, 'is_wildcard', $args, 'isWildcard');
-        $this->setIfExists($insert, 'is_trial', $args, 'isTrial');
-        $this->setIfExists($insert, 'num_domains', $args, 'numDomains');
-        $this->setIfExists($insert, 'min_years', $args, 'minYears');
-        $this->setIfExists($insert, 'max_years', $args, 'maxYears');
-        $this->setIfExists($insert, 'key_length', $args, 'keyLength');
-        $this->setIfExists($insert, 'encryption', $args, 'encryption');
-        $this->setIfExists($insert, 'price_create', $args, 'priceCreate');
-        $this->setIfExists($insert, 'price_renew', $args, 'priceRenew');
-        $this->setIfExists($insert, 'trial_period', $args, 'trialPeriod');
-        
+        $this->setIfExists($insert, 'dd_product_id', $args, ['productID']);
+        $this->setIfExists($insert, 'product_name', $args, ['productName']);
+        $this->setIfExists($insert, 'brand_name', $args, ['brandName']);
+        $this->setIfExists($insert, 'validation_type', $args, ['validationType']);
+        $this->setIfExists($insert, 'is_multi_domain', $args, ['isMultiDomain']);
+        $this->setIfExists($insert, 'is_wildcard', $args, ['isWildcard']);
+        $this->setIfExists($insert, 'is_trial', $args, ['isTrial']);
+        $this->setIfExists($insert, 'num_domains', $args, ['numDomains']);
+        $this->setIfExists($insert, 'key_length', $args, ['keyLength']);
+        $this->setIfExists($insert, 'encryption', $args, ['encryption']);
+        $this->setIfExists($insert, 'price_create', $args, ['create', 'create']);
+        $this->setIfExists($insert, 'trial_period', $args, ['trialPeriod']);
+
         $insert['status'] = $this->validProduct($args['productID']);
 
         Capsule::table('mod_dondominio_ssl_products')->updateOrInsert(['dd_product_id' => $args['productID']], $insert);
     }
 
-    protected function setIfExists(array &$insert, string $insertKey, array $response, string $responseKey): void
+    protected function setIfExists(array &$insert, string $insertKey, array $response, array $responseKeys): void
     {
-        if (isset($response[$responseKey])){
-            $insert[$insertKey] = $response[$responseKey];
+        foreach ($responseKeys as $value) {
+            if (!isset($response[$value])){
+                return;
+            }
+
+            $response = $response[$value];
         }
+
+        $insert[$insertKey] = $response;
     }
 
     protected function validProduct(int $productID): int

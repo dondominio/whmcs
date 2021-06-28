@@ -338,8 +338,9 @@ class Migrations
         if (!Capsule::schema()->hasTable('mod_dondominio_ssl_products')) {
 
             $priceIncrementsType = \WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::getPriceIncrementTypes();
+            $priceIncrementsTypeNone = \WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::PRICE_INCREMENT_TYPE_NONE;
 
-            Capsule::schema()->create('mod_dondominio_ssl_products', function($table) use ($priceIncrementsType) {
+            Capsule::schema()->create('mod_dondominio_ssl_products', function($table) use ($priceIncrementsType, $priceIncrementsTypeNone) {
                 $table->integer('dd_product_id');
                 $table->primary('dd_product_id');
                 $table->integer('tblproducts_id')->default(0);
@@ -350,18 +351,15 @@ class Migrations
                 $table->tinyInteger('is_wildcard')->default(0);
                 $table->tinyInteger('is_trial')->default(0);
                 $table->integer('num_domains')->default(1);
-                $table->integer('min_years')->default(1);
-                $table->integer('max_years')->default(0);
                 $table->integer('key_length')->default(0);
                 $table->string('encryption', 255)->default('');
                 $table->decimal('price_create')->default(0);
-                $table->decimal('price_renew')->default(0);
                 $table->integer('trial_period')->default(0);
                 $table->integer('san_max_domains')->default(0);
                 $table->decimal('san_price')->default(0);
                 $table->tinyInteger('status')->default(0);
                 $table->decimal('price_create_increment')->default(0);
-                $table->enum('price_create_increment_type', $priceIncrementsType)->default('');
+                $table->enum('price_create_increment_type', $priceIncrementsType)->default($priceIncrementsTypeNone);
             });
         }
     }

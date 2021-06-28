@@ -100,10 +100,6 @@
                 {$LANG.ssl_product_price_create}
             </th>
 
-            <th>
-                {$LANG.ssl_product_price_renew}
-            </th>
-
             <th style="width: 20px;"></th>
         </tr>
     </thead>
@@ -121,10 +117,6 @@
 
             <td>
                 {$product.price_create}
-            </td>
-
-            <td>
-                {$product.price_renew}
             </td>
 
             <td>
@@ -155,10 +147,6 @@
 
             <th>
                 {$LANG.ssl_product_price_create}
-            </th>
-
-            <th>
-                {$LANG.ssl_product_price_renew}
             </th>
 
             <th style="width: 20px;"></th>

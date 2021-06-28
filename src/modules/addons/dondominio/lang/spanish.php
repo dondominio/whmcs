@@ -429,7 +429,6 @@ $_ADDONLANG = array(
     'ssl_product_id' => 'ID',
     'ssl_product_name' => 'Nombre',
     'ssl_product_price_create' => 'Precio de Creacion',
-    'ssl_product_price_renew' => 'Precio de Renovacion',
     'ssl_sync' => 'Sincronizar SSL',
     'ssl_sync_message' => 'Sincronizar los productos con la API de DonDominio.',
     'ssl_sync_success' => 'Productos SSL sincronizados correctamente.',
