@@ -12,18 +12,6 @@ class CreateAccount extends \WHMCS\Module\Server\Dondominiossl\Actions\Base
             return 'success';
         }
 
-        if (!strlen($this->params['configoption1'])) {
-            return 'Product ID not found';
-        }
-
-        if (!strlen($this->params['configoption2'])) {
-            return 'VAT Number not found';
-        }
-
-        if (!strlen($this->params['customfields'][$this->fieldCommonName])) {
-            return 'Common Name not found';
-        }
-
         $customFieldValue = $this->getCertificateIDCustomFieldValue();
 
         if (!strlen($customFieldValue)) {
@@ -31,27 +19,12 @@ class CreateAccount extends \WHMCS\Module\Server\Dondominiossl\Actions\Base
         }
 
         try {
-            $address = $this->params['clientsdetails']['address1'];
-            $address = strlen($address) ? $address : $this->params['clientsdetails']['address2'];
+            $this->checkParams();
             $csrResponse = $this->createCSRData();
 
-            $args = [
-                'csrData' => $csrResponse->get('csrData'),
-                'keyData' => $csrResponse->get('csrKey'),
-                'period' => $this->getPeriod(),
-                'adminContactType' => 'individual',
-                'adminContactFirstName' => $this->params['clientsdetails']['firstname'],
-                'adminContactLastName' => $this->params['clientsdetails']['lastname'],
-                'adminContactIdentNumber' => $this->getVATNumber(),
-                'adminContactEmail' => $this->params['clientsdetails']['email'],
-                'adminContactPhone' => $this->params['clientsdetails']['phonenumberformatted'],
-                'adminContactFax' => $this->params['clientsdetails']['phonenumberformatted'],
-                'adminContactAddress' => $address,
-                'adminContactPostalCode' => $this->params['clientsdetails']['postcode'],
-                'adminContactCity' => $this->params['clientsdetails']['city'],
-                'adminContactState' => $this->params['clientsdetails']['state'],
-                'adminContactCountry' => $this->params['clientsdetails']['countrycode'],
-            ];
+            $args = $this->getArgs();
+            $args['csrData'] = $csrResponse->get('csrData');
+            $args['keyData'] = $csrResponse->get('csrKey');
 
             $response = $this->api->createCertificate($this->params['configoption1'], $args);
         } catch (\Exception $e) {

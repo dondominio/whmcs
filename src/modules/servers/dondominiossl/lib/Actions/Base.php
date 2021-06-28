@@ -63,4 +63,74 @@ abstract class Base
 
         return isset($yearsMap[$billingCycle]) ? $yearsMap[$billingCycle] : 1;
     }
+
+    protected function getArgs(): array
+    {
+        return [
+            'period' => $this->getPeriod(),
+            'adminContactType' => 'individual',
+            'adminContactFirstName' => $this->params['clientsdetails']['firstname'],
+            'adminContactLastName' => $this->params['clientsdetails']['lastname'],
+            'adminContactIdentNumber' => $this->getVATNumber(),
+            'adminContactEmail' => $this->params['clientsdetails']['email'],
+            'adminContactPhone' => $this->params['clientsdetails']['phonenumberformatted'],
+            'adminContactFax' => $this->params['clientsdetails']['phonenumberformatted'],
+            'adminContactAddress' => $this->getAddress(),
+            'adminContactPostalCode' => $this->params['clientsdetails']['postcode'],
+            'adminContactCity' => $this->params['clientsdetails']['city'],
+            'adminContactState' => $this->params['clientsdetails']['state'],
+            'adminContactCountry' => $this->params['clientsdetails']['countrycode'],
+        ];
+    }
+
+    protected function checkParams(?array $params = null, ?array $paramsToCheck = null): void
+    {
+        $paramsToCheck = is_null($params) && is_null($paramsToCheck) ? $this->getParamsToCheck() : $paramsToCheck;
+        $params = is_null($params) ? $this->params : $params;
+
+        foreach ($paramsToCheck as $paramKey => $paramMsg) {
+            if (is_array($paramMsg)) {
+                $this->checkParams($params[$paramKey], $paramMsg);
+                continue;
+            }
+
+            if (!strlen($params[$paramKey])) {
+                throw new \Exception($paramMsg);
+            }
+        }
+    }
+
+    protected function getParamsToCheck(): array
+    {
+        return [
+            'configoption1' => 'Product ID not found',
+            'configoption2' => 'VAT Number not found',
+            'customfields' => [
+                $this->fieldCommonName => 'Common Name not found'
+            ],
+            'clientsdetails' => [
+                'companyname' => 'User Company Name not found',
+                'countrycode' => 'User Country Code not found',
+                'state' => 'User State not found',
+                'city' => 'User City not found',
+                'email' => 'User Email not found',
+                'phonenumberformatted' => 'User Phone not found',
+                'postcode' => 'User Post Code not found',
+                'firstname' => 'User First Name not found',
+                'lastname' => 'User Last Name not found',
+            ]
+        ];
+    }
+
+    protected function getAddress(): string
+    {
+        $address = $this->params['clientsdetails']['address1'];
+        $address = strlen($address) ? $address : $this->params['clientsdetails']['address2'];
+
+        if (!strlen($address)) {
+            throw new \Exception('User Address not found');
+        }
+
+        return $address;
+    }
 }
