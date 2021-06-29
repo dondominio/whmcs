@@ -429,6 +429,8 @@ $_ADDONLANG = array(
     'ssl_product_id' => 'ID',
     'ssl_product_name' => 'Nombre',
     'ssl_product_price_create' => 'Precio de Creacion',
+    'ssl_product_price_renew' => 'Precio de Renovacion',
+    'ssl_product_validation_type' => 'Tipo de validación',
     'ssl_sync' => 'Sincronizar SSL',
     'ssl_sync_message' => 'Sincronizar los productos con la API de DonDominio.',
     'ssl_sync_success' => 'Productos SSL sincronizados correctamente.',
@@ -438,6 +440,9 @@ $_ADDONLANG = array(
     'ssl_price_increment' => 'Aumento de precio de creación',
     'ssl_product_create_succesful' => 'Producto creado/editado correctamente',
     'ssl_whmcs_edit_product' => 'Edición a través de WHMCS',
+    'ssl_validation_type_dv' => 'Validación de dominio',
+    'ssl_validation_type_ov' => 'Validación de organización',
+    'ssl_validation_type_ev' => 'Validación extendida',
 
 
     /**

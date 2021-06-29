@@ -49,7 +49,8 @@ class SSL_Controller extends Controller
             'product_multi_domain' => $this->getRequest()->getParam('product_multi_domain'),
             'product_wildcard' => $this->getRequest()->getParam('product_wildcard'),
             'product_trial' => $this->getRequest()->getParam('product_trial'),
-            'product_imported' => $this->getRequest()->getParam('product_imported'),
+            'product_validation_type' =>  $this->getRequest()->getParam('product_validation_type'),
+            'product_imported' => false,
         ];
 
         $page = $this->getRequest()->getParam('page', 1);
@@ -63,6 +64,7 @@ class SSL_Controller extends Controller
             'module_name' => $this->getApp()->getName(),
             '__c__' => static::CONTROLLER_NAME,
             'products' => $products,
+            'validation_types' => \WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::getValidationTypes(),
             'actions' => [
                 'view_index' => static::VIEW_INDEX,
             ],

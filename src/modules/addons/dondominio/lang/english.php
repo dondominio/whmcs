@@ -429,6 +429,8 @@ $_ADDONLANG = array(
     'ssl_product_id' => 'ID',
     'ssl_product_name' => 'Name',
     'ssl_product_price_create' => 'Creation Price',
+    'ssl_product_price_renew' => 'Renew Price',
+    'ssl_product_validation_type' => 'Validation Type',
     'ssl_sync_message' => 'Sync SSL',
     'ssl_sync_message' => 'Synchronize products with MrDomain\'s API.',
     'ssl_sync_success' => 'SSL products synced successfully.',
@@ -438,6 +440,9 @@ $_ADDONLANG = array(
     'ssl_price_increment' => 'Creation price increase',
     'ssl_product_create_succesful' => 'Product created/edited successfully',
     'ssl_whmcs_edit_product' => 'Editing via WHMCS',
+    'ssl_validation_type_dv' => 'Domain validation',
+    'ssl_validation_type_ov' => 'Organization validation',
+    'ssl_validation_type_ev' => 'Extended validation',
 
     /**
      * CONTENT TITLES

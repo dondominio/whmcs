@@ -146,25 +146,33 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
     {
         $queryBuilder = \WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::select();
 
-        if (array_key_exists('product_name', $filters) && !empty($filters['product_name'])) {
+        if (array_key_exists('product_name', $filters) && strlen($filters['product_name'])) {
             $queryBuilder->where('product_name', 'like', '%' . $filters['product_name'] . '%');
         }
 
-        if (array_key_exists('product_multi_domain', $filters) && !is_null($filters['product_multi_domain'])) {
+        if (array_key_exists('product_multi_domain', $filters) && strlen($filters['product_multi_domain'])) {
             $queryBuilder->where('is_multi_domain', '=', $filters['product_multi_domain']);
         }
 
-        if (array_key_exists('product_wildcard', $filters) && !is_null($filters['product_wildcard'])) {
+        if (array_key_exists('product_wildcard', $filters) && strlen($filters['product_wildcard'])) {
             $queryBuilder->where('is_wildcard', '=', $filters['product_wildcard']);
         }
 
-        if (array_key_exists('product_trial', $filters) && !is_null($filters['product_trial'])) {
+        if (array_key_exists('product_trial', $filters) && strlen($filters['product_trial'])) {
             $queryBuilder->where('is_trial', '=', $filters['product_trial']);
         }
 
-        if (array_key_exists('product_imported', $filters) && !is_null($filters['product_imported'])) {
-            $queryBuilder->where('tblproducts_id', '!=', 0);
+        if (array_key_exists('product_imported', $filters) && $filters['product_imported']) {
             $queryBuilder->join('tblproducts', 'tblproducts.id', '=', 'tblproducts_id', 'inner');
+        }
+
+        if (array_key_exists('product_imported', $filters) && !$filters['product_imported']) {
+            $queryBuilder->join('tblproducts', 'tblproducts.id', '=', 'tblproducts_id', 'left');
+            $queryBuilder->where('tblproducts.id', '=', null);
+        }
+
+        if (array_key_exists('product_validation_type', $filters) && strlen($filters['product_validation_type'])){
+            $queryBuilder->where('validation_type', '=', $filters['product_validation_type']);
         }
 
         return $queryBuilder;

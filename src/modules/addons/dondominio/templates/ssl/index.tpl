@@ -18,12 +18,15 @@
                             <input type='text' name='product_name' value='{$filters.product_name}' />
                         </td>
 
-                        <td width='15%' class='fieldlabel'>
-                            <label for='product_imported'>
-                                <input type='checkbox' name='product_imported' id="product_imported" value='1' {if
-                                    $filters.product_imported}checked{/if} />
-                                {$LANG.ssl_label_product_imported}
-                            </label>
+                        <td class='fieldlabel'>
+                            {$LANG.ssl_product_validation_type}
+                        </td>
+        
+                        <td class='fieldarea'>
+                            <select name='product_validation_type' >
+                                <option value=''>{$LANG.filter_any}</option>
+                                {html_options options=$validation_types selected=$filters.product_validation_type}
+                            </select>
                         </td>
 
                         <td width='15%' class='fieldlabel'>
@@ -89,15 +92,31 @@
     <thead>
         <tr>
             <th>
-                {$LANG.ssl_product_id}
-            </th>
-
-            <th>
                 {$LANG.ssl_product_name}
             </th>
 
             <th>
                 {$LANG.ssl_product_price_create}
+            </th>
+
+            <th>
+                {$LANG.ssl_product_price_renew}
+            </th>
+
+            <th>
+                {$LANG.ssl_product_validation_type}
+            </th>
+
+            <th>
+                {$LANG.ssl_label_product_multi_domain}
+            </th>
+
+            <th>
+                {$LANG.ssl_label_product_wildcard}
+            </th>
+
+            <th>
+                {$LANG.ssl_label_product_trial}
             </th>
 
             <th style="width: 20px;"></th>
@@ -108,15 +127,43 @@
         {foreach $products item=product}
         <tr>
             <td>
-                {$product.dd_product_id}
-            </td>
-
-            <td>
                 {$product.product_name} &nbsp;
             </td>
 
-            <td>
+            <td class="text-right">
                 {$product.price_create}
+            </td>
+
+            <td class="text-right">
+                {$product.price_create}
+            </td>
+
+            <td>
+                {$product->getDisplayValidationType()}
+            </td>
+
+            <td class="text-center">
+                {if $product.is_multi_domain}
+                <i class="fad fa-check text-success"></i>
+                {else}
+                <i class="fad fa-times text-danger"></i>
+                {/if}
+            </td>
+
+            <td class="text-center">
+                {if $product.is_wildcard}
+                <i class="fad fa-check text-success"></i>
+                {else}
+                <i class="fad fa-times text-danger"></i>
+                {/if}
+            </td>
+
+            <td class="text-center">
+                {if $product.is_trial}
+                <i class="fad fa-check text-success"></i>
+                {else}
+                <i class="fad fa-times text-danger"></i>
+                {/if}
             </td>
 
             <td>
@@ -138,15 +185,31 @@
     <tfoot>
         <tr>
             <th>
-                {$LANG.ssl_product_id}
-            </th>
-
-            <th>
                 {$LANG.ssl_product_name}
             </th>
 
             <th>
                 {$LANG.ssl_product_price_create}
+            </th>
+
+            <th>
+                {$LANG.ssl_product_price_renew}
+            </th>
+
+            <th>
+                {$LANG.ssl_product_validation_type}
+            </th>
+
+            <th>
+                {$LANG.ssl_label_product_multi_domain}
+            </th>
+
+            <th>
+                {$LANG.ssl_label_product_wildcard}
+            </th>
+
+            <th>
+                {$LANG.ssl_label_product_trial}
             </th>
 
             <th style="width: 20px;"></th>
@@ -173,7 +236,7 @@
 {literal}
 <script>
     $(document).ready(function () {
-        $('form[data-ssl-form] input[type="checkbox"]').on('change', function (event) {
+        $('form[data-ssl-form] input[type="checkbox"], form[data-ssl-form] select').on('change', function (event) {
             $('form[data-ssl-form]').submit();
         });
     });

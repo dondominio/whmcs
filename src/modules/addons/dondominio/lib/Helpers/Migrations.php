@@ -325,7 +325,6 @@ class Migrations
         Capsule::table('mod_dondominio_settings')->updateOrInsert(['key' => 'last_version_ts_update'], ['value' => '0000-00-00 00:00:00']);
     }
 
-
     /**
      * Upgrades database schema for version 2.2.0
      *
@@ -354,6 +353,7 @@ class Migrations
                 $table->integer('key_length')->default(0);
                 $table->string('encryption', 255)->default('');
                 $table->decimal('price_create')->default(0);
+                $table->decimal('price_renew')->default(0);
                 $table->integer('trial_period')->default(0);
                 $table->integer('san_max_domains')->default(0);
                 $table->decimal('san_price')->default(0);

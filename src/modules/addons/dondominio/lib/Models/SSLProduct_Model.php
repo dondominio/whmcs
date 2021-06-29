@@ -6,6 +6,11 @@ class SSLProduct_Model extends AbstractModel
 {
     const SSL_MODULE_NAME = 'dondominiossl';
 
+    const VALIDATION_TYPE_DV = 'dv';
+    const VALIDATION_TYPE_OV = 'ov';
+    const VALIDATION_TYPE_EV = 'ev';
+
+
     const PRICE_INCREMENT_TYPE_PERCENTAGE = 'PERCENTAGE';
     const PRICE_INCREMENT_TYPE_FIX = 'FIX';
     const PRICE_INCREMENT_TYPE_NONE = '';
@@ -23,6 +28,17 @@ class SSLProduct_Model extends AbstractModel
             static::PRICE_INCREMENT_TYPE_FIX,
             static::PRICE_INCREMENT_TYPE_PERCENTAGE,
             static::PRICE_INCREMENT_TYPE_NONE,
+        ];
+    }
+
+    public static function getValidationTypes(): array
+    {
+        $app = \WHMCS\Module\Addon\Dondominio\App::getInstance();
+
+        return [
+            static::VALIDATION_TYPE_DV => $app->getLang('ssl_validation_type_dv'),
+            static::VALIDATION_TYPE_OV => $app->getLang('ssl_validation_type_ov'),
+            static::VALIDATION_TYPE_EV => $app->getLang('ssl_validation_type_ev'),
         ];
     }
 
@@ -193,5 +209,16 @@ class SSLProduct_Model extends AbstractModel
     public function hasWhmcsProduct(): bool
     {
         return is_object($this->getWhmcsProduct());
+    }
+
+    public function getDisplayValidationType(): string
+    {
+        $types = static::getValidationTypes();
+
+        if (isset($types[$this->validation_type])){
+            return $types[$this->validation_type];
+        }
+
+        return $this->validation_type;
     }
 }
