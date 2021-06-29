@@ -10,7 +10,6 @@ class SSLProduct_Model extends AbstractModel
     const PRICE_INCREMENT_TYPE_FIX = 'FIX';
     const PRICE_INCREMENT_TYPE_NONE = '';
 
-    const CUSTOM_FIELD_COMMON_NAME = 'Common Name';
     const CUSTOM_FIELD_CERTIFICATE_ID = 'CertificateID';
 
     protected $table = 'mod_dondominio_ssl_products';
@@ -30,11 +29,6 @@ class SSLProduct_Model extends AbstractModel
     public static function getCustomFields(): array
     {
         return [
-            static::CUSTOM_FIELD_COMMON_NAME => [
-                'type' => 'text',
-                'required' => true,
-                'showorder' => true
-            ],
             static::CUSTOM_FIELD_CERTIFICATE_ID => [
                 'type' => 'text',
                 'required' => false,
@@ -119,7 +113,8 @@ class SSLProduct_Model extends AbstractModel
             'autosetup' => 'on',
             'configoption1' => $this->dd_product_id,
             'configoption2' => $vatNumberID,
-            'pricing' => $pricing
+            'pricing' => $pricing,
+            'showdomainoptions' => true
         ];
 
         $results = localAPI($command, $postData);
@@ -130,6 +125,12 @@ class SSLProduct_Model extends AbstractModel
 
         $this->tblproducts_id = $results['pid'];
         $this->createCustomFields();
+
+        if ($this->is_trial) {
+            $whmcsProduct = $this->getWhmcsProduct();
+            $whmcsProduct->daysAfterSignUpUntilAutoTermination = 365;
+            $whmcsProduct->save();
+        }
     }
 
     public function getWhmcsProductCreatePriceCalc(): float

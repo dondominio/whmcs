@@ -8,7 +8,6 @@ abstract class Base
     protected array $params = [];
     protected \WHMCS\Module\Server\Dondominiossl\Services\Contracts\APIService_Interface $api;
 
-    protected string $fieldCommonName = \WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::CUSTOM_FIELD_COMMON_NAME;
     protected string $fieldCertificateID = \WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::CUSTOM_FIELD_CERTIFICATE_ID;
 
     public function __construct(
@@ -105,9 +104,6 @@ abstract class Base
         return [
             'configoption1' => 'Product ID not found',
             'configoption2' => 'VAT Number not found',
-            'customfields' => [
-                $this->fieldCommonName => 'Common Name not found'
-            ],
             'clientsdetails' => [
                 'companyname' => 'User Company Name not found',
                 'countrycode' => 'User Country Code not found',

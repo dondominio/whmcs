@@ -40,7 +40,6 @@ class CreateAccount extends \WHMCS\Module\Server\Dondominiossl\Actions\Base
     protected function createCSRData(): \Dondominio\API\Response\Response
     {
         $args = [
-            'commonName' => $this->params['customfields'][$this->fieldCommonName],
             'organizationName' => $this->params['clientsdetails']['companyname'],
             'organizationalUnitName' => $this->params['clientsdetails']['companyname'],
             'countryName' => $this->params['clientsdetails']['countrycode'],
