@@ -210,7 +210,7 @@ class SSLProduct_Model extends AbstractModel
     {
         $whmcsProduct = $this->getWhmcsProduct();
 
-        if (is_null($whmcsProduct)){
+        if (is_null($whmcsProduct)) {
             return 0;
         }
 
@@ -222,14 +222,14 @@ class SSLProduct_Model extends AbstractModel
             'currency' => $currencyID,
         ])->first();
 
-        if (empty($price)){
+        if (empty($price)) {
             return 0;
         }
 
-        if ($price->annually < 0){
+        if ($price->annually < 0) {
             return 0;
         }
-        
+
         return (float) $price->annually;
     }
 
@@ -242,7 +242,7 @@ class SSLProduct_Model extends AbstractModel
     {
         $types = static::getValidationTypes();
 
-        if (isset($types[$this->validation_type])){
+        if (isset($types[$this->validation_type])) {
             return $types[$this->validation_type];
         }
 
@@ -259,7 +259,7 @@ class SSLProduct_Model extends AbstractModel
             static::PRICE_INCREMENT_TYPE_NONE => '',
         ];
 
-        if (isset($displayIncrements[$incrementType])){
+        if (isset($displayIncrements[$incrementType])) {
             return $increment . $displayIncrements[$incrementType];
         }
 

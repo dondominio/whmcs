@@ -448,7 +448,21 @@ $_ADDONLANG = array(
     'ssl_whmcs_product_price' => 'Precio anual dentro de WHMCS',
     'ssl_whmcs_base_price' => 'Precio base',
     'ssl_product_price_increase' => 'Incremento de precio',
-
+    'ssl_certificates' => 'Certificados SSL',
+    'ssl_certificate_status_process' => 'En proceso',
+    'ssl_certificate_status_valid' => 'Válido',
+    'ssl_certificate_status_expired' => 'Expirado',
+    'ssl_certificate_status_renew' => 'Renovación en proceso',
+    'ssl_certificate_status_reissue' => 'En proceso de reemisión',
+    'ssl_certificate_status_cancel' => 'Cancelado',
+    'ssl_certificate_renew_true' => 'Renovable',
+    'ssl_certificate_renew_false' => 'No renovable',
+    'ssl_certificate_id' => 'Certificate ID',
+    'ssl_certificate_common_name' => 'Common Name',
+    'ssl_certificate_status' => 'Estado',
+    'ssl_certificate_product' => 'Producto',
+    'ssl_certificate_ts_ini' => 'Fecha de creación',
+    'ssl_certificate_ts_end' => 'Fecha de expiración',
 
     /**
      * CONTENT TITLES

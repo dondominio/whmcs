@@ -164,11 +164,11 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
 
         if (array_key_exists('product_imported', $filters) && $filters['product_imported']) {
             $queryBuilder->join('tblproducts', 'tblproducts.id', '=', 'tblproducts_id', 'inner');
-            
+
             if (array_key_exists('whmcs_product_name', $filters) && $filters['whmcs_product_name']) {
                 $queryBuilder->where('tblproducts.name', 'LIKE', '%' . $filters['whmcs_product_name'] . '%');
             }
-            
+
         }
 
         if (array_key_exists('product_imported', $filters) && !$filters['product_imported']) {
