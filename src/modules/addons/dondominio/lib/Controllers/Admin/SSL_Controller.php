@@ -224,11 +224,13 @@ class SSL_Controller extends Controller
 
     public function view_Sync()
     {
+        $settings = $this->getApp()->getService('settings')->findSettingsAsKeyValue();
         $this->setActualView(static::VIEW_SYNC);
 
         $params = [
             'module_name' => $this->getApp()->getName(),
             '__c__' => static::CONTROLLER_NAME,
+            'update_prices' => $settings->get('prices_autoupdate') == '1' ? "checked='checked'" : "",
             'actions' => [
                 'sync' => static::ACTION_SYNC
             ],

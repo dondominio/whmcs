@@ -132,7 +132,7 @@
             </td>
 
             <td class="text-right">
-                {$product.price_create}
+                {$product.price_renew}
             </td>
 
             <td>
