@@ -18,7 +18,7 @@ class SSL_Service extends AbstractService implements SSLService_Interface
             $this->createProduct($product);
             $productObj = $this->getProduct($product['productID']);
 
-            if (is_object($productObj) && $updatePrices){
+            if (is_object($productObj) && $updatePrices) {
                 $productObj->updateWhmcsProductPrice();
             }
         }
@@ -40,7 +40,7 @@ class SSL_Service extends AbstractService implements SSLService_Interface
     {
         $groups = [];
 
-        foreach (\WHMCS\Product\Group::cursor() as $group){
+        foreach (\WHMCS\Product\Group::cursor() as $group) {
             $groups[$group->id] = $group->name;
         }
 
@@ -73,7 +73,7 @@ class SSL_Service extends AbstractService implements SSLService_Interface
     protected function setIfExists(array &$insert, string $insertKey, array $response, array $responseKeys): void
     {
         foreach ($responseKeys as $value) {
-            if (!isset($response[$value])){
+            if (!isset($response[$value])) {
                 return;
             }
 
@@ -89,5 +89,18 @@ class SSL_Service extends AbstractService implements SSLService_Interface
         $validProducts = [55, 56];
 
         return (int) in_array($productID, $validProducts);
+    }
+
+    public function getCertificateOrderId(int $certificateID): ?int
+    {
+        $order = \WHMCS\Module\Addon\Dondominio\Models\SSLCertificateOrder_Model::where([
+            'certificate_id' => $certificateID
+        ])->first();
+
+        if (is_object($order)){
+            return $order->tblhosting_id;
+        }
+
+        return null;
     }
 }

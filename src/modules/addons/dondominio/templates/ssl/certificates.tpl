@@ -98,6 +98,8 @@
             <th>
                 {$LANG.ssl_certificate_ts_end}
             </th>
+
+            <th>Pedido</th>
         </tr>
     </thead>
 
@@ -120,12 +122,18 @@
                 {$certificate.productName}
             </td>
         
-            <td>
+            <td class="text-right">
                 {$certificate.tsCreate}
             </td>
         
-            <td>
+            <td class="text-right">
                 {$certificate.tsExpir}
+            </td>
+
+            <td class="text-center">
+                {if $certificate.order_id}
+                <a target="_blank" href="{$links.whmcs_order}{$certificate.order_id}"><i class="fab fa-whmcs text-success"></i></a> 
+                {/if}
             </td>
         </tr>
 
@@ -157,6 +165,8 @@
             <th>
                 Fecha de expiracion
             </th>
+            
+            <th>Pedido</th>
         </tr>
     </tfoot>
 </table>

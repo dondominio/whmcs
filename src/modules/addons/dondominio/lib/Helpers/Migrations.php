@@ -362,5 +362,13 @@ class Migrations
                 $table->enum('price_create_increment_type', $priceIncrementsType)->default($priceIncrementsTypeNone);
             });
         }
+
+        if (!Capsule::schema()->hasTable('mod_dondominio_ssl_certificate_orders')) {
+            Capsule::schema()->create('mod_dondominio_ssl_certificate_orders', function($table) {
+                $table->integer('certificate_id');
+                $table->primary('certificate_id');
+                $table->integer('tblhosting_id')->default(0);
+            });
+        }
     }
 }

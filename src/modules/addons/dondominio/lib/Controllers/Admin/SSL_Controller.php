@@ -135,6 +135,7 @@ class SSL_Controller extends Controller
         $app = $this->getApp();
         $whmcsService = $app->getService('whmcs');
         $apiService = $app->getService('api');
+        $sslService = $app->getSSLService();
 
         $page = $this->getRequest()->getParam('page', 1);
         $limit = $whmcsService->getConfiguration('NumRecordstoDisplay');
@@ -181,6 +182,7 @@ class SSL_Controller extends Controller
 
             $certificatesData[$key]['displayStatus'] = isset($status[$statusKey]) ? $status[$statusKey] : $statusKey;
             $certificatesData[$key]['productName'] = isset($products[$productID]) ? $products[$productID] : $productID;
+            $certificatesData[$key]['order_id'] = $sslService->getCertificateOrderID($cert['certificateID']);
         }
 
         $params = [
@@ -196,6 +198,7 @@ class SSL_Controller extends Controller
             'links' => [
                 'prev_page' => static::makeUrl(static::VIEW_CERTIFICATES, array_merge(['page' => ($page - 1)], $filters)),
                 'next_page' => static::makeUrl(static::VIEW_CERTIFICATES, array_merge(['page' => ($page + 1)], $filters)),
+                'whmcs_order' => 'clientsservices.php?id=',
             ],
         ];
 

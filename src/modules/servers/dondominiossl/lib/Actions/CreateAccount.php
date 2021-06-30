@@ -34,6 +34,11 @@ class CreateAccount extends \WHMCS\Module\Server\Dondominiossl\Actions\Base
         $customFieldValue->value = $response->get('ssl')['certificateID'];
         $customFieldValue->save();
 
+        $sslCertificateOrder = new \WHMCS\Module\Addon\Dondominio\Models\SSLCertificateOrder_Model();
+        $sslCertificateOrder->certificate_id = $response->get('ssl')['certificateID'];
+        $sslCertificateOrder->tblhosting_id = $this->params['serviceid'];
+        $sslCertificateOrder->save();
+
         return 'success';
     }
 
