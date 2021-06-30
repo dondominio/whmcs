@@ -206,6 +206,33 @@ class SSLProduct_Model extends AbstractModel
         ]);
     }
 
+    public function getWhmcsProductAnnuallyPrice(): float
+    {
+        $whmcsProduct = $this->getWhmcsProduct();
+
+        if (is_null($whmcsProduct)){
+            return 0;
+        }
+
+        $currencyID = static::getCurrencyID();
+
+        $price = \WHMCS\Database\Capsule::table('tblpricing')->where([
+            'type' => 'product',
+            'relid' => $whmcsProduct->id,
+            'currency' => $currencyID,
+        ])->first();
+
+        if (empty($price)){
+            return 0;
+        }
+
+        if ($price->annually < 0){
+            return 0;
+        }
+        
+        return (float) $price->annually;
+    }
+
     public function hasWhmcsProduct(): bool
     {
         return is_object($this->getWhmcsProduct());
@@ -220,5 +247,22 @@ class SSLProduct_Model extends AbstractModel
         }
 
         return $this->validation_type;
+    }
+
+    public function getDisplayPriceIncrement(): string
+    {
+        $increment = $this->price_create_increment;
+        $incrementType = $this->price_create_increment_type;
+        $displayIncrements = [
+            static::PRICE_INCREMENT_TYPE_FIX => '€',
+            static::PRICE_INCREMENT_TYPE_PERCENTAGE => '%',
+            static::PRICE_INCREMENT_TYPE_NONE => '',
+        ];
+
+        if (isset($displayIncrements[$incrementType])){
+            return $increment . $displayIncrements[$incrementType];
+        }
+
+        return $increment;
     }
 }

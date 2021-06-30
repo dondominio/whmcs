@@ -14,6 +14,7 @@ class SSL_Controller extends Controller
     const DEFAULT_TEMPLATE_FOLDER = 'ssl';
 
     const VIEW_INDEX = '';
+    const VIEW_AVAILABLE_SSL = 'availablessl';
     const VIEW_EDIT_PRODUCT = 'editproduct';
     const VIEW_SYNC = 'sync';
     const ACTION_SYNC = 'actionsync';
@@ -28,6 +29,7 @@ class SSL_Controller extends Controller
     {
         return [
             static::VIEW_INDEX => 'view_Index',
+            static::VIEW_AVAILABLE_SSL => 'view_AvailableSSL',
             static::VIEW_EDIT_PRODUCT => 'view_EditProduct',
             static::VIEW_SYNC => 'view_Sync',
             static::ACTION_SYNC => 'action_Sync',
@@ -35,22 +37,14 @@ class SSL_Controller extends Controller
         ];
     }
 
-    /**
-     * Retrieves template for index view
-     *
-     */
     public function view_Index()
     {
         $app = $this->getApp();
         $whmcsService = $app->getService('whmcs');
 
         $filters = [
-            'product_name' => $this->getRequest()->getParam('product_name'),
-            'product_multi_domain' => $this->getRequest()->getParam('product_multi_domain'),
-            'product_wildcard' => $this->getRequest()->getParam('product_wildcard'),
-            'product_trial' => $this->getRequest()->getParam('product_trial'),
-            'product_validation_type' =>  $this->getRequest()->getParam('product_validation_type'),
-            'product_imported' => false,
+            'whmcs_product_name' => $this->getRequest()->getParam('whmcs_product_name'),
+            'product_imported' => true,
         ];
 
         $page = $this->getRequest()->getParam('page', 1);
@@ -80,6 +74,53 @@ class SSL_Controller extends Controller
         $this->setActualView(static::VIEW_INDEX);
 
         return $this->view('index', $params);
+    }
+
+    /**
+     * Retrieves template for availables SSL Products view
+     *
+     */
+    public function view_AvailableSSL()
+    {
+        $app = $this->getApp();
+        $whmcsService = $app->getService('whmcs');
+
+        $filters = [
+            'product_name' => $this->getRequest()->getParam('product_name'),
+            'product_multi_domain' => $this->getRequest()->getParam('product_multi_domain'),
+            'product_wildcard' => $this->getRequest()->getParam('product_wildcard'),
+            'product_trial' => $this->getRequest()->getParam('product_trial'),
+            'product_validation_type' =>  $this->getRequest()->getParam('product_validation_type'),
+            'product_imported' => false,
+        ];
+
+        $page = $this->getRequest()->getParam('page', 1);
+        $limit = $whmcsService->getConfiguration('NumRecordstoDisplay');
+        $offset = (($page - 1) * $limit);
+
+        $products = $whmcsService->getSSLProducts($filters, $offset, $limit);
+        $totalRecords = $whmcsService->getSSLProductsTotal($filters);
+
+        $params = [
+            'module_name' => $this->getApp()->getName(),
+            '__c__' => static::CONTROLLER_NAME,
+            'products' => $products,
+            'validation_types' => \WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::getValidationTypes(),
+            'actions' => [
+                'view_availabel_ssl' => static::VIEW_AVAILABLE_SSL,
+            ],
+            'links' => [
+                'prev_page' => static::makeUrl(static::VIEW_AVAILABLE_SSL, array_merge(['page' => ($page - 1)])),
+                'next_page' => static::makeUrl(static::VIEW_AVAILABLE_SSL, array_merge(['page' => ($page + 1)])),
+                'create_whmcs_product' => static::makeURL(static::VIEW_EDIT_PRODUCT, ['productid' => '']),
+            ],
+            'filters' => $filters,
+        ];
+
+        $this->setPagination($params, $limit, $page, $totalRecords);
+        $this->setActualView(static::VIEW_AVAILABLE_SSL);
+
+        return $this->view('availableSSL', $params);
     }
 
     public function action_Sync()
@@ -201,6 +242,11 @@ class SSL_Controller extends Controller
                 'title' => $app->getLang('ssl_products'),
                 'link' => static::makeURL(static::VIEW_INDEX),
                 'selected' => $this->checkActualView(static::VIEW_INDEX)
+            ],
+            [
+                'title' => $app->getLang('ssl_available_products'),
+                'link' => static::makeURL(static::VIEW_AVAILABLE_SSL),
+                'selected' => $this->checkActualView(static::VIEW_AVAILABLE_SSL)
             ],
             [
                 'title' => $app->getLang('ssl_sync'),

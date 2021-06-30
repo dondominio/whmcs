@@ -1,6 +1,3 @@
-<p>{$LANG.tld_new_info}</p>
-
-
 <form data-ssl-form action='' method='get'>
     <input type="hidden" name="module" value="{$module_name}">
     <input type="hidden" name="__c__" value="{$__c__}">
@@ -15,43 +12,9 @@
                         </td>
 
                         <td class='fieldarea'>
-                            <input type='text' name='product_name' value='{$filters.product_name}' />
+                            <input type='text' name='whmcs_product_name' value='{$filters.whmcs_product_name}' />
                         </td>
 
-                        <td class='fieldlabel'>
-                            {$LANG.ssl_product_validation_type}
-                        </td>
-        
-                        <td class='fieldarea'>
-                            <select name='product_validation_type' >
-                                <option value=''>{$LANG.filter_any}</option>
-                                {html_options options=$validation_types selected=$filters.product_validation_type}
-                            </select>
-                        </td>
-
-                        <td width='15%' class='fieldlabel'>
-                            <label for='product_multi_domain'>
-                                <input type='checkbox' name='product_multi_domain' id="product_multi_domain" value='1' {if
-                                    $filters.product_multi_domain}checked{/if} />
-                                {$LANG.ssl_label_product_multi_domain}
-                            </label>
-                        </td>
-
-                        <td width='15%' class='fieldlabel'>
-                            <label for='product_wildcard'>
-                                <input type='checkbox' name='product_wildcard' id="product_wildcard" value='1' {if
-                                    $filters.product_wildcard}checked{/if} />
-                                {$LANG.ssl_label_product_wildcard}
-                            </label>
-                        </td>
-
-                        <td width='15%' class='fieldlabel'>
-                            <label for='product_trial'>
-                                <input type='checkbox' name='product_trial' id="product_trial" value='1' {if
-                                    $filters.product_trial}checked{/if} />
-                                {$LANG.ssl_label_product_trial}
-                            </label>
-                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -92,31 +55,19 @@
     <thead>
         <tr>
             <th>
-                {$LANG.ssl_product_name}
+                {$LANG.ssl_whmcs_product_name}
+            </th>
+            
+            <th>
+                {$LANG.ssl_whmcs_product_price}
             </th>
 
             <th>
-                {$LANG.ssl_product_price_create}
+                {$LANG.ssl_whmcs_base_price}
             </th>
 
             <th>
-                {$LANG.ssl_product_price_renew}
-            </th>
-
-            <th>
-                {$LANG.ssl_product_validation_type}
-            </th>
-
-            <th>
-                {$LANG.ssl_label_product_multi_domain}
-            </th>
-
-            <th>
-                {$LANG.ssl_label_product_wildcard}
-            </th>
-
-            <th>
-                {$LANG.ssl_label_product_trial}
+                {$LANG.ssl_product_price_increase}
             </th>
 
             <th style="width: 20px;"></th>
@@ -127,7 +78,11 @@
         {foreach $products item=product}
         <tr>
             <td>
-                {$product.product_name} &nbsp;
+                {$product->getWhmcsProduct()->name} &nbsp;
+            </td>
+
+            <td class="text-right">
+                {$product->getWhmcsProductAnnuallyPrice()}
             </td>
 
             <td class="text-right">
@@ -135,46 +90,13 @@
             </td>
 
             <td class="text-right">
-                {$product.price_create}
-            </td>
-
-            <td>
-                {$product->getDisplayValidationType()}
-            </td>
-
-            <td class="text-center">
-                {if $product.is_multi_domain}
-                <i class="fad fa-check text-success"></i>
-                {else}
-                <i class="fad fa-times text-danger"></i>
-                {/if}
-            </td>
-
-            <td class="text-center">
-                {if $product.is_wildcard}
-                <i class="fad fa-check text-success"></i>
-                {else}
-                <i class="fad fa-times text-danger"></i>
-                {/if}
-            </td>
-
-            <td class="text-center">
-                {if $product.is_trial}
-                <i class="fad fa-check text-success"></i>
-                {else}
-                <i class="fad fa-times text-danger"></i>
-                {/if}
+                {$product->getDisplayPriceIncrement()}
             </td>
 
             <td>
                 <a href="{$links.create_whmcs_product}{$product.dd_product_id}">
-                    {if $product->hasWhmcsProduct()}
                     <img src='images/edit.gif' class="add_tld" width='16' height='16' border='0'
-                        alt='{$LANG.btn_edit}' style="cursor: pointer;" />                    
-                    {else}
-                    <img src='images/icons/add.png' class="add_tld" width='16' height='16' border='0'
-                        alt='{$LANG.btn_add}' style="cursor: pointer;" />
-                    {/if}
+                        alt='{$LANG.btn_edit}' style="cursor: pointer;" />
                 </a>
             </td>
 
@@ -185,31 +107,19 @@
     <tfoot>
         <tr>
             <th>
-                {$LANG.ssl_product_name}
+                {$LANG.ssl_whmcs_product_name}
+            </th>
+            
+            <th>
+                {$LANG.ssl_whmcs_product_price}
             </th>
 
             <th>
-                {$LANG.ssl_product_price_create}
+                {$LANG.ssl_whmcs_base_price}
             </th>
 
             <th>
-                {$LANG.ssl_product_price_renew}
-            </th>
-
-            <th>
-                {$LANG.ssl_product_validation_type}
-            </th>
-
-            <th>
-                {$LANG.ssl_label_product_multi_domain}
-            </th>
-
-            <th>
-                {$LANG.ssl_label_product_wildcard}
-            </th>
-
-            <th>
-                {$LANG.ssl_label_product_trial}
+                {$LANG.ssl_product_price_increase}
             </th>
 
             <th style="width: 20px;"></th>

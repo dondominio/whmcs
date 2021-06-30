@@ -421,6 +421,7 @@ $_ADDONLANG = array(
      * SSL
      */
     'ssl_products' => 'SSL Products',
+    'ssl_available_products' => 'Available SSL Products',
     'ssl_label_product_name' => 'Product Name',
     'ssl_label_product_multi_domain' => 'Multidomain',
     'ssl_label_product_wildcard' => 'Wildcard',
@@ -443,6 +444,10 @@ $_ADDONLANG = array(
     'ssl_validation_type_dv' => 'Domain validation',
     'ssl_validation_type_ov' => 'Organization validation',
     'ssl_validation_type_ev' => 'Extended validation',
+    'ssl_whmcs_product_name' => 'Name in WHMCS',
+    'ssl_whmcs_product_price' => 'Annual price in WHMCS',
+    'ssl_whmcs_base_price' => 'Base price',
+    'ssl_product_price_increase' => 'Increment of price',
 
     /**
      * CONTENT TITLES
