@@ -16,7 +16,8 @@ class SSL_Controller extends Controller
     const VIEW_INDEX = '';
     const VIEW_AVAILABLE_SSL = 'availablessl';
     const VIEW_EDIT_PRODUCT = 'editproduct';
-    const VIEW_CERTIFICATES = 'certificates';
+    const VIEW_WHMCS_PRODUCTS = 'whmcsproducts';
+    const VIEW_CERTIFICATE_INFO = 'certificateinfo';
     const VIEW_SYNC = 'sync';
     const ACTION_SYNC = 'actionsync';
     const ACTION_UPDATEPRODUCT = 'updateproduct';
@@ -32,14 +33,100 @@ class SSL_Controller extends Controller
             static::VIEW_INDEX => 'view_Index',
             static::VIEW_AVAILABLE_SSL => 'view_AvailableSSL',
             static::VIEW_EDIT_PRODUCT => 'view_EditProduct',
-            static::VIEW_CERTIFICATES => 'view_Certificates',
+            static::VIEW_WHMCS_PRODUCTS => 'view_WhmcsProducts',
+            static::VIEW_CERTIFICATE_INFO => 'view_CertificateInfo',
             static::VIEW_SYNC => 'view_Sync',
             static::ACTION_SYNC => 'action_Sync',
             static::ACTION_UPDATEPRODUCT => 'action_UpdateProduct',
         ];
     }
 
+    /**
+     * View for SSL Certificates list
+     * 
+     * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
+     */
     public function view_Index()
+    {
+        $app = $this->getApp();
+        $whmcsService = $app->getService('whmcs');
+        $apiService = $app->getService('api');
+        $sslService = $app->getSSLService();
+
+        $page = $this->getRequest()->getParam('page', 1);
+        $limit = $whmcsService->getConfiguration('NumRecordstoDisplay');
+        $filters = [
+            'status' => $this->getRequest()->getParam('certificate_status'),
+            'renewable' => $this->getRequest()->getParam('certificate_renewable'),
+            'commonName' => $this->getRequest()->getParam('certificate_common_name'),
+        ];
+        $filters['renewable'] = strlen($filters['renewable']) ? $filters['renewable'] : null;
+
+        $totalRecords = 0;
+        $certificatesData = null;
+
+        try {
+            $certificates = $apiService->getSSLCertificates($page, $limit, $filters);
+            $totalRecords = $certificates->get('queryInfo')['total'];
+            $certificatesData =  $certificates->getResponseData()['ssl'];
+        } catch (\Exception $e) {
+            $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
+        }
+
+        $status = [
+            'process' => $app->getLang('ssl_certificate_status_process'),
+            'valid' => $app->getLang('ssl_certificate_status_valid'),
+            'expired' => $app->getLang('ssl_certificate_status_expired'),
+            'renew' => $app->getLang('ssl_certificate_status_renew'),
+            'reissue' => $app->getLang('ssl_certificate_status_reissue'),
+            'cancel' => $app->getLang('ssl_certificate_status_cancel'),
+        ];
+
+        $renewable = [
+            true => $app->getLang('ssl_certificate_renew_true'),
+            false => $app->getLang('ssl_certificate_renew_false'),
+        ];
+
+        $products = [];
+        foreach ($whmcsService->getSSLProducts() as $product) {
+            $products[$product->dd_product_id] = $product->product_name;
+        }
+
+        foreach ($certificatesData as $key => $cert) {
+            $statusKey = $cert['status'];
+            $productID = $cert['productID'];
+            $certificateOrder = $sslService->getCertificateOrder($cert['certificateID']);
+
+            $certificatesData[$key]['displayStatus'] = isset($status[$statusKey]) ? $status[$statusKey] : $statusKey;
+            $certificatesData[$key]['productName'] = isset($products[$productID]) ? $products[$productID] : $productID;
+            $certificatesData[$key]['order_id'] = is_object($certificateOrder) ? $certificateOrder->tblhosting_id : null ;
+        }
+
+        $params = [
+            'module_name' => $this->getApp()->getName(),
+            '__c__' => static::CONTROLLER_NAME,
+            'certificates' => $certificatesData,
+            'certificates_status' => $status,
+            'certificates_renewable' => $renewable,
+            'actions' => [
+                'view_certificates' => static::VIEW_INDEX,
+            ],
+            'filters' => $filters,
+            'links' => [
+                'prev_page' => static::makeUrl(static::VIEW_INDEX, array_merge(['page' => ($page - 1)], $filters)),
+                'next_page' => static::makeUrl(static::VIEW_INDEX, array_merge(['page' => ($page + 1)], $filters)),
+                'view_certificate' => static::makeUrl(static::VIEW_CERTIFICATE_INFO, ['certificate_id' => '']),
+                'whmcs_order' => 'clientsservices.php?id=',
+            ],
+        ];
+
+        $this->setPagination($params, $limit, $page, $totalRecords);
+        $this->setActualView(static::VIEW_INDEX);
+
+        return $this->view('certificates', $params);
+    }
+
+    public function view_WhmcsProducts()
     {
         $app = $this->getApp();
         $whmcsService = $app->getService('whmcs');
@@ -62,18 +149,18 @@ class SSL_Controller extends Controller
             'products' => $products,
             'validation_types' => \WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::getValidationTypes(),
             'actions' => [
-                'view_index' => static::VIEW_INDEX,
+                'view_index' => static::VIEW_WHMCS_PRODUCTS,
             ],
             'links' => [
-                'prev_page' => static::makeUrl(static::VIEW_INDEX, array_merge(['page' => ($page - 1)])),
-                'next_page' => static::makeUrl(static::VIEW_INDEX, array_merge(['page' => ($page + 1)])),
+                'prev_page' => static::makeUrl(static::VIEW_WHMCS_PRODUCTS, array_merge(['page' => ($page - 1)])),
+                'next_page' => static::makeUrl(static::VIEW_WHMCS_PRODUCTS, array_merge(['page' => ($page + 1)])),
                 'create_whmcs_product' => static::makeURL(static::VIEW_EDIT_PRODUCT, ['productid' => '']),
             ],
             'filters' => $filters,
         ];
 
         $this->setPagination($params, $limit, $page, $totalRecords);
-        $this->setActualView(static::VIEW_INDEX);
+        $this->setActualView(static::VIEW_WHMCS_PRODUCTS);
 
         return $this->view('index', $params);
     }
@@ -130,82 +217,47 @@ class SSL_Controller extends Controller
      * 
      * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
      */
-    public function view_Certificates()
+    public function view_CertificateInfo()
     {
         $app = $this->getApp();
-        $whmcsService = $app->getService('whmcs');
-        $apiService = $app->getService('api');
         $sslService = $app->getSSLService();
+        $apiService = $app->getService('api');
 
-        $page = $this->getRequest()->getParam('page', 1);
-        $limit = $whmcsService->getConfiguration('NumRecordstoDisplay');
-        $filters = [
-            'status' => $this->getRequest()->getParam('certificate_status'),
-            'renewable' => $this->getRequest()->getParam('certificate_renewable'),
-            'commonName' => $this->getRequest()->getParam('certificate_common_name'),
-        ];
-        $filters['renewable'] = strlen($filters['renewable']) ? $filters['renewable'] : null;
+        $certificateID = $this->getRequest()->getParam('certificate_id');
+        $certificateOrder = $sslService->getCertificateOrder($certificateID);
+        $product = null;
+        $whmcsProduct = null;
+        $service = null;
+        $user = null;
+        $certificatesData = [];
 
-        $totalRecords = 0;
-        $certificatesData = null;
+        if (is_object($certificateOrder)){
+            $service = $certificateOrder->getService();
+            $user = $service->client;
+            $whmcsProduct = $service->product;
+        }
 
         try {
-            $certificates = $apiService->getSSLCertificates($page, $limit, $filters);
-            $totalRecords = $certificates->get('queryInfo')['total'];
-            $certificatesData =  $certificates->getResponseData()['ssl'];
+            $certificates = $apiService->getSSLCertificateInfo($certificateID);
+            $certificatesData =  $certificates->getResponseData();
+            $product = $sslService->getProduct($certificatesData['productID']);
         } catch (\Exception $e) {
             $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
         }
 
-        $status = [
-            'process' => $app->getLang('ssl_certificate_status_process'),
-            'valid' => $app->getLang('ssl_certificate_status_valid'),
-            'expired' => $app->getLang('ssl_certificate_status_expired'),
-            'renew' => $app->getLang('ssl_certificate_status_renew'),
-            'reissue' => $app->getLang('ssl_certificate_status_reissue'),
-            'cancel' => $app->getLang('ssl_certificate_status_cancel'),
-        ];
-
-        $renewable = [
-            true => $app->getLang('ssl_certificate_renew_true'),
-            false => $app->getLang('ssl_certificate_renew_false'),
-        ];
-
-        $products = [];
-        foreach ($whmcsService->getSSLProducts() as $product) {
-            $products[$product->dd_product_id] = $product->product_name;
-        }
-
-        foreach ($certificatesData as $key => $cert) {
-            $statusKey = $cert['status'];
-            $productID = $cert['productID'];
-
-            $certificatesData[$key]['displayStatus'] = isset($status[$statusKey]) ? $status[$statusKey] : $statusKey;
-            $certificatesData[$key]['productName'] = isset($products[$productID]) ? $products[$productID] : $productID;
-            $certificatesData[$key]['order_id'] = $sslService->getCertificateOrderID($cert['certificateID']);
-        }
-
         $params = [
             'module_name' => $this->getApp()->getName(),
-            '__c__' => static::CONTROLLER_NAME,
-            'certificates' => $certificatesData,
-            'certificates_status' => $status,
-            'certificates_renewable' => $renewable,
-            'actions' => [
-                'view_certificates' => static::VIEW_CERTIFICATES,
-            ],
-            'filters' => $filters,
+            'certificate' => $certificatesData,
+            'service' => $service,
+            'user' => $user,
+            'whmcs_product' => $whmcsProduct,
+            'product' => $product,
             'links' => [
-                'prev_page' => static::makeUrl(static::VIEW_CERTIFICATES, array_merge(['page' => ($page - 1)], $filters)),
-                'next_page' => static::makeUrl(static::VIEW_CERTIFICATES, array_merge(['page' => ($page + 1)], $filters)),
                 'whmcs_order' => 'clientsservices.php?id=',
             ],
         ];
 
-        $this->setPagination($params, $limit, $page, $totalRecords);
-        $this->setActualView(static::VIEW_CERTIFICATES);
-
-        return $this->view('certificates', $params);
+        return $this->view('certificateinfo', $params);  
     }
 
     public function action_Sync()
@@ -251,7 +303,7 @@ class SSL_Controller extends Controller
 
         $whmcsProductGroups = $sslService->getProductGroups();
         $whmcsProduct = $product->getWhmcsProduct();
-        $productName = $this->getRequest()->getParam('name', '');
+        $productName = $this->getRequest()->getParam('name', $product->product_name);
         $productGroup = $this->getRequest()->getParam('group', '');
 
         if (is_object($whmcsProduct)) {
@@ -326,19 +378,19 @@ class SSL_Controller extends Controller
         $params['title'] = $app->getLang('content_title_ssl');
         $params['nav'] = [
             [
-                'title' => $app->getLang('ssl_products'),
+                'title' => $app->getLang('ssl_certificates'),
                 'link' => static::makeURL(static::VIEW_INDEX),
                 'selected' => $this->checkActualView(static::VIEW_INDEX)
+            ],
+            [
+                'title' => $app->getLang('ssl_products'),
+                'link' => static::makeURL(static::VIEW_WHMCS_PRODUCTS),
+                'selected' => $this->checkActualView(static::VIEW_WHMCS_PRODUCTS)
             ],
             [
                 'title' => $app->getLang('ssl_available_products'),
                 'link' => static::makeURL(static::VIEW_AVAILABLE_SSL),
                 'selected' => $this->checkActualView(static::VIEW_AVAILABLE_SSL)
-            ],
-            [
-                'title' => $app->getLang('ssl_certificates'),
-                'link' => static::makeURL(static::VIEW_CERTIFICATES),
-                'selected' => $this->checkActualView(static::VIEW_CERTIFICATES)
             ],
             [
                 'title' => $app->getLang('ssl_sync'),

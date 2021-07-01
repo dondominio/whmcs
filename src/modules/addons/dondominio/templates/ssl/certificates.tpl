@@ -99,7 +99,7 @@
                 {$LANG.ssl_certificate_ts_end}
             </th>
 
-            <th>Pedido</th>
+            <th>{$LANG.ssl_certificate_pedido}</th>
         </tr>
     </thead>
 
@@ -107,7 +107,7 @@
         {foreach $certificates item=certificate}
         <tr>
             <td class="text-right">
-                {$certificate.certificateID}
+                <a href="{$links.view_certificate}{$certificate.certificateID}">{$certificate.certificateID}</a>
             </td>
 
             <td>
@@ -143,30 +143,30 @@
     <tfoot>
         <tr>
             <th>
-                Certificate ID
+                {$LANG.ssl_certificate_id}
             </th>
         
             <th>
-                Common Name
+                {$LANG.ssl_certificate_common_name}
             </th>
         
             <th>
-                Estado
+                {$LANG.ssl_certificate_status}
             </th>
         
             <th>
-                Producto
+                {$LANG.ssl_certificate_product}
             </th>
         
             <th>
-                Fecha de creacion
+                {$LANG.ssl_certificate_ts_ini}
             </th>
         
             <th>
-                Fecha de expiracion
+                {$LANG.ssl_certificate_ts_end}
             </th>
-            
-            <th>Pedido</th>
+
+            <th>{$LANG.ssl_certificate_pedido}</th>
         </tr>
     </tfoot>
 </table>

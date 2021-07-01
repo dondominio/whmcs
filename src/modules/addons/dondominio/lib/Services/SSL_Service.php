@@ -91,14 +91,14 @@ class SSL_Service extends AbstractService implements SSLService_Interface
         return (int) in_array($productID, $validProducts);
     }
 
-    public function getCertificateOrderId(int $certificateID): ?int
+    public function getCertificateOrder(int $certificateID)
     {
         $order = \WHMCS\Module\Addon\Dondominio\Models\SSLCertificateOrder_Model::where([
             'certificate_id' => $certificateID
         ])->first();
 
         if (is_object($order)){
-            return $order->tblhosting_id;
+            return $order;
         }
 
         return null;

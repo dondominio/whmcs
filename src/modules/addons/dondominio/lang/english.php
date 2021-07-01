@@ -444,7 +444,8 @@ $_ADDONLANG = array(
     'ssl_validation_type_dv' => 'Domain validation',
     'ssl_validation_type_ov' => 'Organization validation',
     'ssl_validation_type_ev' => 'Extended validation',
-    'ssl_whmcs_product_name' => 'Name in WHMCS',
+    'ssl_whmcs_product_name' => 'Product in WHMCS',
+    'ssl_dd_product_name' => 'Product in DonDominio',
     'ssl_whmcs_product_price' => 'Annual price in WHMCS',
     'ssl_whmcs_base_price' => 'Base price',
     'ssl_product_price_increase' => 'Increment of price',
@@ -463,6 +464,7 @@ $_ADDONLANG = array(
     'ssl_certificate_product' => 'Product',
     'ssl_certificate_ts_ini' => 'Creation date',
     'ssl_certificate_ts_end' => 'Expiration date',
+    'ssl_certificate_order' => 'Order',
 
     /**
      * CONTENT TITLES

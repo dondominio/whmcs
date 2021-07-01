@@ -416,6 +416,24 @@ class API_Service extends AbstractService implements APIService_Interface
         return $this->parseResponse($response, $filters);
     }
 
+    /**
+     * Gets the SSL Certificates
+     *
+     * @see https://dev.dondominio.com/api/docs/api/#ssl-list-ssl-list
+     *
+     * @param int $page Offset where query starts
+     * @param int $pageLength Limit where query ends
+     * @param array $filters Filters
+     *
+     * @return \Dondominio\API\Response\Response
+     */
+    public function getSSLCertificateInfo($certificateID, $infoType = 'ssldata')
+    {
+        $response = $this->getApiConnection()->ssl_getInfo($certificateID, ['infoType' => $infoType]);
+
+        return $this->parseResponse($response, ['certificateID' => $certificateID, 'infoType' => $infoType]);
+    }
+
     public function printApiInfo()
     {
         $this->getApiConnection()->info();
