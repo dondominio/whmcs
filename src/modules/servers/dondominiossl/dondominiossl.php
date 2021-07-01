@@ -204,11 +204,13 @@ function dondominiossl_ClientArea(array $params)
         $api = $app->getApiService();
         $certificateID = $params['customfields'][\WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::CUSTOM_FIELD_CERTIFICATE_ID];
         $getInfoResponse = $api->getCertificateInfo($certificateID);
+        $ddProduct = \WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::where(['dd_product_id' => $getInfoResponse->get('productID')])->first();
 
         return array(
             'tabOverviewReplacementTemplate' => $templateFile,
             'templateVariables' => array(
-                'api_response' => print_r($params['clientsdetails'], true)
+                'api_response' => $getInfoResponse->getResponseData(),
+                'dd_product_name' => $ddProduct->product_name
             ),
         );
     } catch (Exception $e) {
