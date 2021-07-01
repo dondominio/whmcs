@@ -39,15 +39,15 @@
                         <td>{$certificate.tsCreate}</td>
                     </tr>
                     {/if}
-                    {if $certificate.tsExpire}
+                    {if $certificate.tsExpir}
                     <tr>
-                        <td>Fecha de expiracion</td>
-                        <td>{$certificate.tsExpire}</td>
+                        <td>{$LANG.ssl_certificate_ts_end}</td>
+                        <td>{$certificate.tsExpir}</td>
                     </tr>
                     {/if}
                     {if $certificate.alternativeNames}
                     <tr>
-                        <td>{$LANG.ssl_certificate_ts_end}</td>
+                        <td>{$LANG.ssl_alternative_names}</td>
                         <td>
                             {foreach $certificate.alternativeNames item=name}
                                 <div>{$name}</div>

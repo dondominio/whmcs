@@ -465,6 +465,7 @@ $_ADDONLANG = array(
     'ssl_certificate_ts_ini' => 'Creation date',
     'ssl_certificate_ts_end' => 'Expiration date',
     'ssl_certificate_order' => 'Order',
+    'ssl_alternative_names' => 'Alternative domains',
 
     /**
      * CONTENT TITLES
