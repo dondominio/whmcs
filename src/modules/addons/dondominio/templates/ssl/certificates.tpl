@@ -99,7 +99,7 @@
                 {$LANG.ssl_certificate_ts_end}
             </th>
 
-            <th>{$LANG.ssl_certificate_pedido}</th>
+            <th>{$LANG.ssl_certificate_order}</th>
         </tr>
     </thead>
 
@@ -166,7 +166,7 @@
                 {$LANG.ssl_certificate_ts_end}
             </th>
 
-            <th>{$LANG.ssl_certificate_pedido}</th>
+            <th>{$LANG.ssl_certificate_order}</th>
         </tr>
     </tfoot>
 </table>

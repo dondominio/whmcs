@@ -4,7 +4,19 @@ Todos los cambios importantes de este proyecto serán documentados en este archi
 El formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto se adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
 ## [Pendiente por lanzar]
+
+## [2.1.5] - ...
+### Añadido
+- Nuevo Modulo de Aprovisionamiento para la creación de productos dentro de WHMCS a partir de productos SSL de DonDominio.
+- Nuevo apartado para la gestión de los Certificados y Productos SSL.
+- Listado de certificados SSL relacionados con tu usuario API.
+- Listado de productos disponibles de la API de DonDominio.
+- Listado de productos importados de DonDominio a WHMCS.
+- Sincronización diaria de los productos de WHMCS con los productos de DonDomini.
+- Vista con la información detallada de un Certificado SSL.
+- Formulario para la creación de productos de WHMCS a partir de un Producto SSL de DonDominio.
 
 ## [2.1.5] - 2021-06-1
 ### Changed
