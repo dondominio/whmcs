@@ -20,6 +20,11 @@ abstract class Base
 
     public abstract function execute(): string;
 
+    /**
+     * Get the certificate ID in Custom Fields of the order
+     * 
+     * @return object|null
+     */
     protected function getCertificateIDCustomFieldValue()
     {
         $service = $this->params['model'];
@@ -36,6 +41,11 @@ abstract class Base
         return null;
     }
 
+    /**
+     * Returns the customer's VAT Number
+     * 
+     * @return string
+     */
     protected function getVATNumber(): string
     {
         $clientCustomFields = $this->params['clientsdetails']['customfields'];
@@ -49,6 +59,11 @@ abstract class Base
         return '';
     }
 
+    /**
+     * Get years period of the product
+     * 
+     * @return int
+     */
     protected function getPeriod(): int
     {
         $service = $this->params['model'];
@@ -63,6 +78,11 @@ abstract class Base
         return isset($yearsMap[$billingCycle]) ? $yearsMap[$billingCycle] : 1;
     }
 
+    /**
+     * Get base args for the create and renew requests
+     * 
+     * @return array
+     */
     protected function getArgs(): array
     {
         return [
@@ -82,6 +102,13 @@ abstract class Base
         ];
     }
 
+    /**
+     * Check that the necessary parameters are seted
+     * 
+     * @throws Exception if one parameter is not set
+     *
+     * @return void
+     */
     protected function checkParams(?array $params = null, ?array $paramsToCheck = null): void
     {
         $paramsToCheck = is_null($params) && is_null($paramsToCheck) ? $this->getParamsToCheck() : $paramsToCheck;
@@ -99,6 +126,11 @@ abstract class Base
         }
     }
 
+    /**
+     * Returns a list with the necessary parameters for the creation and renewal requests to work
+     *
+     * @return array
+     */
     protected function getParamsToCheck(): array
     {
         return [
@@ -118,6 +150,14 @@ abstract class Base
         ];
     }
 
+    /**
+     * Returns the customer's address
+     *
+     * @throws Exception if the address is no found
+     * 
+     * 
+     * @return string
+     */
     protected function getAddress(): string
     {
         $address = $this->params['clientsdetails']['address1'];

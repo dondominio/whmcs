@@ -6,6 +6,11 @@ namespace WHMCS\Module\Server\Dondominiossl\Actions;
 class CreateAccount extends \WHMCS\Module\Server\Dondominiossl\Actions\Base
 {
 
+    /**
+     * Create a SSL Certificate
+     *
+     * @return stirng 'success' or error
+     */
     public function execute(): string
     {
         if (strlen($this->params['customfields'][$this->fieldCertificateID])) {
@@ -42,6 +47,13 @@ class CreateAccount extends \WHMCS\Module\Server\Dondominiossl\Actions\Base
         return 'success';
     }
 
+    /**
+     * Make a request to DonDominio API for the creation of a CSR Data
+     * 
+     * @throws Exception if the CSR Data creation is not successful
+     *
+     * @return \Dondominio\API\Response\Response
+     */
     protected function createCSRData(): \Dondominio\API\Response\Response
     {
         $args = [

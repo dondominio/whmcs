@@ -22,6 +22,11 @@ class SSLProduct_Model extends AbstractModel
 
     public $timestamps = false;
 
+    /**
+     * Return a list with the Price Increment types
+     * 
+     * @return array
+     */
     public static function getPriceIncrementTypes(): array
     {
         return [
@@ -31,6 +36,11 @@ class SSLProduct_Model extends AbstractModel
         ];
     }
 
+    /**
+     * Return a list with the Validation Types
+     * 
+     * @return array
+     */
     public static function getValidationTypes(): array
     {
         $app = \WHMCS\Module\Addon\Dondominio\App::getInstance();
@@ -42,6 +52,11 @@ class SSLProduct_Model extends AbstractModel
         ];
     }
 
+    /**
+     * Return a list with the Custom Fields to add to the WHMCS Product
+     * 
+     * @return array
+     */
     public static function getCustomFields(): array
     {
         return [
@@ -53,6 +68,11 @@ class SSLProduct_Model extends AbstractModel
         ];
     }
 
+    /**
+     * Return a list with the Custom Fields to add to the WHMCS Product
+     * 
+     * @return array
+     */
     protected static function getCurrencyID(): int
     {
         $currencyID = \WHMCS\Database\Capsule::table('tblcurrencies')
@@ -68,6 +88,11 @@ class SSLProduct_Model extends AbstractModel
         return (int) $currencyID;
     }
 
+    /**
+     * Return the WHMCS Product asigned to this DonDominio Product
+     * 
+     * @return object
+     */
     public function getWhmcsProduct()
     {
         if (empty($this->tblproducts_id)) {
@@ -77,6 +102,11 @@ class SSLProduct_Model extends AbstractModel
         return \WHMCS\Product\Product::where(['id' => $this->tblproducts_id])->first();
     }
 
+    /**
+     * Update/Create the WHMCS Product
+     * 
+     * @return void
+     */
     public function updateWhmcsProduct(int $groupID, string $name, int $vatNumberID): void
     {
         $whmcsProduct = $this->getWhmcsProduct();
@@ -93,6 +123,11 @@ class SSLProduct_Model extends AbstractModel
         $this->updateWhmcsProductPrice();
     }
 
+    /**
+     * Create the WHMCS Product
+     * 
+     * @return void
+     */
     public function createWhmcsProduct(int $groupID, string $name, int $vatNumberID): void
     {
         $price = $this->getWhmcsProductCreatePriceCalc();
@@ -149,6 +184,11 @@ class SSLProduct_Model extends AbstractModel
         }
     }
 
+    /**
+     * Get the WHMCS Product price calculating the increment
+     * 
+     * @return float
+     */
     public function getWhmcsProductCreatePriceCalc(): float
     {
         $type = $this->price_create_increment_type;
@@ -166,6 +206,11 @@ class SSLProduct_Model extends AbstractModel
         return (float) $price_create;
     }
 
+    /**
+     * Create the WHMCS Product Custom Fields
+     * 
+     * @return void
+     */
     public function createCustomFields(): void
     {
         if (empty($this->tblproducts_id)) {
@@ -188,6 +233,11 @@ class SSLProduct_Model extends AbstractModel
         }
     }
 
+    /**
+     * Update the WHMCS Product price
+     * 
+     * @return void
+     */
     public function updateWhmcsProductPrice(): void
     {
         $whmcsProduct = $this->getWhmcsProduct();
@@ -206,6 +256,11 @@ class SSLProduct_Model extends AbstractModel
         ]);
     }
 
+    /**
+     * Get the WHMCS Product annually price
+     * 
+     * @return float
+     */
     public function getWhmcsProductAnnuallyPrice(): float
     {
         $whmcsProduct = $this->getWhmcsProduct();
@@ -233,11 +288,21 @@ class SSLProduct_Model extends AbstractModel
         return (float) $price->annually;
     }
 
+    /**
+     * Return if the DonDominio product has WHMCS Product assigned
+     * 
+     * @return bool
+     */
     public function hasWhmcsProduct(): bool
     {
         return is_object($this->getWhmcsProduct());
     }
 
+    /**
+     * Return if the DonDominio product has WHMCS Product assigned
+     * 
+     * @return bool
+     */
     public function getDisplayValidationType(): string
     {
         $types = static::getValidationTypes();
@@ -249,6 +314,11 @@ class SSLProduct_Model extends AbstractModel
         return $this->validation_type;
     }
 
+    /**
+     * Return the Increment Price to display
+     * 
+     * @return bool
+     */
     public function getDisplayPriceIncrement(): string
     {
         $increment = $this->price_create_increment;

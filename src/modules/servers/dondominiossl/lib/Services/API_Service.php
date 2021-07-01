@@ -46,7 +46,11 @@ class API_Service implements \WHMCS\Module\Server\Dondominiossl\Services\Contrac
         return $this->getApi()->getConnection();
     }
 
-
+    /**
+     * Collect a list of products from DonDominio API
+     *
+     * @return array
+     */
     public function getProductList(array $args = []): array
     {
         $connection = $this->getApiConnection();
@@ -65,24 +69,44 @@ class API_Service implements \WHMCS\Module\Server\Dondominiossl\Services\Contrac
         return [];
     }
 
-    public function createCertificate(int $productID, array $args): \Dondominio\API\Response\Response
-    {
-        $connection = $this->getApiConnection();
-        return $connection->ssl_create($productID, $args);
-    }
-
-    public function getCertificateInfo(int $certificateID): \Dondominio\API\Response\Response
-    {
-        $connection = $this->getApiConnection();
-        return $connection->ssl_getInfo($certificateID, ['infoType' => 'ssldata']);
-    }
-
+    /**
+     * Send a request to DonDominio API for the creation of a CSR Data
+     *
+     * @return \Dondominio\API\Response\Response
+     */
     public function createCSRData(array $args): \Dondominio\API\Response\Response
     {
         $connection = $this->getApiConnection();
         return $connection->ssl_csrCreate($args);
     }
 
+    /**
+     * Send a request to DonDominio API for the creation of a certificate
+     *
+     * @return \Dondominio\API\Response\Response
+     */
+    public function createCertificate(int $productID, array $args): \Dondominio\API\Response\Response
+    {
+        $connection = $this->getApiConnection();
+        return $connection->ssl_create($productID, $args);
+    }
+
+    /**
+     * Get the information of a certificate from the DonDominio API
+     *
+     * @return \Dondominio\API\Response\Response
+     */
+    public function getCertificateInfo(int $certificateID): \Dondominio\API\Response\Response
+    {
+        $connection = $this->getApiConnection();
+        return $connection->ssl_getInfo($certificateID, ['infoType' => 'ssldata']);
+    }
+
+    /**
+     * Send a request to DonDominio API for the renew of a certificate
+     *
+     * @return \Dondominio\API\Response\Response
+     */
     public function renewCertificate(int $certificateID, array $args): \Dondominio\API\Response\Response
     {
         $connection = $this->getApiConnection();

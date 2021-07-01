@@ -119,7 +119,6 @@ function dondominiossl_ConfigOptions()
  *
  * @return string "success" or an error message
  */
-//whmcsVersion,accountid,serviceid,addonId,userid,domain,username,password,packageid,pid,serverid,status,qty,type,producttype,moduletype,configoption1,configoption2,configoption3,configoption4,configoption5,configoption6,configoption7,configoption8,configoption9,configoption10,configoption11,configoption12,configoption13,configoption14,configoption15,configoption16,configoption17,configoption18,configoption19,configoption20,configoption21,configoption22,configoption23,configoption24,customfields,configoptions,model,server,serverip,serverhostname,serverusername,serverpassword,serveraccesshash,serversecure,serverhttpprefix,serverport,clientsdetails,action
 function dondominiossl_CreateAccount(array $params)
 {
     try {
@@ -140,6 +139,16 @@ function dondominiossl_CreateAccount(array $params)
 
     return 'success';
 }
+
+/**
+ * This function runs each time a renewal invoice for a product becomes paid.
+ *
+ * @param array $params common module parameters
+ *
+ * @see https://developers.whmcs.com/provisioning-modules/module-parameters/
+ *
+ * @return string "success" or an error message
+ */
 
 function dondominiossl_Renew(array $params)
 {

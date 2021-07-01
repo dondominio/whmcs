@@ -126,6 +126,11 @@ class SSL_Controller extends Controller
         return $this->view('certificates', $params);
     }
 
+    /**
+     * View for WHMCS products created by DonDominio Module list
+     * 
+     * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
+     */
     public function view_WhmcsProducts()
     {
         $app = $this->getApp();
@@ -168,6 +173,7 @@ class SSL_Controller extends Controller
     /**
      * Retrieves template for availables SSL Products view
      *
+     * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
      */
     public function view_AvailableSSL()
     {
@@ -260,6 +266,11 @@ class SSL_Controller extends Controller
         return $this->view('certificateinfo', $params);  
     }
 
+    /**
+     * Action for sync WHMCS Products with DonDominio Products
+     * 
+     * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
+     */
     public function action_Sync()
     {
         $app = $this->getApp();
@@ -277,6 +288,11 @@ class SSL_Controller extends Controller
         return $this->view_Index();
     }
 
+    /**
+     * View to sync Products
+     * 
+     * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
+     */
     public function view_Sync()
     {
         $settings = $this->getApp()->getService('settings')->findSettingsAsKeyValue();
@@ -294,6 +310,11 @@ class SSL_Controller extends Controller
         return $this->view('sync', $params);
     }
 
+    /**
+     * View to create/edit products in WHMCS
+     * 
+     * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
+     */
     public function view_EditProduct()
     {
         $sslService = $this->getApp()->getSSLService();
@@ -335,6 +356,11 @@ class SSL_Controller extends Controller
         return $this->view('editproduct', $params);
     }
 
+    /**
+     * Action to create/edit products in WHMCS
+     * 
+     * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
+     */
     public function action_UpdateProduct()
     {
         $app = $this->getApp();

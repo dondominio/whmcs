@@ -142,6 +142,18 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
         return $queryBuilder->get();
     }
 
+    /**
+     * Retreives SSL Products queryBuilder from 'mod_dondominio_ssl_products`
+     *
+     * @param null|string $product_name Product Name
+     * @param null|bool $product_multi_domain If is Multi Domain
+     * @param null|bool $product_wildcard If is Wildvard
+     * @param null|bool $product_trial If is Trial
+     * @param null|bool $product_imported If product is imported in WHMCS
+     * @param null|string $product_validation_type Product validation type
+     *
+     * @return Illuminate\Database\Eloquent\Builder
+     */
     protected function getSSLProductsQuery(array $filters = [])
     {
         $queryBuilder = \WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::select();
@@ -183,6 +195,15 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
         return $queryBuilder;
     }
 
+    /**
+     * Retreives SSL Products cursor from 'mod_dondominio_ssl_products`
+     *
+     * @param array $filters filters for getSSLProductsQuery
+     * @param int $offset
+     * @param int $limit
+     * 
+     * @return \Illuminate\Database\Eloquent\Collection Collection of SSL Products objects containting domains info
+     */
     public function getSSLProducts(array $filters = [], $offset = null, $limit = null)
     {
         $queryBuilder = $this->getSSLProductsQuery($filters);
@@ -200,6 +221,13 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
         return $queryBuilder->get();
     }
 
+    /**
+     * Retreives SSL Products count from 'mod_dondominio_ssl_products`
+     *
+     * @param array $filters filters for getSSLProductsQuery
+     * 
+     * @return int
+     */
     public function getSSLProductsTotal(array $filters = [])
     {
         return $this->getSSLProductsQuery($filters)->count();

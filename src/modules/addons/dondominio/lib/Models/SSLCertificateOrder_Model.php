@@ -9,6 +9,11 @@ class SSLCertificateOrder_Model extends AbstractModel
 
     public $timestamps = false;
 
+    /**
+     * Gets the Service (tblhosting) related to the certificate
+     * 
+     * @return object
+     */
     public function getService()
     {
         $service = \WHMCS\Service\Service::where(['id' => $this->tblhosting_id])->first();

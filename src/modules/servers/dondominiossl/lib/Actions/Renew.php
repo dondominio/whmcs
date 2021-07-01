@@ -6,6 +6,11 @@ namespace WHMCS\Module\Server\Dondominiossl\Actions;
 class Renew extends \WHMCS\Module\Server\Dondominiossl\Actions\Base
 {
 
+    /**
+     * Renew a SSL Certificate
+     *
+     * @return stirng 'success' or error
+     */
     public function execute(): string
     {
         $certificate = $this->getCertificateIDCustomFieldValue();
@@ -31,6 +36,13 @@ class Renew extends \WHMCS\Module\Server\Dondominiossl\Actions\Base
         return 'success';
     }
 
+    /**
+     * Make a request to DonDominio API to get Certificate Info
+     * 
+     * @throws Exception if the CSR Data creation is not successful
+     *
+     * @return \Dondominio\API\Response\Response
+     */
     protected function getCertificateInfo(): \Dondominio\API\Response\Response
     {
         $certificateID = $this->params['customfields'][$this->fieldCertificateID];
