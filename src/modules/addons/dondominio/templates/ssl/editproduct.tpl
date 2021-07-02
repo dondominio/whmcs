@@ -24,7 +24,7 @@
                                         <option value=""></option>
                                         {html_options options=$groups selected=$product_group}
                                     </select>
-                                    <a target="_blank" href="{$links.create_group}">Crear un nuevo Grupo</a>
+                                    <a target="_blank" href="{$links.create_group}">{$LANG.ssl_new_group}</a>
                                 </td>
                             </tr>
                             <tr>
@@ -55,7 +55,7 @@
                             </tr>
                             <tr>
                                 <td class="form-label">
-                                    Campo Personalizado VAT Number
+                                    {$LANG.ssl_vat_number_custom_field}
                                 </td>
 
                                 <td>
@@ -72,7 +72,7 @@
         </div>
         <div class="panel-footer form-footer">
             {if $has_whmcs_product}
-            <a target="_blank" href="{$links.whmcs_product_edit}" class="pull-left">Edición a través de WHMCS</a>
+            <a target="_blank" href="{$links.whmcs_product_edit}" class="pull-left">{$LANG.ssl_whmcs_edit_product}</a>
             {/if}
             <button action="submit" name="submit_button" id="settings_submit"
                 class="btn btn-primary">{$LANG.btn_save}</button>

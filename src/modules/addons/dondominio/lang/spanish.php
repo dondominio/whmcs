@@ -466,6 +466,17 @@ $_ADDONLANG = array(
     'ssl_certificate_ts_end' => 'Fecha de expiración',
     'ssl_certificate_order' => 'Pedido',
     'ssl_alternative_names' => 'Dominios alternativos',
+    'ssl_new_validation_name' => 'Nuevo método de validación',
+    'ssl_vat_number_custom_field' => 'Campo Personalizado VAT Number',
+    'ssl_organization_name' => 'Nombre de organización',
+    'ssl_unit_name' => 'Nombre de unidad da la organización',
+    'ssl_country_name' => 'Código de 2 caracteres del país',
+    'ssl_state_or_province' => 'Nombre de la provincia o estado de la compañía',
+    'ssl_location_name' => 'Nombre de la población de la compañía',
+    'ssl_email_address' => 'Correo electrónico',
+    'ssl_reissue' => 'Remitir',
+    'ssl_change_method' => 'Cambiar método',
+    'ssl_new_group' => 'Crear un nuevo Grupo',
 
     /**
      * CONTENT TITLES

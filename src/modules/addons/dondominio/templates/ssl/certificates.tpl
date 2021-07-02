@@ -8,7 +8,7 @@
                 <tbody>
                     <tr>
                         <td width='15%' class='fieldlabel'>
-                            <label for='product_name'>Common Name</label>
+                            <label for='product_name'>{$LANG.ssl_certificate_common_name}</label>
                         </td>
 
                         <td class='fieldarea'>
@@ -16,7 +16,7 @@
                         </td>
 
                         <td width='15%' class='fieldlabel'>
-                            <label for='product_name'>Estado</label>
+                            <label for='product_name'>{$LANG.ssl_certificate_status}</label>
                         </td>
 
                         <td class='fieldarea'>
@@ -27,7 +27,7 @@
                         </td>
 
                         <td width='15%' class='fieldlabel'>
-                            <label for='product_name'>Renovable</label>
+                            <label for='product_name'>{$LANG.ssl_certificate_renew_true}</label>
                         </td>
 
                         <td class='fieldarea'>

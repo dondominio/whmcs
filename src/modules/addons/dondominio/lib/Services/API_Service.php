@@ -434,6 +434,63 @@ class API_Service extends AbstractService implements APIService_Interface
         return $this->parseResponse($response, ['certificateID' => $certificateID, 'infoType' => $infoType]);
     }
 
+    /**
+     * Send a request to DonDominio API for the creation of a CSR Data
+     *
+     * @return \Dondominio\API\Response\Response
+     */
+    public function createCSRData(array $args): \Dondominio\API\Response\Response
+    {
+        $connection = $this->getApiConnection();
+        return $connection->ssl_csrCreate($args);
+    }
+
+    /**
+     * Send a request to DonDominio API for the creation of a certificate
+     *
+     * @param int $certificateID
+     * @param array $args
+     * 
+     * @return \Dondominio\API\Response\Response
+     */
+    public function reissueCertificate(int $certificateID, array $args): \Dondominio\API\Response\Response
+    {
+        $connection = $this->getApiConnection();
+        return $connection->ssl_reissue($certificateID, $args);
+    }
+
+    /**
+     * Send a request to DonDominio API for resend the validation mail of a CommonName of a Certificate
+     *
+     * @param int $certificateID
+     * @param string $commonName
+     * 
+     * @return \Dondominio\API\Response\Response
+     */
+    public function resendValidationMail(int $certificateID, string $commonName): \Dondominio\API\Response\Response
+    {
+        $connection = $this->getApiConnection();
+        return $connection->ssl_resendValidationMail($certificateID, ['commonName' => $commonName]);
+    }
+
+    /**
+     * Send a request to DonDominio API for Changes validation method for a CommonName
+     *
+     * @param int $certificateID
+     * @param string $commonName
+     * @param string $validationMethod
+     * 
+     * @return \Dondominio\API\Response\Response
+     */
+    public function changeValidationName(int $certificateID, string $commonName, string $validationMethod): \Dondominio\API\Response\Response
+    {
+        $connection = $this->getApiConnection();
+        return $connection->ssl_changevalidationmethod($certificateID, [
+            'commonName' => $commonName,
+            'validationMethod' => $validationMethod
+        ]);
+    }
+
     public function printApiInfo()
     {
         $this->getApiConnection()->info();

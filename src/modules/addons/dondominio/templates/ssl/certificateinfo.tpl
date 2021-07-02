@@ -6,8 +6,27 @@
                 <h3 class="panel-title domain-title">{$certificate.commonName}</h3>
             </div>
             <div class="col-xs-4">
-                {if $service}
-                <a target="_blank" href="{$links.whmcs_order}{$service->id}" class="btn btn-primary pull-right">Pedido en WHMCS</a>
+                {if $service || $in_process || $in_reissue}
+                <div class="dropdown pull-right">
+                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        {$LANG.domain_actions_view}
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                        {if $service}
+                        <li><a target="_blank" href="{$links.whmcs_order}{$service->id}">Pedido en WHMCS</a></li>
+                        {/if}
+
+                        {if $in_process}
+                        <li><a href="{$links.view_reissue}">Reissue</a></li>
+                        <li><a href="{$links.action_resend_validation_mail}">Resend validation mail</a></li>
+                        {/if}
+                        {if $in_process || $in_reissue}
+                        <li><a href="{$links.view_change_validation_method}">Chane validation method</a></li>
+                        {/if}
+                    </ul>
+                </div>
                 {/if}
             </div>
         </div>
@@ -31,6 +50,12 @@
                     <tr>
                         <td>{$LANG.ssl_dd_product_name}</td>
                         <td>{$product->product_name}</td>
+                    </tr>
+                    {/if}
+                    {if $certificate.displayStatus}
+                    <tr>
+                        <td>{$LANG.ssl_certificate_status}</td>
+                        <td>{$certificate.displayStatus}</td>
                     </tr>
                     {/if}
                     {if $certificate.tsCreate}

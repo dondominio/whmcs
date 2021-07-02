@@ -18,6 +18,11 @@ class SSL_Controller extends Controller
     const VIEW_EDIT_PRODUCT = 'editproduct';
     const VIEW_WHMCS_PRODUCTS = 'whmcsproducts';
     const VIEW_CERTIFICATE_INFO = 'certificateinfo';
+    const VIEW_REISSUE = 'viewreissue';
+    const ACTION_REISSUE = 'actionreissue';
+    const VIEW_CHANGE_VALIDATION_METHOD = 'viewchangevalidationmethod';
+    const ACTION_CHANGE_VALIDATION_METHOD = 'actionchangevalidationmethod';
+    const ACTION_RESEND_VALIDATION_MAIL = 'resendvalidationmail';
     const VIEW_SYNC = 'sync';
     const ACTION_SYNC = 'actionsync';
     const ACTION_UPDATEPRODUCT = 'updateproduct';
@@ -35,6 +40,11 @@ class SSL_Controller extends Controller
             static::VIEW_EDIT_PRODUCT => 'view_EditProduct',
             static::VIEW_WHMCS_PRODUCTS => 'view_WhmcsProducts',
             static::VIEW_CERTIFICATE_INFO => 'view_CertificateInfo',
+            static::VIEW_REISSUE => 'view_Reissue',
+            static::ACTION_REISSUE => 'action_Reissue',
+            static::VIEW_CHANGE_VALIDATION_METHOD => 'view_ChangeValidationMethod',
+            static::ACTION_CHANGE_VALIDATION_METHOD => 'action_ChangeValidationMethod',
+            static::ACTION_RESEND_VALIDATION_MAIL => 'action_ResendValidationMail',
             static::VIEW_SYNC => 'view_Sync',
             static::ACTION_SYNC => 'action_Sync',
             static::ACTION_UPDATEPRODUCT => 'action_UpdateProduct',
@@ -99,7 +109,7 @@ class SSL_Controller extends Controller
 
             $certificatesData[$key]['displayStatus'] = isset($status[$statusKey]) ? $status[$statusKey] : $statusKey;
             $certificatesData[$key]['productName'] = isset($products[$productID]) ? $products[$productID] : $productID;
-            $certificatesData[$key]['order_id'] = is_object($certificateOrder) ? $certificateOrder->tblhosting_id : null ;
+            $certificatesData[$key]['order_id'] = is_object($certificateOrder) ? $certificateOrder->tblhosting_id : null;
         }
 
         $params = [
@@ -219,7 +229,7 @@ class SSL_Controller extends Controller
     }
 
     /**
-     * View for SSL Certificates list
+     * View for SSL Certificate info
      * 
      * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
      */
@@ -229,6 +239,7 @@ class SSL_Controller extends Controller
         $sslService = $app->getSSLService();
         $apiService = $app->getService('api');
 
+        $status = \WHMCS\Module\Addon\Dondominio\Models\SSLCertificateOrder_Model::getStatus();
         $certificateID = $this->getRequest()->getParam('certificate_id');
         $certificateOrder = $sslService->getCertificateOrder($certificateID);
         $product = null;
@@ -236,8 +247,9 @@ class SSL_Controller extends Controller
         $service = null;
         $user = null;
         $certificatesData = [];
+        $certificateStatus = '';
 
-        if (is_object($certificateOrder)){
+        if (is_object($certificateOrder)) {
             $service = $certificateOrder->getService();
             $user = $service->client;
             $whmcsProduct = $service->product;
@@ -247,6 +259,8 @@ class SSL_Controller extends Controller
             $certificates = $apiService->getSSLCertificateInfo($certificateID);
             $certificatesData =  $certificates->getResponseData();
             $product = $sslService->getProduct($certificatesData['productID']);
+            $certificateStatus = $certificatesData['status'];
+            $certificatesData['displayStatus'] = isset($status[$certificateStatus]) ? $status[$certificateStatus] : $certificateStatus;
         } catch (\Exception $e) {
             $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
         }
@@ -258,12 +272,192 @@ class SSL_Controller extends Controller
             'user' => $user,
             'whmcs_product' => $whmcsProduct,
             'product' => $product,
+            'in_process' => $certificateStatus === \WHMCS\Module\Addon\Dondominio\Models\SSLCertificateOrder_Model::STATUS_PROCESS,
+            'in_reissue' => $certificateStatus === \WHMCS\Module\Addon\Dondominio\Models\SSLCertificateOrder_Model::STATUS_REISSUE,
             'links' => [
+                'view_reissue' => static::makeUrl(static::VIEW_REISSUE, ['certificate_id' => $certificateID]),
+                'view_change_validation_method' => static::makeUrl(static::VIEW_CHANGE_VALIDATION_METHOD, ['certificate_id' => $certificateID]),
+                'action_resend_validation_mail' => static::makeUrl(static::ACTION_RESEND_VALIDATION_MAIL, [
+                    'certificate_id' => $certificateID,
+                    'common_name' => $certificatesData['commonName']
+                ]),
                 'whmcs_order' => 'clientsservices.php?id=',
             ],
         ];
 
-        return $this->view('certificateinfo', $params);  
+        return $this->view('certificateinfo', $params);
+    }
+
+    /**
+     * View for reissue SSL Certificate
+     * 
+     * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
+     */
+    public function view_Reissue()
+    {
+        $app = $this->getApp();
+        $sslService = $app->getSSLService();
+        $apiService = $app->getService('api');
+
+        $certificateID = $this->getRequest()->getParam('certificate_id');
+        $certificateOrder = $sslService->getCertificateOrder($certificateID);
+        $user = [];
+        $certificatesData = [];
+
+        if (is_object($certificateOrder)) {
+            $user = $certificateOrder->getClientDetails();
+        }
+
+        try {
+            $certificates = $apiService->getSSLCertificateInfo($certificateID);
+            $certificatesData =  $certificates->getResponseData();
+        } catch (\Exception $e) {
+            $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
+        }
+
+        $params = [
+            'module_name' => $this->getApp()->getName(),
+            '__c__' => static::CONTROLLER_NAME,
+            'certificate' => $certificatesData,
+            'user' => $user,
+            'actions' => [
+                'reissue' => static::ACTION_REISSUE
+            ]
+        ];
+
+        return $this->view('reissue', $params);
+    }
+
+    /**
+     * Action for reissue SSL Certificate
+     * 
+     * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
+     */
+    public function action_Reissue()
+    {
+        $app = $this->getApp();
+        $apiService = $app->getService('api');
+
+        $certificateID = $this->getRequest()->getParam('certificate_id');
+        $CSRArgs = [
+            'commonName' => $this->getRequest()->getParam('common_name'),
+            'organizationName' => $this->getRequest()->getParam('organization_name'),
+            'organizationalUnitName' => $this->getRequest()->getParam('organization_unit_name'),
+            'countryName' => $this->getRequest()->getParam('country_name'),
+            'stateOrProvinceName' => $this->getRequest()->getParam('state_or_province_name'),
+            'localityName' => $this->getRequest()->getParam('location_name'),
+            'emailAddress' => $this->getRequest()->getParam('email_address'),
+        ];
+
+        try {
+            $csrResponse = $apiService->createCSRData($CSRArgs);
+
+            $reissueArgs = [
+                'csrData' => $csrResponse->get('csrData'),
+                'keyData' => $csrResponse->get('csrKey'),
+            ];
+
+            $apiService->reissueCertificate($certificateID, $reissueArgs);
+            $this->getResponse()->addSuccess('Reissue');
+        } catch (\Exception $e) {
+            $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
+        }
+
+        return $this->view_CertificateInfo();
+    }
+
+    /**
+     * View for change SSL Certificate validation method
+     * 
+     * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
+     */
+    public function view_ChangeValidationMethod()
+    {
+        $app = $this->getApp();
+        $apiService = $app->getService('api');
+
+        $certificateID = $this->getRequest()->getParam('certificate_id');
+        $domain = [];
+        $validationMethods = [
+            'mail' => 'Validación por correo electrónico',
+            'dns' => 'Validación mediante registro dns en la zona dns del dominio',
+            'http' => 'Validación mediante protocolo http',
+            'https' => 'Validación mediante protocolo https',
+        ];
+
+        try {
+            $certificates = $apiService->getSSLCertificateInfo($certificateID, 'validationStatus');
+            $certificatesData = $certificates->getResponseData();
+
+            $dcv = $certificatesData['validationData']['dcv'];
+
+            foreach($dcv as $key => $val){
+                $domain[$key] = [$key];
+            }
+
+        } catch (\Exception $e) {
+            $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
+        }
+
+        $params = [
+            'module_name' => $this->getApp()->getName(),
+            '__c__' => static::CONTROLLER_NAME,
+            'certificate' => $certificatesData,
+            'domains' => $domain,
+            'validation_methods' => $validationMethods,
+            'actions' => [
+                'change_validaton_method' => static::ACTION_CHANGE_VALIDATION_METHOD
+            ]
+        ];
+
+        return $this->view('changevalidatonmethod', $params);
+    }
+
+    /**
+     * Action for change SSL Certificate validation method
+     * 
+     * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
+     */
+    public function action_ChangeValidationMethod()
+    {
+        $app = $this->getApp();
+        $apiService = $app->getService('api');
+
+        $certificateID = $this->getRequest()->getParam('certificate_id');
+        $commonName = $this->getRequest()->getParam('common_name');
+        $validationMethod = $this->getRequest()->getParam('validation_method');
+
+        try {
+            $apiService->changeValidationName($certificateID, $commonName, $validationMethod);
+            $this->getResponse()->addSuccess('Resend Validation Mail');
+        } catch (\Exception $e) {
+            $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
+        }
+
+        return $this->view_CertificateInfo();
+    }
+
+    /**
+     * Action for resend the validation mail of a CommonName of a Certificate.
+     * 
+     * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
+     */
+    public function action_ResendValidationMail()
+    {
+        $app = $this->getApp();
+        $apiService = $app->getService('api');
+
+        $certificateID = $this->getRequest()->getParam('certificate_id');
+        $commonName = $this->getRequest()->getParam('common_name');
+
+        try {
+            $apiService->resendValidationMail($certificateID, $commonName);
+            $this->getResponse()->addSuccess('Resend Validation Mail');
+        } catch (\Exception $e) {
+            $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
+        }
+
+        return $this->view_CertificateInfo();
     }
 
     /**

@@ -466,6 +466,17 @@ $_ADDONLANG = array(
     'ssl_certificate_ts_end' => 'Expiration date',
     'ssl_certificate_order' => 'Order',
     'ssl_alternative_names' => 'Alternative domains',
+    'ssl_new_validation_name' => 'New validation method',
+    'ssl_vat_number_custom_field' => 'Custom VAT Number Field',
+    'ssl_organization_name' => 'Organization name',
+    'ssl_unit_name' => 'Organization unit name',
+    'ssl_country_name' => '2-character country code',
+    'ssl_state_or_province' => 'Name of the province or state of the company',
+    'ssl_location_name' => 'Company town name',
+    'ssl_email_address' => 'Email',
+    'ssl_reissue' => 'Reissue',
+    'ssl_change_method' => 'Change method',
+    'ssl_new_group' => 'Create a new Group',
 
     /**
      * CONTENT TITLES
