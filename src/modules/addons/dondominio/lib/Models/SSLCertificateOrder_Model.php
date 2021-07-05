@@ -52,6 +52,66 @@ class SSLCertificateOrder_Model extends AbstractModel
     }
 
     /**
+     * Gets the Product (mod_dondominio_ssl_products) related to the certificate
+     * 
+     * @return \WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model
+     */
+    public function getProduct(): ?\WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model
+    {
+        $product = \WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::where(['dd_product_id' => $this->dd_product_id])->first();
+
+        if (is_object($product)) {
+            return $product;
+        }
+
+        return null;
+    }
+
+    /**
+     * Return the customer's watt number depending on the configuration of the product in WHMCS
+     * 
+     * @return string
+     */
+    public function getVatNumber(): string
+    {
+        $whmcsProduct = $this->getWhmcsProduct();
+        $user = $this->getClientDetails();
+
+        if (empty($whmcsProduct)) {
+            return '';
+        }
+
+        if (!is_array($user['customfields'])) {
+            return '';
+        }
+
+        foreach ($user['customfields'] as $customField) {
+            if ((int) $customField['id'] === (int) $whmcsProduct->configoption2) {
+                return (string) $customField['value'];
+            }
+        }
+
+        return '';
+    }
+
+    /**
+     * Return the WHMCS Product asigned to this DonDominio Product
+     * 
+     * @return object
+     */
+    public function getWhmcsProduct()
+    {
+        $product = $this->getProduct();
+
+        if (empty($product)) {
+            return null;
+        }
+
+        return $product->getWhmcsProduct();
+    }
+
+
+    /**
      * Gets the certificate client details
      * 
      * @return array

@@ -18,6 +18,8 @@ class SSL_Controller extends Controller
     const VIEW_EDIT_PRODUCT = 'editproduct';
     const VIEW_WHMCS_PRODUCTS = 'whmcsproducts';
     const VIEW_CERTIFICATE_INFO = 'certificateinfo';
+    const VIEW_RENEW = 'viewrenew';
+    const ACTION_RENEW = 'actionrenew';
     const VIEW_REISSUE = 'viewreissue';
     const ACTION_REISSUE = 'actionreissue';
     const VIEW_CHANGE_VALIDATION_METHOD = 'viewchangevalidationmethod';
@@ -40,6 +42,8 @@ class SSL_Controller extends Controller
             static::VIEW_EDIT_PRODUCT => 'view_EditProduct',
             static::VIEW_WHMCS_PRODUCTS => 'view_WhmcsProducts',
             static::VIEW_CERTIFICATE_INFO => 'view_CertificateInfo',
+            static::VIEW_RENEW => 'view_Renew',
+            static::ACTION_RENEW => 'action_Renew',
             static::VIEW_REISSUE => 'view_Reissue',
             static::ACTION_REISSUE => 'action_Reissue',
             static::VIEW_CHANGE_VALIDATION_METHOD => 'view_ChangeValidationMethod',
@@ -275,6 +279,7 @@ class SSL_Controller extends Controller
             'in_process' => $certificateStatus === \WHMCS\Module\Addon\Dondominio\Models\SSLCertificateOrder_Model::STATUS_PROCESS,
             'in_reissue' => $certificateStatus === \WHMCS\Module\Addon\Dondominio\Models\SSLCertificateOrder_Model::STATUS_REISSUE,
             'links' => [
+                'view_renew' => static::makeUrl(static::VIEW_RENEW, ['certificate_id' => $certificateID]),
                 'view_reissue' => static::makeUrl(static::VIEW_REISSUE, ['certificate_id' => $certificateID]),
                 'view_change_validation_method' => static::makeUrl(static::VIEW_CHANGE_VALIDATION_METHOD, ['certificate_id' => $certificateID]),
                 'action_resend_validation_mail' => static::makeUrl(static::ACTION_RESEND_VALIDATION_MAIL, [
@@ -286,6 +291,115 @@ class SSL_Controller extends Controller
         ];
 
         return $this->view('certificateinfo', $params);
+    }
+
+    /**
+     * View for renew SSL Certificate
+     * 
+     * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
+     */
+    public function view_Renew()
+    {
+        $app = $this->getApp();
+        $sslService = $app->getSSLService();
+        $apiService = $app->getService('api');
+
+        $certificateID = $this->getRequest()->getParam('certificate_id');
+        $certificateOrder = $sslService->getCertificateOrder($certificateID);
+        $vatNumber = '';
+        $address = '';
+        $user = [];
+        $certificatesData = [];
+
+        if (is_object($certificateOrder)) {
+            $user = $certificateOrder->getClientDetails();
+            $vatNumber = $certificateOrder->getVatNumber();
+            $address = strlen($user['address1']) ? $user['address1'] : $user['address2'];
+        }
+
+        $contactTypes = [
+            'individual' => 'Individuo',
+            'organization' => 'Organizacion'
+        ];
+
+        try {
+            $certificates = $apiService->getSSLCertificateInfo($certificateID);
+            $certificatesData =  $certificates->getResponseData();
+        } catch (\Exception $e) {
+            $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
+        }
+
+        $params = [
+            'module_name' => $this->getApp()->getName(),
+            '__c__' => static::CONTROLLER_NAME,
+            'certificate' => $certificatesData,
+            'user' => $user,
+            'contact_types' => $contactTypes,
+            'vat_number' => $vatNumber,
+            'address' => $address,
+            'actions' => [
+                'renew' => static::ACTION_RENEW
+            ],
+            'links' => [
+                'view_certificateinfo' =>  static::makeUrl(static::VIEW_CERTIFICATE_INFO, ['certificate_id' => $certificateID]),
+            ]
+        ];
+
+        return $this->view('renew', $params);
+    }
+
+    /**
+     * Action for renew SSL Certificate
+     * 
+     * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
+     */
+    public function action_Renew()
+    {
+        $app = $this->getApp();
+        $apiService = $app->getService('api');
+
+        $certificateID = $this->getRequest()->getParam('certificate_id');
+        $CSRArgs = [
+            'commonName' => $this->getRequest()->getParam('common_name'),
+            'organizationName' => $this->getRequest()->getParam('organization_name'),
+            'organizationalUnitName' => $this->getRequest()->getParam('organization_unit_name'),
+            'countryName' => $this->getRequest()->getParam('country_name'),
+            'stateOrProvinceName' => $this->getRequest()->getParam('state_or_province_name'),
+            'localityName' => $this->getRequest()->getParam('location_name'),
+            'emailAddress' => $this->getRequest()->getParam('email_address'),
+        ];
+        $renewArgs = [
+            'adminContactID' => $this->getRequest()->getParam('contact_id'),
+            'adminContactType' => $this->getRequest()->getParam('contact_type'),
+            'adminContactFirstName' => $this->getRequest()->getParam('contact_first_name'),
+            'adminContactLastName' => $this->getRequest()->getParam('contact_last_name'),
+            'adminContactOrgName' => $this->getRequest()->getParam('contact_org_name'),
+            'adminContactOrgType' => $this->getRequest()->getParam('contact_org_type'),
+            'adminContactIdentNumber' => $this->getRequest()->getParam('contact_iden_num'),
+            'adminContactEmail' => $this->getRequest()->getParam('contact_email'),
+            'adminContactPhone' => $this->getRequest()->getParam('contact_phone'),
+            'adminContactFax' => $this->getRequest()->getParam('contact_fax'),
+            'adminContactAddress' => $this->getRequest()->getParam('contact_address'),
+            'adminContactPostalCode' => $this->getRequest()->getParam('contact_post_code'),
+            'adminContactCity' => $this->getRequest()->getParam('contact_city'),
+            'adminContactState' => $this->getRequest()->getParam('contact_state'),
+            'adminContactCountry' => $this->getRequest()->getParam('contact_country'),
+        ];
+
+        try {
+            $csrResponse = $apiService->createCSRData($CSRArgs);
+
+            $renewArgs['csrData'] = $csrResponse->get('csrData');
+            $renewArgs['keyData'] = $csrResponse->get('csrKey');
+
+
+            $apiService->renewCertificate($certificateID, $renewArgs);
+            $this->getResponse()->addSuccess('Reissue');
+        } catch (\Exception $e) {
+            $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
+        }
+
+        return $this->view_CertificateInfo();
     }
 
     /**
@@ -322,6 +436,9 @@ class SSL_Controller extends Controller
             'user' => $user,
             'actions' => [
                 'reissue' => static::ACTION_REISSUE
+            ],
+            'links' => [
+                'view_certificateinfo' =>  static::makeUrl(static::VIEW_CERTIFICATE_INFO, ['certificate_id' => $certificateID]),
             ]
         ];
 
@@ -391,10 +508,9 @@ class SSL_Controller extends Controller
 
             $dcv = $certificatesData['validationData']['dcv'];
 
-            foreach($dcv as $key => $val){
+            foreach ($dcv as $key => $val) {
                 $domain[$key] = [$key];
             }
-
         } catch (\Exception $e) {
             $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
         }
@@ -407,6 +523,9 @@ class SSL_Controller extends Controller
             'validation_methods' => $validationMethods,
             'actions' => [
                 'change_validaton_method' => static::ACTION_CHANGE_VALIDATION_METHOD
+            ],
+            'links' => [
+                'view_certificateinfo' =>  static::makeUrl(static::VIEW_CERTIFICATE_INFO, ['certificate_id' => $certificateID]),
             ]
         ];
 
@@ -520,10 +639,12 @@ class SSL_Controller extends Controller
         $whmcsProduct = $product->getWhmcsProduct();
         $productName = $this->getRequest()->getParam('name', $product->product_name);
         $productGroup = $this->getRequest()->getParam('group', '');
+        $vatNumber = $whmcsService->getVatNumberID();
 
         if (is_object($whmcsProduct)) {
             $productName = $whmcsProduct->name;
             $productGroup = $whmcsProduct->gid;
+            $vatNumber = $whmcsProduct->configoption2;
         }
 
         $params = [
@@ -536,7 +657,7 @@ class SSL_Controller extends Controller
             'increment_type' => $product->price_create_increment_type,
             'has_whmcs_product' => $product->hasWhmcsProduct(),
             'client_custom_field' => $whmcsService->getCustomClientFields(),
-            'vat_number_id' => $whmcsService->getVatNumberID(),
+            'vat_number_id' => $vatNumber,
             'links' => [
                 'ssl_index' => static::makeURL(static::VIEW_INDEX),
                 'create_group' => 'configproducts.php?action=creategroup',

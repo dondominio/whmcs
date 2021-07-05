@@ -6,7 +6,7 @@
                 <h3 class="panel-title domain-title">{$certificate.commonName}</h3>
             </div>
             <div class="col-xs-4">
-                {if $service || $in_process || $in_reissue}
+                {if $service || $in_process || $in_reissue || $certificate.renewable}
                 <div class="dropdown pull-right">
                     <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -15,15 +15,18 @@
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                         {if $service}
-                        <li><a target="_blank" href="{$links.whmcs_order}{$service->id}">Pedido en WHMCS</a></li>
+                        <li><a target="_blank" href="{$links.whmcs_order}{$service->id}">{$LANG.ssl_whmcs_order}</a></li>
                         {/if}
 
                         {if $in_process}
-                        <li><a href="{$links.view_reissue}">Reissue</a></li>
-                        <li><a href="{$links.action_resend_validation_mail}">Resend validation mail</a></li>
+                        <li><a href="{$links.view_reissue}">{$LANG.ssl_reissue}</a></li>
+                        <li><a href="{$links.action_resend_validation_mail}">{$LANG.ssl_resend_validation_mail}</a></li>
                         {/if}
                         {if $in_process || $in_reissue}
-                        <li><a href="{$links.view_change_validation_method}">Chane validation method</a></li>
+                        <li><a href="{$links.view_change_validation_method}">{$LANG.ssl_change_validation_method}</a></li>
+                        {/if}
+                        {if $certificate.renewable}
+                        <li><a href="{$links.view_renew}">{$LANG.ssl_renew}</a></li>
                         {/if}
                     </ul>
                 </div>

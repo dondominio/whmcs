@@ -446,7 +446,21 @@ class API_Service extends AbstractService implements APIService_Interface
     }
 
     /**
-     * Send a request to DonDominio API for the creation of a certificate
+     * Send a request to DonDominio API for the renew of a certificate
+     *
+     * @param int $certificateID
+     * @param array $args
+     * 
+     * @return \Dondominio\API\Response\Response
+     */
+    public function renewCertificate(int $certificateID, array $args): \Dondominio\API\Response\Response
+    {
+        $connection = $this->getApiConnection();
+        return $connection->ssl_renew($certificateID, $args);
+    }
+
+    /**
+     * Send a request to DonDominio API for the reissue of a certificate
      *
      * @param int $certificateID
      * @param array $args

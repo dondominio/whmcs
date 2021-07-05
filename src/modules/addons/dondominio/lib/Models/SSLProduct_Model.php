@@ -118,6 +118,7 @@ class SSLProduct_Model extends AbstractModel
 
         $whmcsProduct->gid = $groupID;
         $whmcsProduct->name = $name;
+        $whmcsProduct->configoption2 = $vatNumberID;
         $whmcsProduct->save();
 
         $this->updateWhmcsProductPrice();

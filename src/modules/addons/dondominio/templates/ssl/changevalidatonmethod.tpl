@@ -14,14 +14,14 @@
 
                 <div class="form-group">
                     <label for="common_name">{$LANG.ssl_certificate_common_name}</label>
-                    <select class="form-control" id="common_name">
+                    <select class="form-control" name="common_name" id="common_name">
                         {html_options options=$domains}
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label for="validation_method">{$LANG.ssl_new_validation_name}</label>
-                    <select class="form-control" id="validation_method">
+                    <select class="form-control" name="validation_method" id="validation_method">
                         {html_options options=$validation_methods}
                     </select>
                 </div>
@@ -30,7 +30,7 @@
         </div>
         <div class="panel-footer form-footer">
             <button action='submit' name='submit_button' id='settings_submit' class='btn btn-primary'>{$LANG.ssl_change_method}</button>
-            <a href='{$links.tlds_index}' class='btn btn-default'>{$LANG.btn_back}</a>
+            <a href='{$links.view_certificateinfo}' class='btn btn-default'>{$LANG.btn_back}</a>
         </div>
     </form>
 </div>
