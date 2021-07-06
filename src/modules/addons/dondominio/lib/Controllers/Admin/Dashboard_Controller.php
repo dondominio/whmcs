@@ -23,6 +23,7 @@ class Dashboard_Controller extends Controller
     const VIEW_SIDEBAR = 'sidebar';
     const PRINT_MOREINFO = 'moreapiinfo';
     const UPDATE_MODULES = 'updatemodules';
+    const TOGGLE_PREMIUM_DOMAINS = 'premiumdomains';
 
     /**
      * Gets available actions for Controller
@@ -37,7 +38,8 @@ class Dashboard_Controller extends Controller
             static::VIEW_BALANCEUPDATE => 'view_BalanceUpdate',
             static::VIEW_SIDEBAR => 'view_Sidebar',
             static::PRINT_MOREINFO => 'print_MoreApiInfo',
-            static::UPDATE_MODULES => 'update_Modules'
+            static::UPDATE_MODULES => 'update_Modules',
+            static::TOGGLE_PREMIUM_DOMAINS => 'toggle_PremiumDomains'
         ];
     }
 
@@ -75,8 +77,9 @@ class Dashboard_Controller extends Controller
                 'update_modules' => static::makeURL(static::UPDATE_MODULES),
                 'check_api_status_link' => static::makeURL(static::VIEW_INDEX, ['check_api' => 1]),
                 'settings' => Settings_Controller::makeURL(),
-                'active_registrar' => sprintf('/admin/configregistrars.php?action=activate&module=%s%s', $app->getName(), $token),
-                'registrar_config' => sprintf('/admin/configregistrars.php?action=save&module=%s', $app->getName()),
+                'active_registrar' => sprintf('configregistrars.php?action=activate&module=%s%s', $app->getName(), $token),
+                'registrar_config' => sprintf('configregistrars.php?action=save&module=%s', $app->getName()),
+                'toogle_premium_domains' => static::makeURL(static::TOGGLE_PREMIUM_DOMAINS),
             ],
             'registrar_config' => $registrarConfig,
         ];
@@ -228,6 +231,35 @@ class Dashboard_Controller extends Controller
         ];
 
         return $this->view('update', $params);
+    }
+
+    /**
+     * Toogle premium domains setting
+     *
+     * @return void
+     */
+    public function toggle_PremiumDomains()
+    {
+        $app = $this->getApp();
+        $whmcsService = $app->getService('whmcs');
+        $response = $this->getResponse();
+        $status = $this->getRequest()->getParam('status');
+        $data = [
+            'success' => true,
+            'msg' => $app->getLang('premium_domains_success'),
+        ];
+
+        try {
+            $whmcsService->changePremiumDomainsStatus((bool) $status);
+        } catch (\Exception $e){
+            $data = [
+                'success' => false,
+                'msg' => $app->getLang($e->getMessage()),
+            ];
+        }
+
+        $response->setContentType(Response::CONTENT_JSON);
+        $response->send(json_encode($data), true);
     }
 
     /**
