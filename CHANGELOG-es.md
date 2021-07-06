@@ -6,6 +6,11 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.
 
 ## [Pendiente por lanzar]
 
+## [2.1.6] - 2021-07-06
+### Fixed
+- Fix URLs de apartado de administración.
+- Fix cambio de estado de Dominios Prémium.
+
 ## [2.1.5] - 2021-06-1
 ### Changed
 - No mostrar errores si falla la petición para comprobar nuevas actualizaciones del Registrador/Addon.

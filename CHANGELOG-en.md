@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.6] - 2021-07-06
+### Fixed
+- Fix administration section URLs.
+- Fix status change of Premium Domains.
+
 ## [2.1.5] - 2021-06-1
 ### Changed
 - Do not show errors if the request to check for new Registrar/Addon updates fails.

@@ -166,7 +166,7 @@
 <br>
 <input id="get-more-api-info" type="button" class="btn btn-info" value="{$LANG.more_info}"
     data-url="{$links.more_api_info}">
-<a class="btn btn-warning" href="/admin/systemphpinfo.php" target="_blank">PHP Info <i
+<a class="btn btn-warning" href="systemphpinfo.php" target="_blank">PHP Info <i
         class="fad fa-external-link-alt"></i></a>
 <div id="more-api-infobox" class='infobox hide'>
     <img id="more-api-infobox-loading" src="../assets/img/loadingsml.gif" style="width: 25px;">
@@ -175,6 +175,7 @@
 
 <input data-success value="{$LANG.success_action}" hidden />
 <input data-error value="{$LANG.error_action}" hidden />
+<input data-toggle-premium-domains type="hidden" value="{$links.toogle_premium_domains}">
 
 {literal}
 <script>
@@ -201,14 +202,15 @@
 
     function saveSettingPremiumDomains(event, state) {
         const val = state ? 1 : 0
+        const url = $('[data-toggle-premium-domains]').val()
 
         $('#loading').show()
 
         $.ajax({
-            url: '?module=ispapidomaincheck&action=savepremiumdomains',
+            url: url,
             type: 'POST',
             data: {
-                premiumDomains: val
+                status: val
             },
             dataType: 'json'
         }).done(function (d) {
@@ -248,7 +250,7 @@
             size: 'small',
             onColor: 'success',
             offColor: 'default'
-        }).on('switchChange.bootstrapSwitch', saveSettingPremiumDomains)
+        }).on('switchChange.bootstrapSwitch', saveSettingPremiumDomains);
 
         $('[data-form="registrar"]').on('submit', function (event) {
             event.preventDefault();
