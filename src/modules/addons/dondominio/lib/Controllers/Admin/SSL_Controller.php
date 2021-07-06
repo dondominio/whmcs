@@ -306,37 +306,78 @@ class SSL_Controller extends Controller
 
         $certificateID = $this->getRequest()->getParam('certificate_id');
         $certificateOrder = $sslService->getCertificateOrder($certificateID);
-        $vatNumber = '';
-        $address = '';
-        $user = [];
+        $vatNumber = $this->getRequest()->getParam('contact_iden_num');
+        $address = $this->getRequest()->getParam('contact_address');
+        $certificateID = $this->getRequest()->getParam('certificate_id');
+        $phone = $this->getRequest()->getParam('contact_phone');
+        $phoneCode = $this->getRequest()->getParam('country-calling-code-contact_phone');
+        $fax = $this->getRequest()->getParam('contact_fax');
+        $faxCode = $this->getRequest()->getParam('country-calling-code-contact_fax');
+        $csrOrgName = $this->getRequest()->getParam('organization_name');
+        $csrOrgUnitName = $this->getRequest()->getParam('organization_unit_name');
+        $csrCountry = $this->getRequest()->getParam('country_name');
+        $csrState = $this->getRequest()->getParam('state_or_province_name');
+        $csrLocation = $this->getRequest()->getParam('location_name');
+        $csrEmailAddress = $this->getRequest()->getParam('email_address');
+        $contactID = $this->getRequest()->getParam('contact_id');
+        $contactType = $this->getRequest()->getParam('contact_type', 'individual');
+        $user = [
+            'firstname' => $this->getRequest()->getParam('contact_first_name'),
+            'lastname' => $this->getRequest()->getParam('contact_last_name'),
+            'companyname' => $this->getRequest()->getParam('contact_org_name'),
+            'unitname' => $this->getRequest()->getParam('organization_unit_name'),
+            'email' => $this->getRequest()->getParam('contact_email'),
+            'phonenumberformatted' => strlen($phone) ? sprintf('+%s.%s', $phoneCode, $phone) : '',
+            'fax' => strlen($fax) ? sprintf('+%s.%s', $faxCode, $fax) : '',
+            'postcode' => $this->getRequest()->getParam('contact_post_code'),
+            'city' => $this->getRequest()->getParam('contact_city'),
+            'state' => $this->getRequest()->getParam('contact_state'),
+            'countrycode' => $this->getRequest()->getParam('contact_country'),
+        ];
         $certificatesData = [];
 
         if (is_object($certificateOrder)) {
             $user = $certificateOrder->getClientDetails();
             $vatNumber = $certificateOrder->getVatNumber();
             $address = strlen($user['address1']) ? $user['address1'] : $user['address2'];
+            $csrOrgName = strlen($csrOrgName) ? $csrOrgName : $user['companyname'];
+            $csrCountry = strlen($csrCountry) ? $csrCountry : $user['countrycode'];
+            $csrState = strlen($csrState) ? $csrState : $user['state'];
+            $csrLocation = strlen($csrLocation) ? $csrLocation : $user['city'];
+            $csrEmailAddress = strlen($csrEmailAddress) ? $csrEmailAddress : $user['email'];
         }
 
         $contactTypes = [
-            'individual' => 'Individuo',
-            'organization' => 'Organizacion'
+            'individual' => $app->getLang('ssl_contact_individual'),
+            'organization' => $app->getLang('ssl_contact_organization')
         ];
 
         try {
             $certificates = $apiService->getSSLCertificateInfo($certificateID);
             $certificatesData =  $certificates->getResponseData();
         } catch (\Exception $e) {
-            $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
+            $this->getResponse()->addError($app->getLang($e->getMessage()));
         }
 
+        print_r($contactType);
+
         $params = [
-            'module_name' => $this->getApp()->getName(),
+            'module_name' => $app->getName(),
             '__c__' => static::CONTROLLER_NAME,
             'certificate' => $certificatesData,
             'user' => $user,
             'contact_types' => $contactTypes,
             'vat_number' => $vatNumber,
             'address' => $address,
+            'csr_org_name' => $csrOrgName,
+            'csr_org_unit_name' => $csrOrgUnitName,
+            'csr_country' => $csrCountry,
+            'csr_state' => $csrState,
+            'csr_location' => $csrLocation,
+            'csr_email_address' => $csrEmailAddress,
+            'contact_id' => $contactID,
+            'is_contact_data' => is_null($contactID),
+            'contact_type' => $contactType,
             'actions' => [
                 'renew' => static::ACTION_RENEW
             ],
@@ -359,6 +400,11 @@ class SSL_Controller extends Controller
         $apiService = $app->getService('api');
 
         $certificateID = $this->getRequest()->getParam('certificate_id');
+        $phone = $this->getRequest()->getParam('contact_phone');
+        $phoneCode = $this->getRequest()->getParam('country-calling-code-contact_phone');
+        $fax = $this->getRequest()->getParam('contact_fax');
+        $faxCode = $this->getRequest()->getParam('country-calling-code-contact_fax');
+
         $CSRArgs = [
             'commonName' => $this->getRequest()->getParam('common_name'),
             'organizationName' => $this->getRequest()->getParam('organization_name'),
@@ -377,8 +423,8 @@ class SSL_Controller extends Controller
             'adminContactOrgType' => $this->getRequest()->getParam('contact_org_type'),
             'adminContactIdentNumber' => $this->getRequest()->getParam('contact_iden_num'),
             'adminContactEmail' => $this->getRequest()->getParam('contact_email'),
-            'adminContactPhone' => $this->getRequest()->getParam('contact_phone'),
-            'adminContactFax' => $this->getRequest()->getParam('contact_fax'),
+            'adminContactPhone' => sprintf('+%s.%s', $phoneCode, $phone),
+            'adminContactFax' => strlen($fax) ? sprintf('+%s.%s', $faxCode, $fax) : '',
             'adminContactAddress' => $this->getRequest()->getParam('contact_address'),
             'adminContactPostalCode' => $this->getRequest()->getParam('contact_post_code'),
             'adminContactCity' => $this->getRequest()->getParam('contact_city'),
@@ -387,6 +433,7 @@ class SSL_Controller extends Controller
         ];
 
         try {
+            throw new \Exception('test');
             $csrResponse = $apiService->createCSRData($CSRArgs);
 
             $renewArgs['csrData'] = $csrResponse->get('csrData');
@@ -394,9 +441,10 @@ class SSL_Controller extends Controller
 
 
             $apiService->renewCertificate($certificateID, $renewArgs);
-            $this->getResponse()->addSuccess('Reissue');
+            $this->getResponse()->addSuccess($app->getLang('ssl_success_renew'));
         } catch (\Exception $e) {
             $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
+            return $this->view_Renew();
         }
 
         return $this->view_CertificateInfo();
@@ -475,9 +523,10 @@ class SSL_Controller extends Controller
             ];
 
             $apiService->reissueCertificate($certificateID, $reissueArgs);
-            $this->getResponse()->addSuccess('Reissue');
+            $this->getResponse()->addSuccess($app->getLang('ssl_success_reissue'));
         } catch (\Exception $e) {
             $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
+            return $this->view_Reissue();
         }
 
         return $this->view_CertificateInfo();
@@ -548,9 +597,10 @@ class SSL_Controller extends Controller
 
         try {
             $apiService->changeValidationName($certificateID, $commonName, $validationMethod);
-            $this->getResponse()->addSuccess('Resend Validation Mail');
+            $this->getResponse()->addSuccess($app->getLang('ssl_success_change_validation_method'));
         } catch (\Exception $e) {
             $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
+            return $this->view_ChangeValidationMethod();
         }
 
         return $this->view_CertificateInfo();
@@ -571,7 +621,7 @@ class SSL_Controller extends Controller
 
         try {
             $apiService->resendValidationMail($certificateID, $commonName);
-            $this->getResponse()->addSuccess('Resend Validation Mail');
+            $this->getResponse()->addSuccess($app->getLang('ssl_success_resend_validation_mail'));
         } catch (\Exception $e) {
             $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
         }
@@ -701,7 +751,7 @@ class SSL_Controller extends Controller
             return $this->view_EditProduct();
         }
 
-        return $this->view_Index();
+        return $this->view_WhmcsProducts();
     }
 
     /**

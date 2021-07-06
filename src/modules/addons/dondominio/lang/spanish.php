@@ -498,6 +498,12 @@ $_ADDONLANG = array(
     'ssl_contact_city' => 'Ciudad del Contacto',
     'ssl_contact_state' => 'Estado del contato',
     'ssl_contact_country' => 'País del Contacto (2 caracteres)',
+    'ssl_success_resend_validation_mail' => 'Correo de validación reenviado correctamente',
+    'ssl_success_change_validation_method' => 'Método de validación cambiado correctamente',
+    'ssl_success_reissue' => 'Certificado remitido correctamente',
+    'ssl_success_renew' => 'Certificado renovado correctamente',
+    'ssl_contact_individual' => 'Individuo',
+    'ssl_contact_organization' => 'Organizacion',
 
     /**
      * CONTENT TITLES

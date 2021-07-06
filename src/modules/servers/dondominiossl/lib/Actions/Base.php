@@ -93,7 +93,6 @@ abstract class Base
             'adminContactIdentNumber' => $this->getVATNumber(),
             'adminContactEmail' => $this->params['clientsdetails']['email'],
             'adminContactPhone' => $this->params['clientsdetails']['phonenumberformatted'],
-            'adminContactFax' => $this->params['clientsdetails']['phonenumberformatted'],
             'adminContactAddress' => $this->getAddress(),
             'adminContactPostalCode' => $this->params['clientsdetails']['postcode'],
             'adminContactCity' => $this->params['clientsdetails']['city'],
