@@ -134,6 +134,8 @@ $_ADDONLANG = array(
     'domain_ts_expire' => 'Fecha de expiración',
     'domain_transfer' => 'Transferir',
     'domain_more_info' => 'Más información',
+    'premium_domains_error' => 'Error al modificar el estado de los Dominios Prémium',
+    'premium_domains_success' => 'Estado de los Dominios Prémium modificado',
 
     //Import
     'import_title' => 'Importar',

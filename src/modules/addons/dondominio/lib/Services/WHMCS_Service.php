@@ -1292,4 +1292,22 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
 
         return $vatNumber->id;
     }
+    
+    /**
+     * Change premium domains status
+     *
+     * @param bool $status
+     * 
+     * @return void
+     *
+     * @throws Exception if status is not changed 
+     */
+    public function changePremiumDomainsStatus(bool $status): void
+    {
+        $setting = \WHMCS\Config\Setting::setValue('PremiumDomains', $status);
+
+        if ((bool) $setting->value !== $status) {
+            throw new \Exception('premium_domains_error');
+        }
+    }
 }
