@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - View with the detailed information of an SSL Certificate.
 - Form for creating WHMCS products from a MrDomain/DonDominio SSL Product.
  
+## [2.1.7] - 2021-07-07
+### Fixed
+- Adapt update system to be able to add DonDominio Modules,
+
 ## [2.1.6] - 2021-07-06
 ### Fixed
 - Fix administration section URLs.
