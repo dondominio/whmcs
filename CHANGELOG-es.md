@@ -6,6 +6,10 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.
 
 ## [Pendiente por lanzar]
 
+## [2.1.7] - 2021-07-07
+### Changed
+- Adaptar sistema de actualizaciones para poder añadir módulos de DonDominio.
+
 ## [2.1.6] - 2021-07-06
 ### Fixed
 - Fix URLs de apartado de administración.
