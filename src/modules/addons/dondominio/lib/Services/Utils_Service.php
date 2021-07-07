@@ -241,7 +241,7 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
         return $element->getPathName() . DIRECTORY_SEPARATOR . 'src';
     }
 
-    /**
+   /**
      * Moves files to specified directories to install the modules
      *
      * @param string $downloadFolder Path where the installation folder is
@@ -250,13 +250,31 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
      *
      * @return void
      */
-    protected function installModules($downloadFolder)
+    protected function installModules(string $downloadFolder): void
     {
-        $modulesFoldersPath = [
+        $modulesFoldersPath = [];
+        $baseFoldersPath = [
             static::buildPath(['includes', 'dondominio']),
-            static::buildPath(['modules', 'registrars', 'dondominio']),
-            static::buildPath(['modules', 'addons', 'dondominio'])
+            static::buildPath(['modules', 'registrars']),
+            static::buildPath(['modules', 'addons']),
+            static::buildPath(['modules', 'servers']),
+            static::buildPath(['modules', 'gateways']),
+            static::buildPath(['modules', 'mail']),
+            static::buildPath(['modules', 'notifications']),
         ];
+
+        foreach ($baseFoldersPath as $path){
+            $realPath = static::buildPath([$downloadFolder, $path]);
+            $subFolders = scandir($realPath);
+
+            foreach ($subFolders as $subFolder){
+                $realSubPath = static::buildPath([$downloadFolder, $subFolder]);
+
+                if (!in_array($subFolder, ['.', '..']) && !is_dir($realSubPath)){
+                    $modulesFoldersPath[] = static::buildPath([$path, $subFolder]);
+                }
+            }
+        }
 
         $this->checkPermissions($modulesFoldersPath, $downloadFolder);
 
@@ -264,6 +282,7 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
         $downloadsReference = uniqid() . '1';
 
         try {
+            $this->checkBaseFolders($baseFoldersPath);
             $this->doBackups($modulesFoldersPath, $backupsReference);
             $this->moveDownloads($modulesFoldersPath, $downloadFolder, $downloadsReference);
             $this->replaceModules($modulesFoldersPath, $downloadsReference);
@@ -272,6 +291,24 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
             $this->deleteDirectories($modulesFoldersPath, $downloadsReference);
             $this->recoveryBackups($modulesFoldersPath, $backupsReference);
             throw $e;
+        }
+    }
+
+    /**
+     * Create includes & modules 
+     *
+     * @param array $baseFoldersPath Base folders for includes & modules
+     *
+     * @return void
+     */
+    protected function checkBaseFolders(array $baseFoldersPath): void
+    {
+        foreach ($baseFoldersPath as $folder){
+            $realPath = static::buildPath([ROOTDIR, $folder]);
+
+            if (!file_exists($realPath)) {
+                mkdir($realPath, 0755, true);
+            }
         }
     }
 
