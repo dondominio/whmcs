@@ -25,6 +25,8 @@ class Dashboard_Controller extends Controller
     const UPDATE_MODULES = 'updatemodules';
     const TOGGLE_PREMIUM_DOMAINS = 'premiumdomains';
     const INSTALL_SSL_PROVISIONING = 'installsslprovisioning';
+    const INSTALL_REGISTRAR = 'installregistrar';
+
 
     /**
      * Gets available actions for Controller
@@ -42,6 +44,7 @@ class Dashboard_Controller extends Controller
             static::UPDATE_MODULES => 'action_UpdateModules',
             static::TOGGLE_PREMIUM_DOMAINS => 'action_TogglePremiumDomains',
             static::INSTALL_SSL_PROVISIONING => 'action_InstallSSLprovisioning',
+            static::INSTALL_REGISTRAR => 'action_InstallRegistrar',
         ];
     }
 
@@ -60,7 +63,7 @@ class Dashboard_Controller extends Controller
         $registrarConfig = [];
         $token = '';
 
-        if ($info['registrar']) {
+        if ($info['registrar']['success']) {
             $registrarConfig = $this->getRegistrarConfig();
         }
 
@@ -83,6 +86,7 @@ class Dashboard_Controller extends Controller
                 'registrar_config' => sprintf('configregistrars.php?action=save&module=%s', $app->getName()),
                 'toogle_premium_domains' => static::makeURL(static::TOGGLE_PREMIUM_DOMAINS),
                 'install_ssl_provisioning'=> static::makeURL(static::INSTALL_SSL_PROVISIONING),
+                'install_registrar'=> static::makeURL(static::INSTALL_REGISTRAR),
                 'reinstall'=> static::makeURL(static::UPDATE_MODULES, ['reinstall' => 1]),
             ],
             'registrar_config' => $registrarConfig,
@@ -287,6 +291,26 @@ class Dashboard_Controller extends Controller
         try {
             $utilesService->updateSSLProvisioningModule();
             $this->getResponse()->addSuccess($app->getLang('ssl_provisioning_module_installed'));
+        } catch (\Exception $e){
+            $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
+        }
+
+        return $this->view_Index();
+    }
+
+    /**
+     * Install the Registrar Module
+     *
+     * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
+     */
+    public function action_InstallRegistrar()
+    {
+        $app = $this->getApp();
+        $utilesService = $app->getService('utils');
+
+        try {
+            $utilesService->updateRegistrar();
+            $this->getResponse()->addSuccess($app->getLang('registrar_module_installed'));
         } catch (\Exception $e){
             $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
         }

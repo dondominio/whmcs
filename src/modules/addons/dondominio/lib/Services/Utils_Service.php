@@ -11,6 +11,7 @@ use DateTime;
 class Utils_Service extends AbstractService implements UtilsService_Interface
 {
     const UPDATE_VERSION_HOUR_INTERVAL = 6;
+    const LATEST_VERSION_URL = 'https://api.github.com/repos/dondominio/whmcs/releases/latest';
 
     /**
      * Retrieves latest version number from github
@@ -120,9 +121,68 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
         return true;
     }
 
+    /**
+     * Update Provisioning Modules
+     *
+     * Downloads the newest version of provisioning module from github and installs it
+     *
+     * @return void
+     */
     public function updateSSLProvisioningModule(): void
     {
-        $this->updateModules([static::buildPath(['modules', 'servers']),]);
+        $this->updateModules([static::buildPath(['modules', 'servers']),], false);
+    }
+
+    /**
+     * Update Registrar Modules
+     *
+     * Downloads the newest version of registrar module from github and installs it
+     *
+     * @return void
+     */
+    public function updateRegistrar(): void
+    {
+        $this->updateModules([static::buildPath(['modules', 'registrars']),], false);
+    }
+
+    /**
+     * Get the actual release info URL of GitHub API
+     *
+     * @return string
+     */
+    protected function getActualVersionReleaseInfoLink(): string
+    {
+        $latest = static::LATEST_VERSION_URL;
+        $opts = [
+            'http' => [
+                'method' => 'GET',
+                'header' => [
+                    'User-Agent: Mozilla/5.0 (Android 4.4; Mobile; rv:41.0) Gecko/41.0 Firefox/41.0'
+                ]
+            ]
+        ];
+        $context = stream_context_create($opts);
+
+        try {
+            $version = $this->getApp()->getVersion();
+            $versionName = sprintf('Version %s', $version);
+            $releasesJson = @file_get_contents('https://api.github.com/repos/dondominio/whmcs/releases', false, $context);
+            $releases = json_decode($releasesJson, true);
+        } catch (\Throwable $e){
+            return $latest;
+        }
+
+        foreach ($releases as $releas){
+            if (!isset($releas['name']) || !isset($releas['url'])){
+                continue;
+            }
+
+            if ($releas['name'] === $versionName){
+                return $releas['url'];
+            }
+        }
+
+        return $latest;
     }
 
     /**
@@ -130,9 +190,9 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
      *
      * Downloads the newest version from github and installs it
      *
-     * @return bool
+     * @return void
      */
-    public function updateModules(array $baseFoldersPath = [])
+    public function updateModules(array $baseFoldersPath = [], bool $lastVersion = true)
     {
         $method = null;
         $extensions = ['zip', 'Phar'];
@@ -149,14 +209,13 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
         }
 
         // DOWNLOAD
-        $tarballPath = $this->downloadLatestVersion($method);
+        $tarballPath = $this->downloadVersion($method, $lastVersion);
 
         // DECOMPRESS
         $latestVersionPath = $this->decompressFile($tarballPath, $method);
 
         // INSTALL MODULES (MOVE TO DESTINATION)
         $this->installModules($latestVersionPath, $baseFoldersPath);
-
     }
 
     /**
@@ -166,8 +225,10 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
      *
      * @return string
      */
-    protected function downloadLatestVersion($method)
+    protected function downloadVersion(string $method, bool $lastVersion = true): string
     {
+        $urlVersion = $lastVersion ? static::LATEST_VERSION_URL : $this->getActualVersionReleaseInfoLink();
+
         $opts = [
             'http' => [
                 'method' => 'GET',
@@ -178,7 +239,7 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
         ];
         $context = stream_context_create($opts);
 
-        $latestInfo = @file_get_contents('https://api.github.com/repos/dondominio/whmcs/releases/latest', false, $context);
+        $latestInfo = @file_get_contents($urlVersion, false, $context);
         $jsonLatestInfo = json_decode($latestInfo, true);
 
         if (empty($jsonLatestInfo)) {

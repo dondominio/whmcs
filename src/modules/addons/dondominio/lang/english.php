@@ -339,6 +339,7 @@ $_ADDONLANG = array(
     'addon_module' => 'Addon Module',
     'registrar_module' => 'Registrar Module',
     'ssl_provisioning_module' => 'SSL Provisioning Module',
+    'registrar_module_installed' => 'Recorder module installed',
 
     /**
      * DELETED DOMAINS
@@ -514,6 +515,10 @@ $_ADDONLANG = array(
     'ssl_contact_individual' => 'Individual',
     'ssl_contact_organization' => 'Organization',
     'ssl_provisioning_module_installed' => 'SSL Provisioning Module Installed',
+    'ssl_provisioning_module_not_found' => 'The DonDominio/MrDomain Provisioning Module for SSL Certificates was not found',
+    'ssl_provisioning_module_install_msg' => 'You can install it to be able to create products in WHMCS related to DonDominio/MrDomain\'s SSL products',
+    'ssl_whmcs_products_not_found' => 'No products found in WHMCS related to DonDominio/MrDomain\'s products',
+    'ssl_add_product' => 'Add products',
 
     /**
      * CONTENT TITLES

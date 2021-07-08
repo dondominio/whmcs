@@ -339,6 +339,7 @@ $_ADDONLANG = array(
     'addon_module' => 'Módulo Addon',
     'registrar_module' => 'Módulo Registrador',
     'ssl_provisioning_module' => 'Módulo Aprovisionamiento SSL',
+    'registrar_module_installed' => 'Módulo registrador instalado',
 
     /**
      * DELETED DOMAINS
@@ -514,6 +515,10 @@ $_ADDONLANG = array(
     'ssl_contact_individual' => 'Individuo',
     'ssl_contact_organization' => 'Organizacion',
     'ssl_provisioning_module_installed' => 'Módulo de aprovisionamiento de SSL Instalado',
+    'ssl_provisioning_module_not_found' => 'No se ha encontrado el Módulo de aprovisionamiento de DonDominio para certificados SSL',
+    'ssl_provisioning_module_install_msg' => 'Puedes instalarlo para poder crear productos en WHMCS relacionados con los productos SSL de DonDominio',
+    'ssl_whmcs_products_not_found' => 'No se han encontrado productos en WHMCS relacionados con los productos de DonDominio',
+    'ssl_add_product' => 'Añadir productos',
 
     /**
      * CONTENT TITLES

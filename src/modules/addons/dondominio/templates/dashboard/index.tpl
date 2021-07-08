@@ -76,7 +76,7 @@
                     <tr>
                         <td colspan="3">{$LANG.modules_installed}</td>
                     </tr>
-                    <tr>
+                    <tr class="align-top">
                         <td>
                             <ul>
                                 <li>{$LANG.addon_module}</li>
@@ -85,14 +85,14 @@
                         <td>{$LANG.ok}</td>
                         <td></td>
                     </tr>
-                    <tr>
+                    <tr class="align-top">
                         <td>
                             <ul>
                                 <li>{$LANG.registrar_module}</li>
                             </ul>
                         </td>
                         <td>
-                            {if $checks.registrar eq true}
+                            {if $checks.registrar.success eq true}
                             {$LANG.ok}
                             {else}
                             <span class="text-danger">{$LANG.error}</span>
@@ -107,17 +107,19 @@
                             {else}
                             <a data-reload-link class="btn btn-success" href='{$links.active_registrar}'>{$LANG.active}</a>
                             {/if}
+                            {else}
+                            <a class="btn btn-success" href='{$links.install_registrar}'>{$LANG.install}</a>
                             {/if}
                         </td>
                     </tr>
-                    <tr>
+                    <tr class="align-top">
                         <td>
                             <ul>
                                 <li>{$LANG.ssl_provisioning_module}</li>
                             </ul>
                         </td>
                         <td>
-                            {if $checks.ssl_provisioning eq true}
+                            {if $checks.ssl_provisioning.success eq true}
                             {$LANG.ok}
                             {else}
                             <span class="text-danger">{$LANG.error}</span>
