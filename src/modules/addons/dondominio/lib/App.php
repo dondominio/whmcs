@@ -544,6 +544,16 @@ class App
             $checks['registrar']['message'] = $this->getLang($e->getMessage());
         }
 
+        // Find SSL Provisioning Module
+        try {
+            $this->getService('utils')->findSSLProvisioningModule();
+            $checks['ssl_provisioning']['success'] = true;
+            $checks['ssl_provisioning']['active'] = true;
+        } catch (Exception $e) {
+            $checks['ssl_provisioning']['success'] = false;
+            $checks['ssl_provisioning']['message'] = $this->getLang($e->getMessage());
+        }
+
         return $checks;
     }
 }

@@ -99,13 +99,40 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
     }
 
     /**
+     * Find if SSL provisioning module is installed
+     *
+     * @return bool
+     */
+    public function findSSLProvisioningModule()
+    {
+        $registrarPath = static::buildPath([ROOTDIR, 'modules', 'servers', 'dondominiossl']);
+
+        if (!is_dir($registrarPath)) {
+            throw new Exception('ssldondominio_folder_not_found');
+        }
+
+        $registrarFile = static::buildPath([$registrarPath, 'dondominiossl.php']);
+
+        if (!file_exists($registrarFile)) {
+            throw new Exception('ssldondominio_file_not_found');
+        }
+
+        return true;
+    }
+
+    public function updateSSLProvisioningModule(): void
+    {
+        $this->updateModules([static::buildPath(['modules', 'servers']),]);
+    }
+
+    /**
      * Update Modules
      *
      * Downloads the newest version from github and installs it
      *
      * @return bool
      */
-    public function updateModules()
+    public function updateModules(array $baseFoldersPath = [])
     {
         $method = null;
         $extensions = ['zip', 'Phar'];
@@ -128,7 +155,7 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
         $latestVersionPath = $this->decompressFile($tarballPath, $method);
 
         // INSTALL MODULES (MOVE TO DESTINATION)
-        $this->installModules($latestVersionPath);
+        $this->installModules($latestVersionPath, $baseFoldersPath);
 
     }
 
@@ -250,10 +277,10 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
      *
      * @return void
      */
-    protected function installModules(string $downloadFolder): void
+    protected function installModules(string $downloadFolder, array $baseFoldersPath = []): void
     {
         $modulesFoldersPath = [];
-        $baseFoldersPath = [
+        $baseFoldersPath = empty($baseFoldersPath) ? [
             static::buildPath(['includes', 'dondominio']),
             static::buildPath(['modules', 'registrars']),
             static::buildPath(['modules', 'addons']),
@@ -261,7 +288,7 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
             static::buildPath(['modules', 'gateways']),
             static::buildPath(['modules', 'mail']),
             static::buildPath(['modules', 'notifications']),
-        ];
+        ] : $baseFoldersPath;
 
         foreach ($baseFoldersPath as $path){
             $realPath = static::buildPath([$downloadFolder, $path]);

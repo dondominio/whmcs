@@ -293,6 +293,10 @@ $_ADDONLANG = array(
     'check_api_status' => 'Check Status',
     'success_api_conection' => 'Correct connection with DonDominio API',
     'registrar_config_title' => 'Registrar Configuration',
+    'install' => 'Install',
+    'reinstall' => 'Reinstall',
+    'reinstall_title' => 'If there is any problem in the operation of DonDominio/MrDomain modules you can reinstall them to restore the files',
+    'modules_reinstalled_successfully' => 'Modules reinstalled successfully',
 
     /**
      * GENERIC
@@ -315,6 +319,8 @@ $_ADDONLANG = array(
     'local_version_is_empty' => 'Unable to retrieve local version. Version is empty.',
     'registrar_folder_not_found' => 'Registrar folder not found.',
     'registrar_file_not_found' => 'Registrar file not found',
+    'ssldondominio_folder_not_found' => 'SSL Provisioning Module not installed.',
+    'ssldondominio_file_not_found' => 'SSL Provisioning module file not found.',
     'no_extension_found_for_decompressing' => 'No extension found for decompressing.',
     'unable_to_retrieve_latest_json_info' => 'Unable to retrieve latest info (json).',
     'unable_to_download_latest_version' => 'Unable to download latest version',
@@ -332,6 +338,7 @@ $_ADDONLANG = array(
     'modules_installed' => 'Modules Installed',
     'addon_module' => 'Addon Module',
     'registrar_module' => 'Registrar Module',
+    'ssl_provisioning_module' => 'SSL Provisioning Module',
 
     /**
      * DELETED DOMAINS
@@ -506,6 +513,7 @@ $_ADDONLANG = array(
     'ssl_success_renew' => 'Certificate successfully renewed',
     'ssl_contact_individual' => 'Individual',
     'ssl_contact_organization' => 'Organization',
+    'ssl_provisioning_module_installed' => 'SSL Provisioning Module Installed',
 
     /**
      * CONTENT TITLES

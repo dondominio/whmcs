@@ -293,6 +293,10 @@ $_ADDONLANG = array(
     'check_api_status' => 'Consultar Estado',
     'success_api_conection' => 'Conexión correcta con la API de DonDominio',
     'registrar_config_title' => 'Configuración del Registrador',
+    'install' => 'Instalar',
+    'reinstall' => 'Reinstalar',
+    'reinstall_title' => 'Si hay algún problema en el funcionamiento de los módulos de DonDominio puedes reinstalarlos para restaurar los archivos',
+    'modules_reinstalled_successfully' => 'Módulos reinstalados con éxito',
 
     /**
      * GENERIC
@@ -315,6 +319,8 @@ $_ADDONLANG = array(
     'local_version_is_empty' => 'Error al obtener la versión local. La versión está vacía.',
     'registrar_folder_not_found' => 'Carpeta del módulo Registrar no encontrada.',
     'registrar_file_not_found' => 'Archivo del módulo Registrar no encontrado.',
+    'ssldondominio_folder_not_found' => 'Módulo de Aprovisionamiento SSL no instalado.',
+    'ssldondominio_file_not_found' => 'Archivo del módulo Aprovisionamiento SSL no encontrado.',
     'no_extension_found_for_decompressing' => 'No se han encontrado extensiones de compresión.',
     'unable_to_retrieve_latest_json_info' => 'Error al Unable to retrieve latest info (json).',
     'unable_to_download_latest_version' => 'Error al descargar la última versión.',
@@ -332,6 +338,7 @@ $_ADDONLANG = array(
     'modules_installed' => 'Módulos instalados',
     'addon_module' => 'Módulo Addon',
     'registrar_module' => 'Módulo Registrador',
+    'ssl_provisioning_module' => 'Módulo Aprovisionamiento SSL',
 
     /**
      * DELETED DOMAINS
@@ -506,6 +513,7 @@ $_ADDONLANG = array(
     'ssl_success_renew' => 'Certificado renovado correctamente',
     'ssl_contact_individual' => 'Individuo',
     'ssl_contact_organization' => 'Organizacion',
+    'ssl_provisioning_module_installed' => 'Módulo de aprovisionamiento de SSL Instalado',
 
     /**
      * CONTENT TITLES

@@ -21,6 +21,8 @@
                             {$checks.version.message}
                             <br>
                             <a target="_blank" href="{$LANG.changelog_link}">{$LANG.new_version_changelog}</a>
+                            {else}
+                            <a data-toggle="tooltip" data-placement="top" title="{$LANG.reinstall_title}" class="btn btn-warning" href="{$links.reinstall}">{$LANG.reinstall}</a>
                             {/if}
                             {else}
                             <span class="text-danger">{$LANG.error}</span>
@@ -105,6 +107,27 @@
                             {else}
                             <a data-reload-link class="btn btn-success" href='{$links.active_registrar}'>{$LANG.active}</a>
                             {/if}
+                            {/if}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <ul>
+                                <li>{$LANG.ssl_provisioning_module}</li>
+                            </ul>
+                        </td>
+                        <td>
+                            {if $checks.ssl_provisioning eq true}
+                            {$LANG.ok}
+                            {else}
+                            <span class="text-danger">{$LANG.error}</span>
+                            {/if}
+                        </td>
+                        <td>
+                            {$checks.ssl_provisioning.message}
+                            {if $checks.ssl_provisioning.success eq true}
+                            {else}
+                            <a class="btn btn-success" href='{$links.install_ssl_provisioning}'>{$LANG.install}</a>
                             {/if}
                         </td>
                     </tr>
