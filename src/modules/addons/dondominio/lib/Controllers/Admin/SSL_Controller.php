@@ -28,6 +28,7 @@ class SSL_Controller extends Controller
     const VIEW_SYNC = 'sync';
     const ACTION_SYNC = 'actionsync';
     const ACTION_UPDATEPRODUCT = 'updateproduct';
+    const ACTION_INSTALL = 'install';
 
     /**
      * Gets available actions for Controller
@@ -52,6 +53,7 @@ class SSL_Controller extends Controller
             static::VIEW_SYNC => 'view_Sync',
             static::ACTION_SYNC => 'action_Sync',
             static::ACTION_UPDATEPRODUCT => 'action_UpdateProduct',
+            static::ACTION_INSTALL => 'action_Install',
         ];
     }
 
@@ -149,6 +151,14 @@ class SSL_Controller extends Controller
     {
         $app = $this->getApp();
         $whmcsService = $app->getService('whmcs');
+        $utilsService = $app->getService('utils');
+
+        try {
+            $utilsService->findSSLProvisioningModule();
+        } catch (\Exception $e){
+            $this->getResponse()->addError($app->getLang($e->getMessage()));
+            return $this->view_Install();
+        }
 
         $filters = [
             'whmcs_product_name' => $this->getRequest()->getParam('whmcs_product_name'),
@@ -174,6 +184,7 @@ class SSL_Controller extends Controller
                 'prev_page' => static::makeUrl(static::VIEW_WHMCS_PRODUCTS, array_merge(['page' => ($page - 1)])),
                 'next_page' => static::makeUrl(static::VIEW_WHMCS_PRODUCTS, array_merge(['page' => ($page + 1)])),
                 'create_whmcs_product' => static::makeURL(static::VIEW_EDIT_PRODUCT, ['productid' => '']),
+                'available_products' => static::makeURL(static::VIEW_AVAILABLE_SSL),
             ],
             'filters' => $filters,
         ];
@@ -181,7 +192,7 @@ class SSL_Controller extends Controller
         $this->setPagination($params, $limit, $page, $totalRecords);
         $this->setActualView(static::VIEW_WHMCS_PRODUCTS);
 
-        return $this->view('index', $params);
+        return $this->view('whmcsproducts', $params);
     }
 
     /**
@@ -199,7 +210,7 @@ class SSL_Controller extends Controller
             'product_multi_domain' => $this->getRequest()->getParam('product_multi_domain'),
             'product_wildcard' => $this->getRequest()->getParam('product_wildcard'),
             'product_trial' => $this->getRequest()->getParam('product_trial'),
-            'product_validation_type' =>  $this->getRequest()->getParam('product_validation_type'),
+            'product_validation_type' => $this->getRequest()->getParam('product_validation_type'),
             'product_imported' => false,
         ];
 
@@ -680,10 +691,19 @@ class SSL_Controller extends Controller
      */
     public function view_EditProduct()
     {
-        $sslService = $this->getApp()->getSSLService();
-        $whmcsService = $this->getApp()->getService('whmcs');
+        $app = $this->getApp();
+        $sslService = $app->getSSLService();
+        $whmcsService = $app->getService('whmcs');
+        $utilsService = $app->getService('utils');
         $id = $this->getRequest()->getParam('productid', 0);
         $product = $sslService->getProduct($id);
+
+        try {
+            $utilsService->findSSLProvisioningModule();
+        } catch (\Exception $e){
+            $this->getResponse()->addError($app->getLang($e->getMessage()));
+            return $this->view_Install();
+        }
 
         $whmcsProductGroups = $sslService->getProductGroups();
         $whmcsProduct = $product->getWhmcsProduct();
@@ -698,7 +718,7 @@ class SSL_Controller extends Controller
         }
 
         $params = [
-            'module_name' => $this->getApp()->getName(),
+            'module_name' => $app->getName(),
             '__c__' => static::CONTROLLER_NAME,
             'product' => $product,
             'product_name' => $productName,
@@ -730,6 +750,7 @@ class SSL_Controller extends Controller
     {
         $app = $this->getApp();
         $sslService = $app->getSSLService();
+        $utilsService = $app->getService('utils');
 
         $id = $this->getRequest()->getParam('productid', 0);
         $group = $this->getRequest()->getParam('group', 0);
@@ -743,6 +764,7 @@ class SSL_Controller extends Controller
         $product->price_create_increment_type = $incrementType;
 
         try {
+            $utilsService->findSSLProvisioningModule();
             $product->updateWhmcsProduct($group, $name, $vatNumber);
             $product->save();
             $this->getResponse()->addSuccess($app->getLang('ssl_product_create_succesful'));
@@ -752,6 +774,25 @@ class SSL_Controller extends Controller
         }
 
         return $this->view_WhmcsProducts();
+    }
+
+    /**
+     * View for install SSL Provisionin Module
+     * 
+     * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
+     */
+    public function view_Install()
+    {
+        $installSSLAction = \WHMCS\Module\Addon\Dondominio\Controllers\Admin\Dashboard_Controller::INSTALL_SSL_PROVISIONING;
+        $installSSLLink = \WHMCS\Module\Addon\Dondominio\Controllers\Admin\Dashboard_Controller::makeURL($installSSLAction);
+        
+        $params = [
+            'links' => [
+                'install_ssl_provisioning'=> $installSSLLink,
+            ]
+        ];
+
+        return $this->view('install', $params);
     }
 
     /**

@@ -1,3 +1,4 @@
+{if $products|count gt 0}
 <form data-ssl-form action='' method='get'>
     <input type="hidden" name="module" value="{$module_name}">
     <input type="hidden" name="__c__" value="{$__c__}">
@@ -142,6 +143,15 @@
     {$LANG.pagination_next} »
     {/if}
 </p>
+
+{else}
+<div class="panel panel-default">
+    <div class="panel-body text-center">
+        <p>{$LANG.ssl_whmcs_products_not_found}</p>
+        <a class="btn btn-success" href='{$links.available_products}'>{$LANG.ssl_add_product}</a>
+    </div>
+</div>
+{/if}
 
 {literal}
 <script>
