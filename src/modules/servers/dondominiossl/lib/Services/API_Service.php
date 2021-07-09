@@ -96,10 +96,10 @@ class API_Service implements \WHMCS\Module\Server\Dondominiossl\Services\Contrac
      *
      * @return \Dondominio\API\Response\Response
      */
-    public function getCertificateInfo(int $certificateID): \Dondominio\API\Response\Response
+    public function getCertificateInfo(int $certificateID, string $infoType = 'ssldata'): \Dondominio\API\Response\Response
     {
         $connection = $this->getApiConnection();
-        return $connection->ssl_getInfo($certificateID, ['infoType' => 'ssldata']);
+        return $connection->ssl_getInfo($certificateID, ['infoType' => $infoType]);
     }
 
     /**
@@ -111,6 +111,32 @@ class API_Service implements \WHMCS\Module\Server\Dondominiossl\Services\Contrac
     {
         $connection = $this->getApiConnection();
         return $connection->ssl_renew($certificateID, $args);
+    }
+
+    /**
+     * Send a request to DonDominio API for the reissue of a certificate
+     *
+     * @return \Dondominio\API\Response\Response
+     */
+    public function reissueCertificate(int $certificateID, array $args): \Dondominio\API\Response\Response
+    {
+        $connection = $this->getApiConnection();
+        return $connection->ssl_reissue($certificateID, $args);
+    }
+
+    /**
+     * Send a request to DonDominio API for change the validation method of a certificate
+     *
+     * @return \Dondominio\API\Response\Response
+     */
+    public function changeValidationMethod(int $certificateID, string $commonName, string $validationMethod): \Dondominio\API\Response\Response
+    {
+        $connection = $this->getApiConnection();
+        return $connection->ssl_reissue([
+            'certificateID' => $certificateID,
+            'commonName' => $commonName,
+            'validationMethod' => $validationMethod,
+        ]);
     }
 
 }

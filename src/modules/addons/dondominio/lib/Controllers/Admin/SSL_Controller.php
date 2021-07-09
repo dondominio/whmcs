@@ -556,10 +556,10 @@ class SSL_Controller extends Controller
         $certificateID = $this->getRequest()->getParam('certificate_id');
         $domain = [];
         $validationMethods = [
-            'mail' => 'Validación por correo electrónico',
-            'dns' => 'Validación mediante registro dns en la zona dns del dominio',
-            'http' => 'Validación mediante protocolo http',
-            'https' => 'Validación mediante protocolo https',
+            'mail' => $app->getLang('ssl_validation_mail'),
+            'dns' => $app->getLang('ssl_validation_dns'),
+            'http' => $app->getLang('ssl_validation_http'),
+            'https' => $app->getLang('ssl_validation_https'),
         ];
 
         try {
@@ -569,7 +569,7 @@ class SSL_Controller extends Controller
             $dcv = $certificatesData['validationData']['dcv'];
 
             foreach ($dcv as $key => $val) {
-                $domain[$key] = [$key];
+                $domain[$key] = $key;
             }
         } catch (\Exception $e) {
             $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));

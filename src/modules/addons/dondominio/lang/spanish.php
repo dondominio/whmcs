@@ -519,6 +519,10 @@ $_ADDONLANG = array(
     'ssl_provisioning_module_install_msg' => 'Puedes instalarlo para poder crear productos en WHMCS relacionados con los productos SSL de DonDominio',
     'ssl_whmcs_products_not_found' => 'No se han encontrado productos en WHMCS relacionados con los productos de DonDominio',
     'ssl_add_product' => 'Añadir productos',
+    'ssl_validation_mail' => 'Validación por correo electrónico',
+    'ssl_validation_dns' => 'Validación mediante registro dns en la zona dns del dominio',
+    'ssl_validation_http' => 'Validación mediante protocolo http',
+    'ssl_validation_https' => 'Validación mediante protocolo https',
 
     /**
      * CONTENT TITLES

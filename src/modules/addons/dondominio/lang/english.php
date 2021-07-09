@@ -519,6 +519,10 @@ $_ADDONLANG = array(
     'ssl_provisioning_module_install_msg' => 'You can install it to be able to create products in WHMCS related to DonDominio/MrDomain\'s SSL products',
     'ssl_whmcs_products_not_found' => 'No products found in WHMCS related to DonDominio/MrDomain\'s products',
     'ssl_add_product' => 'Add products',
+    'ssl_validation_mail' => 'Validation via email',
+    'ssl_validation_dns' => 'Validation via dns record at the domain dns zone',
+    'ssl_validation_http' => 'Validation via http protocol',
+    'ssl_validation_https' => 'Validation via https protocol',
 
     /**
      * CONTENT TITLES

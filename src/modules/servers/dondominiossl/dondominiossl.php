@@ -203,25 +203,11 @@ function dondominiossl_Renew(array $params)
  */
 function dondominiossl_ClientArea(array $params)
 {
-    // Determine the requested action and set service call parameters based on
-    // the action.
-    $requestedAction = isset($_REQUEST['customAction']) ? $_REQUEST['customAction'] : '';
-    $templateFile = $requestedAction == 'manage' ? 'templates/manage.tpl' : 'templates/overview.tpl';  
+    $app = new \WHMCS\Module\Server\Dondominiossl\App($params);
+    $controller = new \WHMCS\Module\Server\Dondominiossl\Controllers\ClientController($app);
 
     try {
-        $app = new \WHMCS\Module\Server\Dondominiossl\App();
-        $api = $app->getApiService();
-        $certificateID = $params['customfields'][\WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::CUSTOM_FIELD_CERTIFICATE_ID];
-        $getInfoResponse = $api->getCertificateInfo($certificateID);
-        $ddProduct = \WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::where(['dd_product_id' => $getInfoResponse->get('productID')])->first();
-
-        return array(
-            'tabOverviewReplacementTemplate' => $templateFile,
-            'templateVariables' => array(
-                'api_response' => $getInfoResponse->getResponseData(),
-                'dd_product_name' => $ddProduct->product_name
-            ),
-        );
+        return $controller->process();
     } catch (Exception $e) {
         // Record the error in WHMCS's module log.
         logModuleCall(
