@@ -22,7 +22,7 @@ class SideBar
 
         $servicePanel->removeChild('Information');
 
-        foreach ($childs as $child){
+        foreach ($childs as $child) {
             $servicePanel->addChild($child['name'], $child['extra']);
         }
 
@@ -64,34 +64,27 @@ class SideBar
                     'order' => 1,
                 ]
             ],
-            'reissue' => [
-                'name' => 'Reissue',
+            'validation' => [
+                'name' => 'Validacion del Certificado',
                 'extra' => [
-                    'uri' => sprintf('clientarea.php?action=productdetails&id=%d&custom_action=reissue', $serviceID),
-                    'icon'  => 'fa-list-alt',
+                    'uri' => sprintf('clientarea.php?action=productdetails&id=%d&custom_action=validation', $serviceID),
+                    'icon'  => 'fa-check',
                     'order' => 2,
                 ]
-                ],
-            'changemethod' => [
-                'name' => 'Cambiar método de validación',
-                'extra' => [
-                    'uri' => sprintf('clientarea.php?action=productdetails&id=%d&custom_action=changemethod', $serviceID),
-                    'icon'  => 'fa-list-alt',
-                    'order' => 3,
-                ]
-            ]
+            ],
         ];
     }
 
     protected function getSelectedChild(array $childs): string
     {
         $customAction = 'index';
+        $childs['reissue']['name'] = 'Validacion del Certificado';
 
-        if (isset($_REQUEST['custom_action'])){
+        if (isset($_REQUEST['custom_action'])) {
             $customAction = $_REQUEST['custom_action'];
         }
 
-        if (isset($childs[$customAction]['name'])){
+        if (isset($childs[$customAction]['name'])) {
             return $childs[$customAction]['name'];
         }
 

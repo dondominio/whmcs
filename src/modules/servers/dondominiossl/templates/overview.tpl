@@ -3,291 +3,206 @@
 <hr>
 
 <div class="row">
-    <div class="col-sm-4">
-        {$LANG.clientareahostingregdate}
-    </div>
-    <div class="col-sm-8">
-        {$regdate}
-    </div>
-</div>
+    <div class="col-md-6">
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <th colspan="2">
+                        Datos del Producto
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        {$LANG.clientareahostingregdate}
+                    </td>
+                    <td>
+                        {$regdate}
+                    </td>
+                </tr>
 
-<div class="row">
-    <div class="col-sm-4">
-        {$LANG.orderproduct}
-    </div>
-    <div class="col-sm-8">
-        {$groupname} - {$product}
-    </div>
-</div>
+                <tr>
+                    <td>
+                        {$LANG.orderproduct}
+                    </td>
+                    <td>
+                        {$groupname} - {$product}
+                    </td>
+                </tr>
 
-{if $dd_product_name}
-    <div class="row">
-        <div class="col-sm-4">
-            DonDominio Product
-        </div>
-        <div class="col-sm-8">
-            {$dd_product_name}
-        </div>
-    </div>
-{/if}
-
-{if $type eq "server"}
-    {if $domain}
-        <div class="row">
-            <div class="col-sm-4">
-                {$LANG.serverhostname}
-            </div>
-            <div class="col-sm-8">
-                {$domain}
-            </div>
-        </div>
-    {/if}
-    {if $dedicatedip}
-        <div class="row">
-            <div class="col-sm-4">
-                {$LANG.primaryIP}
-            </div>
-            <div class="col-sm-8">
-                {$dedicatedip}
-            </div>
-        </div>
-    {/if}
-    {if $assignedips}
-        <div class="row">
-            <div class="col-sm-4">
-                {$LANG.assignedIPs}
-            </div>
-            <div class="col-sm-8">
-                {$assignedips|nl2br}
-            </div>
-        </div>
-    {/if}
-    {if $ns1 || $ns2}
-        <div class="row">
-            <div class="col-sm-4">
-                {$LANG.domainnameservers}
-            </div>
-            <div class="col-sm-8">
-                {$ns1}<br />{$ns2}
-            </div>
-        </div>
-    {/if}
-{else}
-    {if $domain}
-        <div class="row">
-            <div class="col-sm-4">
-                {$LANG.orderdomain}
-            </div>
-            <div class="col-sm-8">
-                {$domain}
-                <a href="http://{$domain}" target="_blank" class="btn btn-default btn-xs">{$LANG.visitwebsite}</a>
-            </div>
-        </div>
-    {/if}
-    {if $username}
-        <div class="row">
-            <div class="col-sm-4">
-                {$LANG.serverusername}
-            </div>
-            <div class="col-sm-8">
-                {$username}
-            </div>
-        </div>
-    {/if}
-    {if $serverdata}
-        <div class="row">
-            <div class="col-sm-4">
-                {$LANG.servername}
-            </div>
-            <div class="col-sm-8">
-                {$serverdata.hostname}
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-4">
-                {$LANG.domainregisternsip}
-            </div>
-            <div class="col-sm-8">
-                {$serverdata.ipaddress}
-            </div>
-        </div>
-        {if $serverdata.nameserver1 || $serverdata.nameserver2 || $serverdata.nameserver3 || $serverdata.nameserver4 || $serverdata.nameserver5}
-            <div class="row">
-                <div class="col-sm-4">
-                    {$LANG.domainnameservers}
-                </div>
-                <div class="col-sm-8">
-                    {if $serverdata.nameserver1}{$serverdata.nameserver1} ({$serverdata.nameserver1ip})<br />{/if}
-                    {if $serverdata.nameserver2}{$serverdata.nameserver2} ({$serverdata.nameserver2ip})<br />{/if}
-                    {if $serverdata.nameserver3}{$serverdata.nameserver3} ({$serverdata.nameserver3ip})<br />{/if}
-                    {if $serverdata.nameserver4}{$serverdata.nameserver4} ({$serverdata.nameserver4ip})<br />{/if}
-                    {if $serverdata.nameserver5}{$serverdata.nameserver5} ({$serverdata.nameserver5ip})<br />{/if}
-                </div>
-            </div>
-        {/if}
-    {/if}
-{/if}
-
-{if $dedicatedip}
-    <div class="row">
-        <div class="col-sm-4">
-            {$LANG.domainregisternsip}
-        </div>
-        <div class="col-sm-8">
-            {$dedicatedip}
-        </div>
-    </div>
-{/if}
-
-{foreach from=$configurableoptions item=configoption}
-    <div class="row">
-        <div class="col-sm-4">
-            {$configoption.optionname}
-        </div>
-        <div class="col-sm-8">
-            {if $configoption.optiontype eq 3}
-                {if $configoption.selectedqty}
-                    {$LANG.yes}
-                {else}
-                    {$LANG.no}
+                {if $domain}
+                <tr>
+                    <td>
+                        {$LANG.orderdomain}
+                    </td>
+                    <td>
+                        {$domain}
+                        <a href="http://{$domain}" target="_blank"
+                            class="btn btn-default btn-xs">{$LANG.visitwebsite}</a>
+                    </td>
+                </tr>
                 {/if}
-            {elseif $configoption.optiontype eq 4}
-                {$configoption.selectedqty} x {$configoption.selectedoption}
-            {else}
-                {$configoption.selectedoption}
-            {/if}
-        </div>
-    </div>
-{/foreach}
 
-{foreach from=$productcustomfields item=customfield}
-    <div class="row">
-        <div class="col-sm-4">
-            {$customfield.name}
-        </div>
-        <div class="col-sm-8">
-            {$customfield.value}
-        </div>
-    </div>
-{/foreach}
+                <tr>
+                    <td>
+                        {$LANG.orderpaymentmethod}
+                    </td>
+                    <td>
+                        {$paymentmethod}
+                    </td>
+                </tr>
 
-{if $lastupdate}
-    <div class="row">
-        <div class="col-sm-4">
-            {$LANG.clientareadiskusage}
-        </div>
-        <div class="col-sm-8">
-            {$diskusage}MB / {$disklimit}MB ({$diskpercent})
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-4">
-            {$LANG.clientareabwusage}
-        </div>
-        <div class="col-sm-8">
-            {$bwusage}MB / {$bwlimit}MB ({$bwpercent})
-        </div>
-    </div>
-{/if}
+                <tr>
+                    <td>
+                        {$LANG.firstpaymentamount}
+                    </td>
+                    <td>
+                        {$firstpaymentamount}
+                    </td>
+                </tr>
 
-<div class="row">
-    <div class="col-sm-4">
-        {$LANG.orderpaymentmethod}
+                <tr>
+                    <td>
+                        {$LANG.recurringamount}
+                    </td>
+                    <td>
+                        {$recurringamount}
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        {$LANG.clientareahostingnextduedate}
+                    </td>
+                    <td>
+                        {$nextduedate}
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        {$LANG.orderbillingcycle}
+                    </td>
+                    <td>
+                        {$billingcycle}
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        {$LANG.clientareastatus}
+                    </td>
+                    <td>
+                        {$status}
+                    </td>
+                </tr>
+
+                {if $suspendreason}
+                <tr>
+                    <td>
+                        {$LANG.suspendreason}
+                    </td>
+                    <td>
+                        {$suspendreason}
+                    </td>
+                </tr>
+                {/if}
+            </tbody>
+        </table>
     </div>
-    <div class="col-sm-8">
-        {$paymentmethod}
+    <div class="col-md-6">
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <th colspan="2">
+                        Datos Certificado
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {if $dd_product_name}
+                <tr>
+                    <td>
+                        Tipo de certificado
+                    </td>
+                    <td>
+                        {$dd_product_name}
+                    </td>
+                </tr>
+                {/if} 
+                {if $certificate.certificateID}
+                <tr>
+                    <td>
+                        ID del Certificado
+                    </td>
+                    <td>
+                        {$certificate.certificateID}
+                    </td>
+                </tr>
+                {/if}
+                {if $certificate.displayStatus}
+                <tr>
+                    <td>
+                        Estado
+                    </td>
+                    <td>
+                        {$certificate.displayStatus}
+                    </td>
+                </tr>
+                {/if}
+                {if $certificate.sanMaxDomains}
+                <tr>
+                    <td>
+                        Número máximo de dominios
+                    </td>
+                    <td>
+                        {$certificate.sanMaxDomains}
+                    </td>
+                </tr>
+                {/if}
+                {if $certificate.tsCreate}
+                <tr>
+                    <td>
+                        Creacion
+                    </td>
+                    <td>
+                        {$certificate.tsCreate}
+                    </td>
+                </tr>
+                {/if}
+                {if $certificate.tsExpir}
+                <tr>
+                    <td>
+                        Expiracion
+                    </td>
+                    <td>
+                        {$certificate.tsExpir}
+                    </td>
+                </tr>
+                {/if}
+                {if $can_download}
+                <tr>
+                    <td class="text-center" colspan="2">
+                        <a class="btn btn-primary" href="{$links.download_crt}" download>Descargar Certificado</a>
+                    </td>
+                </tr>
+                {/if}
+            </tbody>
+        </table>
     </div>
 </div>
-
-<div class="row">
-    <div class="col-sm-4">
-        {$LANG.firstpaymentamount}
-    </div>
-    <div class="col-sm-8">
-        {$firstpaymentamount}
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-sm-4">
-        {$LANG.recurringamount}
-    </div>
-    <div class="col-sm-8">
-        {$recurringamount}
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-sm-4">
-        {$LANG.clientareahostingnextduedate}
-    </div>
-    <div class="col-sm-8">
-        {$nextduedate}
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-sm-4">
-        {$LANG.orderbillingcycle}
-    </div>
-    <div class="col-sm-8">
-        {$billingcycle}
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-sm-4">
-        {$LANG.clientareastatus}
-    </div>
-    <div class="col-sm-8">
-        {$status}
-    </div>
-</div>
-
-{if $suspendreason}
-    <div class="row">
-        <div class="col-sm-4">
-            {$LANG.suspendreason}
-        </div>
-        <div class="col-sm-8">
-            {$suspendreason}
-        </div>
-    </div>
-{/if}
-
-{if $api_response.sslCert}
-    <div class="row">
-        <div class="col-sm-4">
-            CSR Data
-        </div>
-        <div class="col-sm-8">
-            <pre>{$api_response.sslCert}</pre>
-        </div>
-    </div>
-{/if}
-
-{if $api_response.sslKey}
-    <div class="row">
-        <div class="col-sm-4">
-            CSR Key
-        </div>
-        <div class="col-sm-8">
-            <pre>{$api_response.sslKey}</pre>
-        </div>
-    </div>
-{/if}
-
 
 <hr>
 
 <div class="row">
-
-    <div class="col-sm-4 pull-right">
-        <a href="clientarea.php?action=cancel&amp;id={$id}" class="btn btn-danger btn-block{if $pendingcancellation}disabled{/if}">
-            {if $pendingcancellation}
-                {$LANG.cancellationrequested}
+    <div class="col-sm-6 pull-right">
+        <a href="clientarea.php?action=cancel&amp;id={$id}"
+            class="btn btn-danger btn-block{if $pendingcancellation}disabled{/if}">
+            {if $pendin6cancellation}
+            {$LANG.cancellationrequested}
             {else}
-                {$LANG.cancel}
+            {$LANG.cancel}
             {/if}
         </a>
     </div>

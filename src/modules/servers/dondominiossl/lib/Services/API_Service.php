@@ -132,11 +132,22 @@ class API_Service implements \WHMCS\Module\Server\Dondominiossl\Services\Contrac
     public function changeValidationMethod(int $certificateID, string $commonName, string $validationMethod): \Dondominio\API\Response\Response
     {
         $connection = $this->getApiConnection();
-        return $connection->ssl_reissue([
+        return $connection->ssl_changeValidationMethod([
             'certificateID' => $certificateID,
             'commonName' => $commonName,
             'validationMethod' => $validationMethod,
         ]);
+    }
+
+    /**
+     * Send a request to DonDominio API for resend the validation mail of a certificate
+     *
+     * @return \Dondominio\API\Response\Response
+     */
+    public function resendValidationMail(int $certificateID, string $commonName): \Dondominio\API\Response\Response
+    {
+        $connection = $this->getApiConnection();
+        return $connection->ssl_resendValidationMail($certificateID, $commonName);
     }
 
 }

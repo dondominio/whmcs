@@ -133,6 +133,7 @@ abstract class Base
     protected function getParamsToCheck(): array
     {
         return [
+            'domain' => 'Domain not found',
             'configoption1' => 'Product ID not found',
             'configoption2' => 'VAT Number not found',
             'clientsdetails' => [

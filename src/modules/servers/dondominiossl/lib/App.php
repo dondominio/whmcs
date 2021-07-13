@@ -57,5 +57,43 @@ class App
         $renew = new \WHMCS\Module\Server\Dondominiossl\Actions\Renew($this->getApiService(), $this->getParams());
         return $renew->execute();
     }
+
+    /**
+     * Reissue a WHMCS order for a product with the dondominiossl module
+     *
+     * @return string 'success' or error
+     */
+    public function reissue(array $csrDataArgs, string $validationMethod, array $altNames = [], array $altValidations = []): string
+    {
+        $reissue = new \WHMCS\Module\Server\Dondominiossl\Actions\Reissue($this->getApiService(), $this->getParams());
+        $reissue->setCsrDataArgs($csrDataArgs);
+        $reissue->setAltNames($altNames, $altValidations);
+        $reissue->setValidationMethod($validationMethod);
+        return $reissue->execute();
+    }
+
+    /**
+     * Change a WHMS product certificate domain validation method
+     *
+     * @return string 'success' or error
+     */
+    public function changeValidationMethod(string $domain, string $method): string
+    {
+        $changeValidationMethod = new \WHMCS\Module\Server\Dondominiossl\Actions\ChangeValidationMethod($this->getApiService(), $this->getParams());
+        $changeValidationMethod->setDomains($domain);
+        $changeValidationMethod->setMethod($method);
+        return $changeValidationMethod->execute();
+    }
+
+    /**
+     * Resend validation mail of a WHMCS order for a product with the dondominiossl module
+     *
+     * @return string 'success' or error
+     */
+    public function resendValidationMail(): string
+    {
+        $resendValidationMail = new \WHMCS\Module\Server\Dondominiossl\Actions\ResendValidationMail($this->getApiService(), $this->getParams());
+        return $resendValidationMail->execute();
+    }
 }
 

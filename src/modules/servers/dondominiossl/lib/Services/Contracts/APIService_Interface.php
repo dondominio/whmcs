@@ -11,4 +11,5 @@ interface APIService_Interface
     public function reissueCertificate(int $certificateID, array $args): \Dondominio\API\Response\Response;
     public function getCertificateInfo(int $certificateID, string $infoType = 'ssldata'): \Dondominio\API\Response\Response;
     public function changeValidationMethod(int $certificateID, string $domain, string $method): \Dondominio\API\Response\Response;
+    public function resendValidationMail(int $certificateID, string $domain): \Dondominio\API\Response\Response;
 }

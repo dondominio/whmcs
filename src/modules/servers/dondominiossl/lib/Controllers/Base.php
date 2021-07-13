@@ -31,6 +31,8 @@ abstract class Base
 
     protected function send(string $templateFile, array $variables = []): array
     {
+        $variables['js'] = implode(DIRECTORY_SEPARATOR, [dirname(dirname(__DIR__)), 'templates/js.tpl']);
+
         return [
             'tabOverviewReplacementTemplate' => $templateFile,
             'templateVariables' => $variables
@@ -57,7 +59,7 @@ abstract class Base
         return \WHMCS\Module\Addon\Dondominio\Helpers\Response::getInstance();
     }
 
-    protected function createUrl(string $view): string
+    protected function buildUrl(string $view): string
     {
         $serviceID = $this->getRequest()->getParam('id', '');
         return sprintf('clientarea.php?action=productdetails&id=%s&custom_action=%s', $serviceID, $view);
