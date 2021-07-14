@@ -6,7 +6,6 @@ namespace WHMCS\Module\Server\Dondominiossl\Controllers;
 class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Base
 {
     const VIEW_INDEX = 'index';
-    const VIEW_VALIDATION = 'validation';
     const VIEW_REISSUE = 'reissue';
     const ACTION_REISSUE = 'actionreissue';
     const ACTION_CHANGEMETHOD = 'actionchangemethod';
@@ -17,7 +16,6 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
     {
         return [
             static::VIEW_INDEX => 'view_Index',
-            static::VIEW_VALIDATION => 'view_Validation',
             static::VIEW_REISSUE => 'view_Reissue',
             static::ACTION_REISSUE => 'action_Reissue',
             static::ACTION_CHANGEMETHOD => 'action_ChangeMethod',
@@ -63,29 +61,8 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
     {
         $api = $this->app->getApiService();
         $certificateID = $this->app->getParams()['customfields'][\WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::CUSTOM_FIELD_CERTIFICATE_ID];
-        $getInfoResponse = $api->getCertificateInfo($certificateID);
-        $ddProduct = \WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::where(['dd_product_id' => $getInfoResponse->get('productID')])->first();
-        $certificate = $getInfoResponse->getResponseData();
-        $crtStatus = $certificate['status'];
-
-        $status = $this->getValidationStatus();
-        $certificate['displayStatus'] = isset($status[$crtStatus]) ? $status[$crtStatus] : $crtStatus;
-
-        return $this->send('templates/overview.tpl', [
-            'certificate' => $certificate,
-            'dd_product_name' => $ddProduct->product_name,
-            'can_download' => extension_loaded('zip'),
-            'links' => [
-                'download_crt' => $this->buildUrl(static::ACTION_DOWNLOAD_CRT),
-            ]
-        ]);
-    }
-
-    protected function view_Validation(): array
-    {
-        $api = $this->app->getApiService();
-        $certificateID = $this->app->getParams()['customfields'][\WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::CUSTOM_FIELD_CERTIFICATE_ID];
         $getInfoResponse = $api->getCertificateInfo($certificateID, 'validationStatus');
+        $ddProduct = \WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::where(['dd_product_id' => $getInfoResponse->get('productID')])->first();
         $certificate = $getInfoResponse->getResponseData();
         $crtStatus = $certificate['status'];
 
@@ -100,18 +77,21 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
             $domains[$key]['displayValidationMethod'] = $displayValidationMethod;
         }
 
-        return $this->send('templates/validation.tpl', [
+        return $this->send('templates/overview.tpl', [
             'certificate' => $certificate,
+            'dd_product_name' => $ddProduct->product_name,
+            'can_download' => extension_loaded('zip'),
             'domains' => $domains,
             'validation_methods' => $validationMethods,
             'can_change_validation' => in_array($crtStatus, ['process', 'reissue']),
             'in_process' => $crtStatus === 'process',
             'is_valid' => $crtStatus === 'valid',
             'links' => [
+                'download_crt' => $this->buildUrl(static::ACTION_DOWNLOAD_CRT),
                 'changemethod' => $this->buildUrl(static::ACTION_CHANGEMETHOD),
                 'resendmail' => $this->buildUrl(static::ACTION_RESEND_MAIL),
                 'viewreissue' => $this->buildUrl(static::VIEW_REISSUE),
-            ],
+            ]
         ]);
     }
 
@@ -130,6 +110,7 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
             'validation_methods' => $this->getValidationMethods(),
             'links' => [
                 'action_reissue' => $this->buildUrl(static::ACTION_REISSUE),
+                'index' => $this->buildUrl(static::VIEW_INDEX),
             ],
         ]);
     }

@@ -1,4 +1,4 @@
-<h3>Reissue</h3>
+<h3>Remitir</h3>
 
 <hr>
 
@@ -84,7 +84,8 @@
     {/if}
 
     <div class="form-group text-right">
-        <input type='submit' name='submit_button' id='settings_submit' class='btn btn-primary' value="Reissue" />
+        <a href="{$links.index}" class='btn btn-default'>Cancelar</a>
+        <input type='submit' name='submit_button' id='settings_submit' class='btn btn-primary' value="Remitir" />
     </div>
 </form>
 
@@ -122,7 +123,7 @@
 
             altNameContainer.append(clone);
 
-            if (altNameCount >= maxAlts){
+            if (altNameCount >= maxAlts) {
                 $(this).hide();
             }
         });
@@ -131,9 +132,8 @@
             e.preventDefault();
             let altNameCount = $('[data-dd-alt-name]').length;
             let altNameDiv = $(this).parents('[data-dd-alt-name]');
-            console.log('xd');
 
-            if (altNameCount === 1){
+            if (altNameCount === 1) {
                 altNameDiv.hide()
                 altNameDiv.find('input, select').attr('disabled', true);
                 return;
@@ -141,7 +141,7 @@
 
             altNameDiv.remove();
             $('[data-dd-alt-name]').last().find('[data-dd-close-altdomain]').show();
-        
+
             $('[data-dd-add-altdomain]').show();
         });
     });
