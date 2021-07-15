@@ -19,13 +19,14 @@ class SSL_Controller extends Controller
     const VIEW_WHMCS_PRODUCTS = 'whmcsproducts';
     const VIEW_CERTIFICATE_INFO = 'certificateinfo';
     const VIEW_RENEW = 'viewrenew';
-    const ACTION_RENEW = 'actionrenew';
     const VIEW_REISSUE = 'viewreissue';
-    const ACTION_REISSUE = 'actionreissue';
     const VIEW_CHANGE_VALIDATION_METHOD = 'viewchangevalidationmethod';
-    const ACTION_CHANGE_VALIDATION_METHOD = 'actionchangevalidationmethod';
-    const ACTION_RESEND_VALIDATION_MAIL = 'resendvalidationmail';
+    const VIEW_RESEND_VALIDATION_MAIL = 'resendvalidationmail';
     const VIEW_SYNC = 'sync';
+    const ACTION_RENEW = 'actionrenew';
+    const ACTION_REISSUE = 'actionreissue';
+    const ACTION_CHANGE_VALIDATION_METHOD = 'actionchangevalidationmethod';
+    const ACTION_RESEND_VALIDATION_MAIL = 'actionresendvalidationmail';
     const ACTION_SYNC = 'actionsync';
     const ACTION_UPDATEPRODUCT = 'updateproduct';
     const ACTION_INSTALL = 'install';
@@ -44,16 +45,29 @@ class SSL_Controller extends Controller
             static::VIEW_WHMCS_PRODUCTS => 'view_WhmcsProducts',
             static::VIEW_CERTIFICATE_INFO => 'view_CertificateInfo',
             static::VIEW_RENEW => 'view_Renew',
-            static::ACTION_RENEW => 'action_Renew',
             static::VIEW_REISSUE => 'view_Reissue',
-            static::ACTION_REISSUE => 'action_Reissue',
             static::VIEW_CHANGE_VALIDATION_METHOD => 'view_ChangeValidationMethod',
+            static::VIEW_RESEND_VALIDATION_MAIL => 'view_ResendValidationMail',
+            static::VIEW_SYNC => 'view_Sync',
+            static::ACTION_RENEW => 'action_Renew',
+            static::ACTION_REISSUE => 'action_Reissue',
             static::ACTION_CHANGE_VALIDATION_METHOD => 'action_ChangeValidationMethod',
             static::ACTION_RESEND_VALIDATION_MAIL => 'action_ResendValidationMail',
-            static::VIEW_SYNC => 'view_Sync',
             static::ACTION_SYNC => 'action_Sync',
             static::ACTION_UPDATEPRODUCT => 'action_UpdateProduct',
             static::ACTION_INSTALL => 'action_Install',
+        ];
+    }
+
+    protected function getValidationMethods(): array
+    {
+        $app = $this->getApp();
+
+        return [
+            'mail' => $app->getLang('ssl_validation_mail'),
+            'dns' => $app->getLang('ssl_validation_dns'),
+            'http' => $app->getLang('ssl_validation_http'),
+            'https' => $app->getLang('ssl_validation_https'),
         ];
     }
 
@@ -155,7 +169,7 @@ class SSL_Controller extends Controller
 
         try {
             $utilsService->findSSLProvisioningModule();
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             $this->getResponse()->addError($app->getLang($e->getMessage()));
             return $this->view_Install();
         }
@@ -289,14 +303,12 @@ class SSL_Controller extends Controller
             'product' => $product,
             'in_process' => $certificateStatus === \WHMCS\Module\Addon\Dondominio\Models\SSLCertificateOrder_Model::STATUS_PROCESS,
             'in_reissue' => $certificateStatus === \WHMCS\Module\Addon\Dondominio\Models\SSLCertificateOrder_Model::STATUS_REISSUE,
+            'is_valid' => $certificateStatus === \WHMCS\Module\Addon\Dondominio\Models\SSLCertificateOrder_Model::STATUS_VALID,
             'links' => [
                 'view_renew' => static::makeUrl(static::VIEW_RENEW, ['certificate_id' => $certificateID]),
                 'view_reissue' => static::makeUrl(static::VIEW_REISSUE, ['certificate_id' => $certificateID]),
                 'view_change_validation_method' => static::makeUrl(static::VIEW_CHANGE_VALIDATION_METHOD, ['certificate_id' => $certificateID]),
-                'action_resend_validation_mail' => static::makeUrl(static::ACTION_RESEND_VALIDATION_MAIL, [
-                    'certificate_id' => $certificateID,
-                    'common_name' => $certificatesData['commonName']
-                ]),
+                'view_resend_validation_mail' => static::makeUrl(static::VIEW_RESEND_VALIDATION_MAIL, ['certificate_id' => $certificateID]),
                 'whmcs_order' => 'clientsservices.php?id=',
             ],
         ];
@@ -369,8 +381,6 @@ class SSL_Controller extends Controller
         } catch (\Exception $e) {
             $this->getResponse()->addError($app->getLang($e->getMessage()));
         }
-
-        print_r($contactType);
 
         $params = [
             'module_name' => $app->getName(),
@@ -493,6 +503,7 @@ class SSL_Controller extends Controller
             '__c__' => static::CONTROLLER_NAME,
             'certificate' => $certificatesData,
             'user' => $user,
+            'validation_methods' => $this->getValidationMethods(),
             'actions' => [
                 'reissue' => static::ACTION_REISSUE
             ],
@@ -515,6 +526,8 @@ class SSL_Controller extends Controller
         $apiService = $app->getService('api');
 
         $certificateID = $this->getRequest()->getParam('certificate_id');
+        $altNames = $this->getRequest()->getArrayParam('alt_name', []);
+        $altValidations = $this->getRequest()->getArrayParam('alt_validation', []);
         $CSRArgs = [
             'commonName' => $this->getRequest()->getParam('common_name'),
             'organizationName' => $this->getRequest()->getParam('organization_name'),
@@ -532,6 +545,24 @@ class SSL_Controller extends Controller
                 'csrData' => $csrResponse->get('csrData'),
                 'keyData' => $csrResponse->get('csrKey'),
             ];
+
+            $altNamesFiltred = [];
+            $validationsFiltred = [];
+
+            foreach ($altNames as $key => $val) {
+                if (!empty($val)) {
+                    $altNamesFiltred[] = $altNames[$key];
+                    $validationsFiltred[] = $altValidations[$key];
+                }
+            }
+
+            $namesCount = count($altNamesFiltred);
+            $validationsCount = count($validationsFiltred);
+
+            for ($i = 1; $i <= $namesCount && $i <= $validationsCount; $i++) {
+                $reissueArgs['alt_name_' . $i] = $altNamesFiltred[$i - 1];
+                $reissueArgs['alt_validation_' . $i] = $validationsFiltred[$i - 1];
+            }
 
             $apiService->reissueCertificate($certificateID, $reissueArgs);
             $this->getResponse()->addSuccess($app->getLang('ssl_success_reissue'));
@@ -555,12 +586,7 @@ class SSL_Controller extends Controller
 
         $certificateID = $this->getRequest()->getParam('certificate_id');
         $domain = [];
-        $validationMethods = [
-            'mail' => $app->getLang('ssl_validation_mail'),
-            'dns' => $app->getLang('ssl_validation_dns'),
-            'http' => $app->getLang('ssl_validation_http'),
-            'https' => $app->getLang('ssl_validation_https'),
-        ];
+        $validationMethods = $this->getValidationMethods();
 
         try {
             $certificates = $apiService->getSSLCertificateInfo($certificateID, 'validationStatus');
@@ -568,8 +594,8 @@ class SSL_Controller extends Controller
 
             $dcv = $certificatesData['validationData']['dcv'];
 
-            foreach ($dcv as $key => $val) {
-                $domain[$key] = $key;
+            foreach ($dcv as $val) {
+                $domain[$val['domainName']] = $val['domainName'];
             }
         } catch (\Exception $e) {
             $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
@@ -615,6 +641,52 @@ class SSL_Controller extends Controller
         }
 
         return $this->view_CertificateInfo();
+    }
+
+    /**
+     * View for resend SSL Certificate validation method
+     * 
+     * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
+     */
+    public function view_ResendValidationMail()
+    {
+        $app = $this->getApp();
+        $apiService = $app->getService('api');
+
+        $certificateID = $this->getRequest()->getParam('certificate_id');
+        $domain = [];
+
+        try {
+            $certificates = $apiService->getSSLCertificateInfo($certificateID, 'validationStatus');
+            $certificatesData = $certificates->getResponseData();
+
+            $dcv = $certificatesData['validationData']['dcv'];
+
+            foreach ($dcv as $val) {
+                if ($val['method'] === 'mail') {
+                    $domain[$val['domainName']] = $val['domainName'];
+                }
+            }
+        } catch (\Exception $e) {
+            $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
+        }
+
+        $params = [
+            'module_name' => $this->getApp()->getName(),
+            '__c__' => static::CONTROLLER_NAME,
+            'certificate' => $certificatesData,
+            'domains' => $domain,
+            'actions' => [
+                'resend_mail' => static::ACTION_RESEND_VALIDATION_MAIL
+            ],
+            'links' => [
+                'view_certificateinfo' =>  static::makeUrl(static::VIEW_CERTIFICATE_INFO, ['certificate_id' => $certificateID]),
+                'view_change_validation_method' => static::makeUrl(static::VIEW_CHANGE_VALIDATION_METHOD, ['certificate_id' => $certificateID]),
+
+            ]
+        ];
+
+        return $this->view('resendmail', $params);
     }
 
     /**
@@ -700,7 +772,7 @@ class SSL_Controller extends Controller
 
         try {
             $utilsService->findSSLProvisioningModule();
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             $this->getResponse()->addError($app->getLang($e->getMessage()));
             return $this->view_Install();
         }
@@ -785,10 +857,10 @@ class SSL_Controller extends Controller
     {
         $installSSLAction = \WHMCS\Module\Addon\Dondominio\Controllers\Admin\Dashboard_Controller::INSTALL_SSL_PROVISIONING;
         $installSSLLink = \WHMCS\Module\Addon\Dondominio\Controllers\Admin\Dashboard_Controller::makeURL($installSSLAction);
-        
+
         $params = [
             'links' => [
-                'install_ssl_provisioning'=> $installSSLLink,
+                'install_ssl_provisioning' => $installSSLLink,
             ]
         ];
 

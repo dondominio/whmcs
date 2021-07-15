@@ -24,19 +24,22 @@ class Reissue extends \WHMCS\Module\Server\Dondominiossl\Actions\Base
 
     public function setAltNames(array $altNames, array $altValidations): void
     {
+        $altNamesFiltred = [];
+        $altValidationsFiltred = [];
+
         foreach ($altNames as $key => $val) {
-            if (empty($val)) {
-                unset($altNames[$key]);
-                unset($altValidations[$key]);
+            if (!empty($val)) {
+                $altNamesFiltred[] = $altNames[$key];
+                $altValidationsFiltred[] = $altValidations[$key];
             }
         }
 
-        $namesCount = count($altNames);
-        $validationsCount = count($altValidations);
+        $namesCount = count($altNamesFiltred);
+        $validationsCount = count($altValidationsFiltred);
 
         for ($i = 1; $i <= $namesCount && $i <= $validationsCount; $i++) {
-            $this->altNames['alt_name_' . $i] = $altNames[$i - 1];
-            $this->altValidations['alt_validation_' . $i] = $altValidations[$i - 1];
+            $this->altNames['alt_name_' . $i] = $altNamesFiltred[$i - 1];
+            $this->altValidations['alt_validation_' . $i] = $altValidationsFiltred[$i - 1];
         }
     }
 
@@ -65,7 +68,7 @@ class Reissue extends \WHMCS\Module\Server\Dondominiossl\Actions\Base
                 'validationMethod' => $this->validationMethod,
             ];
 
-            if ($csrResponse->get('sanMaxDomains') > 0) {
+            if ($info->get('sanMaxDomains') > 0) {
                 $args = array_merge($args, $this->altNames, $this->altValidations);
             }
 

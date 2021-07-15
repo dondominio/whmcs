@@ -523,6 +523,8 @@ $_ADDONLANG = array(
     'ssl_validation_dns' => 'Validation via dns record at the domain dns zone',
     'ssl_validation_http' => 'Validation via http protocol',
     'ssl_validation_https' => 'Validation via https protocol',
+    'ssl_no_mail_validation' => 'The certificate does not contain any domain with mail validation',
+    'ssl_resend' => 'Resend',
 
     /**
      * CONTENT TITLES

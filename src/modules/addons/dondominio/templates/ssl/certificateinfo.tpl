@@ -6,7 +6,7 @@
                 <h3 class="panel-title domain-title">{$certificate.commonName}</h3>
             </div>
             <div class="col-xs-4">
-                {if $service || $in_process || $in_reissue || $certificate.renewable}
+                {if $service || $in_process || $in_reissue || $is_valid || $certificate.renewable}
                 <div class="dropdown pull-right">
                     <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -18,9 +18,11 @@
                         <li><a target="_blank" href="{$links.whmcs_order}{$service->id}">{$LANG.ssl_whmcs_order}</a></li>
                         {/if}
 
-                        {if $in_process}
+                        {if $is_valid}
                         <li><a href="{$links.view_reissue}">{$LANG.ssl_reissue}</a></li>
-                        <li><a href="{$links.action_resend_validation_mail}">{$LANG.ssl_resend_validation_mail}</a></li>
+                        {/if}
+                        {if $in_process}
+                        <li><a href="{$links.view_resend_validation_mail}">{$LANG.ssl_resend_validation_mail}</a></li>
                         {/if}
                         {if $in_process || $in_reissue}
                         <li><a href="{$links.view_change_validation_method}">{$LANG.ssl_change_validation_method}</a></li>
