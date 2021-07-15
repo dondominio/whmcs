@@ -5,6 +5,8 @@ namespace WHMCS\Module\Server\Dondominiossl;
 
 class App
 {
+    const DEFAULT_LANG = 'spanish';
+
     protected array $params = [];
     protected ?\WHMCS\Module\Server\Dondominiossl\Services\Contracts\APIService_Interface $api = null;
 
@@ -16,6 +18,27 @@ class App
     public function getParams(): array
     {
         return $this->params;
+    }
+
+    public function getLanguage(): \WHMCS\Module\Server\Dondominiossl\Lang\Translations
+    {
+        $lang = static::DEFAULT_LANG;
+
+        if (isset($this->getParams()['templatevars']['loggedinuser'])) {
+            $lang = $this->getParams()['templatevars']['loggedinuser']->language;
+        }
+
+        $class = sprintf('\WHMCS\Module\Server\Dondominiossl\Lang\%s', ucfirst($lang));
+
+        if (class_exists($class)) {
+            $trans = new $class();
+
+            if ($trans instanceof \WHMCS\Module\Server\Dondominiossl\Lang\Translations) {
+                return $trans;
+            }
+        }
+
+        return new \WHMCS\Module\Server\Dondominiossl\Lang\Spanish();
     }
 
     /**

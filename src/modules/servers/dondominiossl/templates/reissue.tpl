@@ -1,4 +1,4 @@
-<h3>Remitir</h3>
+<h3>{$DD_LANG.cert_reissue}</h3>
 
 <hr>
 
@@ -7,47 +7,47 @@
 
 <form data-form-dd-ssl action='{$links.action_reissue}' method='post'>
     <div class="form-group">
-        <label for="common_name">Dominio</label>
+        <label for="common_name">{$DD_LANG.cert_domain}</label>
         <input type="text" class="form-control" name="common_name" id="common_name" value="{$domain}" readonly>
     </div>
 
     <div class="form-group">
-        <label for="validation_method">Método de validación</label>
+        <label for="validation_method">{$DD_LANG.cert_validation_method}</label>
         <select class="form-control" name="validation_method" id="validation_method">
             {html_options options=$validation_methods selected=dns}
         </select>
     </div>
 
     <div class="form-group">
-        <label for="organization_name">Nombre de organización</label>
+        <label for="organization_name">{$DD_LANG.cert_org_name}</label>
         <input type="text" class="form-control" name="organization_name" id="organization_name"
             value="{$user.companyname}">
     </div>
 
     <div class="form-group">
-        <label for="organization_unit_name">Nombre de unidad</label>
+        <label for="organization_unit_name">{$DD_LANG.cert_org_unit}</label>
         <input type="text" class="form-control" name="organization_unit_name" id="organization_unit_name"
             value="{$user.companyname}">
     </div>
 
     <div class="form-group">
-        <label for="country_name">Código de 2 caracteres del país</label>
+        <label for="country_name">{$DD_LANG.cert_country}</label>
         <input type="text" class="form-control" name="country_name" id="country_name" value="{$user.countrycode}">
     </div>
 
     <div class="form-group">
-        <label for="state_or_province_name">Nombre de la provincia o estado de la compañía</label>
+        <label for="state_or_province_name">{$DD_LANG.cert_state}</label>
         <input type="text" class="form-control" name="state_or_province_name" id="state_or_province_name"
             value="{$user.state}">
     </div>
 
     <div class="form-group">
-        <label for="location_name">Nombre de la población de la compañía</label>
+        <label for="location_name">{$DD_LANG.cert_location}</label>
         <input type="text" class="form-control" name="location_name" id="location_name" value="{$user.city}">
     </div>
 
     <div class="form-group">
-        <label for="email_address">Nombre de la población de la compañía</label>
+        <label for="email_address">{$DD_LANG.cert_mail}</label>
         <input type="text" class="form-control" name="email_address" id="email_address" value="{$user.email}">
     </div>
 
@@ -61,12 +61,11 @@
             <div class="form-group">
                 <div class="row">
                     <div class="col-sm-6">
-                        <label data-dd-alt-name-domain for="alt_name[]">Dominio Alternativo 1</label>
+                        <label for="alt_name[]">{$DD_LANG.cert_alt_name} <span data-dd-alt-name-domain>1</span></label>
                         <input type="text" class="form-control" name="alt_name[]" id="alt_name[]" disabled="disabled">
                     </div>
                     <div class="col-sm-6">
-                        <label data-dd-alt-name-method for="alt_validation[]">Método de validación de Dominio
-                            Alternativo 1</label>
+                        <label for="alt_validation[]">{$DD_LANG.cert_alt_validation_name} <span data-dd-alt-name-method>1</span></label>
                         <select class="form-control" name="alt_validation[]" id="alt_validation[]" disabled="disabled">
                             {html_options options=$validation_methods selected=dns}
                         </select>
@@ -77,14 +76,13 @@
     </div>
 
     <div class="form-group text-center">
-        <a data-dd-add-altdomain href="#" class="btn btn-default"><i class="fa fa-plus"></i> Añadir Dominio
-            Alternativo</a>
+        <a data-dd-add-altdomain href="#" class="btn btn-default"><i class="fa fa-plus"></i>{$DD_LANG.cert_add_alt}</a>
     </div>
 
     {/if}
 
     <div class="form-group text-right">
-        <a href="{$links.index}" class='btn btn-default'>Cancelar</a>
+        <a href="{$links.index}" class='btn btn-default'>{$DD_LANG.cert_cancel}</a>
         <input type='submit' name='submit_button' id='settings_submit' class='btn btn-primary' value="Remitir" />
     </div>
 </form>
@@ -115,8 +113,8 @@
             }
 
             altNameDivs.find('[data-dd-close-altdomain]').hide()
-            clone.find('[data-dd-alt-name-domain]').text('Dominio Alternativo ' + altNameCount)
-            clone.find('[data-dd-alt-name-method]').text('Método de validación de Dominio Alternativo ' + altNameCount)
+            clone.find('[data-dd-alt-name-domain]').text(altNameCount)
+            clone.find('[data-dd-alt-name-method]').text(altNameCount)
             clone.find('[name="alt_name[]"]').val('');
             clone.find('[name="alt_validation[]"]').val('dns');
             clone.find('[data-dd-close-altdomain]').show();

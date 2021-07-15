@@ -11,7 +11,7 @@
             <thead>
                 <tr>
                     <th colspan="2">
-                        Datos del Producto
+                        {$DD_LANG.product_data}
                     </th>
                 </tr>
             </thead>
@@ -41,8 +41,6 @@
                     </td>
                     <td>
                         {$domain}
-                        <a href="http://{$domain}" target="_blank"
-                            class="btn btn-default btn-xs">{$LANG.visitwebsite}</a>
                     </td>
                 </tr>
                 {/if}
@@ -119,7 +117,7 @@
             <thead>
                 <tr>
                     <th colspan="2">
-                        Datos del Certificado
+                        {$DD_LANG.cert_data}
                     </th>
                 </tr>
             </thead>
@@ -127,7 +125,7 @@
                 {if $dd_product_name}
                 <tr>
                     <td>
-                        Tipo de certificado
+                        {$DD_LANG.cert_type}
                     </td>
                     <td>
                         {$dd_product_name}
@@ -137,7 +135,7 @@
                 {if $certificate.certificateID}
                 <tr>
                     <td>
-                        ID del Certificado
+                        {$DD_LANG.cert_id}
                     </td>
                     <td>
                         {$certificate.certificateID}
@@ -147,7 +145,7 @@
                 {if $certificate.displayStatus}
                 <tr>
                     <td>
-                        Estado
+                        {$DD_LANG.cert_status}
                     </td>
                     <td>
                         {$certificate.displayStatus}
@@ -157,7 +155,7 @@
                 {if $certificate.sanMaxDomains}
                 <tr>
                     <td>
-                        Número máximo de dominios
+                        {$DD_LANG.cert_max_domains}
                     </td>
                     <td>
                         {$certificate.sanMaxDomains}
@@ -167,7 +165,7 @@
                 {if $certificate.tsCreate}
                 <tr>
                     <td>
-                        Creación
+                        {$DD_LANG.cert_creation}
                     </td>
                     <td>
                         {$certificate.tsCreate}
@@ -177,7 +175,7 @@
                 {if $certificate.tsExpir}
                 <tr>
                     <td>
-                        Expiración
+                        {$DD_LANG.cert_expiration}
                     </td>
                     <td>
                         {$certificate.tsExpir}
@@ -187,7 +185,7 @@
                 {if $certificate.validationData.organizationValidationStatus}
                 <tr>
                     <td>
-                        Estado validación de empresa
+                        {$DD_LANG.cert_company_validation}
                     </td>
                     <td>
                         {$certificate.validationData.organizationValidationStatus}
@@ -197,7 +195,7 @@
                 {if $certificate.validationData.brandValidationStatus}
                 <tr>
                     <td>
-                        Estado validación de la marca de empresa
+                        {$DD_LANG.cert_brand_company_validation}
                     </td>
                     <td>
                         {$certificate.validationData.brandValidationStatus}
@@ -207,7 +205,7 @@
                 {if $certificate.validationData.message}
                 <tr>
                     <td>
-                        Mensaje de validación
+                        {$DD_LANG.cert_msg_validation}
                     </td>
                     <td>
                         {$certificate.validationData.message}
@@ -216,7 +214,7 @@
                 {/if}
                 <tr>
                     <td>
-                        Validación externa
+                        {$DD_LANG.cert_external_validation}
                     </td>
                     <td>
                         {if $certificate.validationData.externalValidation}
@@ -233,7 +231,7 @@
                                 <input type="hidden" name="password" value="">
                                 <input type="hidden" name="need_pass" value="">
                                 <input type="hidden" name="type" value="zip">
-                                <a data-dd-download-crt href="#" class="btn btn-primary">Descargar</a>
+                                <a data-dd-download-crt href="#" class="btn btn-primary">{$DD_LANG.cert_download}</a>
                                 <a href="#" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
                                     aria-haspopup="true" aria-expanded="false">
                                     <span data-dd-download-text>ZIP</span>
@@ -250,7 +248,7 @@
                             </div>
                         </form>
                         {if $is_valid}
-                        <a href="{$links.viewreissue}" class="btn btn-primary">Remitir</a>
+                        <a href="{$links.viewreissue}" class="btn btn-primary">{$DD_LANG.cert_reissue}</a>
                         {/if}
                     </td>
                 </tr>
@@ -260,14 +258,14 @@
 </div>
 <hr />
 
-<h4>Control de validación del dominio</h4>
+<h4>{$DD_LANG.cert_dcv}</h4>
 
 <table class="table table-striped table-bordered">
     <thead>
         <tr>
-            <th>Dominio</th>
-            <th>Método de validación</th>
-            <th>Estado de validación</th>
+            <th>{$DD_LANG.cert_domain}</th>
+            <th>{$DD_LANG.cert_validation_method}</th>
+            <th>{$DD_LANG.cert_validation_status}</th>
         </tr>
     </thead>
     <tbody>
@@ -311,16 +309,16 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content panel panel-primary">
                     <div class="modal-header panel-heading">
-                        <h5 class="modal-title">Cambiar método</h5>
+                        <h5 class="modal-title">{$DD_LANG.cert_change_method}</h5>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="common_name">Dominio</label>
+                            <label for="common_name">{$DD_LANG.cert_domain}</label>
                             <input data-dd-domain class="form-control" name="common_name" id="common_name" readonly />
                         </div>
 
                         <div class="form-group">
-                            <label for="validation_method">Nuevo método de validación</label>
+                            <label for="validation_method">{$DD_LANG.cert_new_validation_method}</label>
                             <select data-dd-validation-method class="form-control" name="validation_method"
                                 id="validation_method">
                                 {html_options options=$validation_methods}
@@ -328,7 +326,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{$LANG.close}</button>
                         <input type='submit' name='submit_button' id='settings_submit' class='btn btn-primary'
                             value="Cambiar" />
                     </div>
@@ -343,17 +341,17 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content panel panel-primary">
                 <div class="modal-header panel-heading">
-                    <h5 class="modal-title">Reenviar correo de validación</h5>
+                    <h5 class="modal-title">{$DD_LANG.cert_resend_mail}</h5>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="common_name">Dominio</label>
+                        <label for="common_name">{$DD_LANG.cert_domain}</label>
                         <input data-dd-domain class="form-control" name="common_name" id="common_name" readonly />
                     </div>
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{$LANG.close}</button>
                     <input type='submit' name='submit_button' id='settings_submit' class='btn btn-primary'
                         value="Reenviar" />
                 </div>
@@ -366,17 +364,17 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content panel panel-primary">
             <div class="modal-header panel-heading">
-                <h5 class="modal-title">Para generar este formato es necesaria una contraseña</h5>
+                <h5 class="modal-title">{$DD_LANG.cert_download_need_pass}</h5>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="password">Contraseña</label>
+                    <label for="password">{$DD_LANG.cert_pass}</label>
                     <input data-dd-download-pass type="password" class="form-control" name="password" id="password" />
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                <a data-dd-download-crt class='btn btn-primary'>Descargar</a>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">{$LANG.close}</button>
+                <a data-dd-download-crt class='btn btn-primary'>{$DD_LANG.cert_download}</a>
             </div>
         </div>
     </div>

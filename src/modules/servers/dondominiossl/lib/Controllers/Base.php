@@ -34,6 +34,7 @@ abstract class Base
     {
         $variables['js'] = implode(DIRECTORY_SEPARATOR, [dirname(dirname(__DIR__)), 'templates/js.tpl']);
         $variables['error_msg'] = $this->errorMsg;
+        $variables['DD_LANG'] = $this->app->getLanguage()->getTranslations();
 
         return [
             'tabOverviewReplacementTemplate' => $templateFile,

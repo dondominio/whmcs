@@ -2,6 +2,8 @@
 
 namespace WHMCS\Module\Server\Dondominiossl\Hooks;
 
+use Lang;
+
 class SideBar
 {
     public function __invoke(\WHMCS\View\Menu\Item  $primarySidebar): void
@@ -57,7 +59,7 @@ class SideBar
     {
         return [
             'index' => [
-                'name' => 'Information',
+                'name' => Lang::Trans('information'),
                 'extra' => [
                     'uri' => sprintf('clientarea.php?action=productdetails&id=%d', $serviceID),
                     'icon'  => 'fa-list-alt',
