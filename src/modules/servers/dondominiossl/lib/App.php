@@ -25,7 +25,7 @@ class App
      */
     public function getApiService(): \WHMCS\Module\Server\Dondominiossl\Services\Contracts\APIService_Interface
     {
-        if (is_null($this->api)){
+        if (is_null($this->api)) {
             $config = [
                 'apiuser' => \WHMCS\Database\Capsule::table('mod_dondominio_settings')->where(['key' => 'api_username'])->value('value'),
                 'apipasswd' => base64_decode(\WHMCS\Database\Capsule::table('mod_dondominio_settings')->where(['key' => 'api_password'])->value('value')),
@@ -34,6 +34,20 @@ class App
         }
 
         return $this->api;
+    }
+
+    public function getCertificateInfo(string $infoType = 'ssldata', string $password = ''): ?\Dondominio\API\Response\Response
+    {
+        try {
+            $api = $this->getApiService();
+            $certificateID = $this->getParams()['customfields'][\WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::CUSTOM_FIELD_CERTIFICATE_ID];
+            $response = $api->getCertificateInfo($certificateID, $infoType, $password);
+        } catch (\Exception $e) {
+            throw $e;
+            return null;
+        }
+
+        return $response;
     }
 
     /**
@@ -96,4 +110,3 @@ class App
         return $resendValidationMail->execute();
     }
 }
-

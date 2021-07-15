@@ -57,35 +57,75 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
         ];
     }
 
+    protected function getDownloadInfoTypes(): array
+    {
+        $infoResponse = $this->app->getCertificateInfo('ssldata');
+        $downloadTypes = [
+            'zip' => [
+                'name' => 'ZIP',
+                'need_pass' => false
+            ],
+            'pem' => [
+                'name' => 'PEM',
+                'need_pass' => false
+            ],
+            'der' => [
+                'name' => 'DER/CER',
+                'need_pass' => false
+            ],
+            'p7b' => [
+                'name' => 'P7B/PKCS#7',
+                'need_pass' => false
+            ],
+            'pfx' => [
+                'name' => 'PFX/PKCS#12',
+                'need_pass' => true
+            ],
+        ];
+
+        if (is_object($infoResponse) && empty($infoResponse->get('sslKey'))) {
+            unset($downloadTypes['pfx']);
+        }
+
+        return $downloadTypes;
+    }
+
     protected function view_Index(): array
     {
-        $api = $this->app->getApiService();
-        $certificateID = $this->app->getParams()['customfields'][\WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::CUSTOM_FIELD_CERTIFICATE_ID];
-        $getInfoResponse = $api->getCertificateInfo($certificateID, 'validationStatus');
-        $ddProduct = \WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::where(['dd_product_id' => $getInfoResponse->get('productID')])->first();
-        $certificate = $getInfoResponse->getResponseData();
-        $crtStatus = $certificate['status'];
-
+        $infoResponse = $this->app->getCertificateInfo('validationStatus');
         $validationMethods = $this->getValidationMethods();
-        $status = $this->getValidationStatus();
-        $certificate['displayStatus'] = isset($status[$crtStatus]) ? $status[$crtStatus] : $crtStatus;
-        $domains = $certificate['validationData']['dcv'];
+        $ddProductName = '';
+        $crtStatus = '';
+        $certificate = [];
+        $domains = [];
 
-        foreach ($domains as $key => $domain) {
-            $method = $domain['method'];
-            $displayValidationMethod = isset($validationMethods[$method]) ? $validationMethods[$method] : $method;
-            $domains[$key]['displayValidationMethod'] = $displayValidationMethod;
+        if (is_object($infoResponse)) {
+            $ddProduct = \WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::where(['dd_product_id' => $infoResponse->get('productID')])->first();
+            $ddProductName = is_object($ddProduct) ? $ddProduct->product_name : '';
+
+            $certificate = $infoResponse->getResponseData();
+            $crtStatus = $certificate['status'];
+
+            $status = $this->getValidationStatus();
+            $certificate['displayStatus'] = isset($status[$crtStatus]) ? $status[$crtStatus] : $crtStatus;
+            $domains = isset($certificate['validationData']['dcv']) ? $certificate['validationData']['dcv'] : [];
+
+            foreach ($domains as $key => $domain) {
+                $method = $domain['method'];
+                $displayValidationMethod = isset($validationMethods[$method]) ? $validationMethods[$method] : $method;
+                $domains[$key]['displayValidationMethod'] = $displayValidationMethod;
+            }
         }
 
         return $this->send('templates/overview.tpl', [
             'certificate' => $certificate,
-            'dd_product_name' => $ddProduct->product_name,
-            'can_download' => extension_loaded('zip'),
+            'dd_product_name' => $ddProductName,
             'domains' => $domains,
             'validation_methods' => $validationMethods,
             'can_change_validation' => in_array($crtStatus, ['process', 'reissue']),
             'in_process' => $crtStatus === 'process',
             'is_valid' => $crtStatus === 'valid',
+            'download_types' => $this->getDownloadInfoTypes(),
             'links' => [
                 'download_crt' => $this->buildUrl(static::ACTION_DOWNLOAD_CRT),
                 'changemethod' => $this->buildUrl(static::ACTION_CHANGEMETHOD),
@@ -97,16 +137,14 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
 
     protected function view_Reissue(): array
     {
-        $api = $this->app->getApiService();
-        $certificateID = $this->app->getParams()['customfields'][\WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::CUSTOM_FIELD_CERTIFICATE_ID];
-        $getInfoResponse = $api->getCertificateInfo($certificateID, 'validationStatus');
+        $getInfoResponse = $this->app->getCertificateInfo('validationStatus');
         $user = $this->app->getParams()['clientsdetails'];
         $domain = $this->app->getParams()['domain'];
 
         return $this->send('templates/reissue.tpl', [
             'user' => $user,
             'domain' => $domain,
-            'certificate' => $getInfoResponse->getResponseData(),
+            'certificate' => is_object($getInfoResponse) ? $getInfoResponse->getResponseData() : [],
             'validation_methods' => $this->getValidationMethods(),
             'links' => [
                 'action_reissue' => $this->buildUrl(static::ACTION_REISSUE),
@@ -182,62 +220,33 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
 
     protected function action_DownloadCRT(): array
     {
-        if (!extension_loaded('zip')) {
+        $infoType = $this->getRequest()->getParam('type', 'zip');
+        $pass = $this->getRequest()->getParam('password', '');
+
+        $response = $this->app->getCertificateInfo($infoType, $pass);
+
+        if (empty($response) || !is_array($response->get('content'))) {
+            $this->setErrorMsg('Error al obtener el archivo');
             return $this->view_Index();
         }
 
-        $api = $this->app->getApiService();
-        $certificateID = $this->app->getParams()['customfields'][\WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::CUSTOM_FIELD_CERTIFICATE_ID];
-        $getInfoResponse = $api->getCertificateInfo($certificateID, 'ssldata');
+        $content = $response->get('content');
 
-        $zipPath = @tempnam("/tmp", "zip");
-        $zip = new \ZipArchive();
-        $zip->open($zipPath, \ZipArchive::OVERWRITE);
+        $type = isset($content['type']) ? $content['type'] : null;
+        $name = isset($content['name']) ? $content['name'] : null;
+        $encoded = isset($content['base64encoded']) ? $content['base64encoded'] : null;
+        $data = isset($content['data']) ? $content['data'] : null;
 
-        $data = [
-            'certificate.ca.crt' => $getInfoResponse->get('sslCertChain'),
-            'certificate.crt' => $getInfoResponse->get('sslCert'),
-            'certificate.key' => $getInfoResponse->get('sslKey'),
-        ];
-
-        $tmpFiles = $this->addToZip($zip, $data);
-
-        $zip->close();
-
-        header("Content-type: application/zip");
-        header("Content-Length: " . filesize($zipPath));
-        header("Content-Disposition: attachment; filename=ssl.zip");
-        readfile($zipPath);
-        unlink($zipPath);
-
-        foreach ($tmpFiles as $tmpFile) {
-            unlink($tmpFile);
+        if ($encoded) {
+            $data = base64_decode($data);
         }
+
+        header(sprintf('Content-type: %s', $type));
+        header(sprintf('Content-Length: %s', strlen($data)));
+        header(sprintf('Content-Disposition: attachment; filename=%s', $name));
+
+        echo $data;
 
         die();
-        return [];
-    }
-
-    protected function addToZip(\ZipArchive $zip, array $data, string $prefix = 'csr'): array
-    {
-        $tmpFiles = [];
-
-        foreach ($data as $key => $val) {
-            $tmpPath = @tempnam("tmp", $prefix);
-            $temp = fopen($tmpPath, 'w');
-
-            if (!is_array($val)) {
-                $val = [$val];
-            }
-
-            foreach ($val as $subValue) {
-                fwrite($temp, $subValue);
-            }
-
-            $zip->addFile($tmpPath, $key);
-            $tmpFiles[] = $tmpPath;
-        }
-
-        return $tmpFiles;
     }
 }

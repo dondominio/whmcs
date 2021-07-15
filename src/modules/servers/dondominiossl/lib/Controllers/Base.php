@@ -8,6 +8,7 @@ abstract class Base
     protected ?\WHMCS\Module\Server\Dondominiossl\App $app = null;
     protected ?\WHMCS\Module\Addon\Dondominio\Helpers\Response $response = null;
     protected ?\WHMCS\Module\Addon\Dondominio\Helpers\Request $request = null;
+    protected string $errorMsg = '';
 
     public function __construct(\WHMCS\Module\Server\Dondominiossl\App $app)
     {
@@ -32,11 +33,17 @@ abstract class Base
     protected function send(string $templateFile, array $variables = []): array
     {
         $variables['js'] = implode(DIRECTORY_SEPARATOR, [dirname(dirname(__DIR__)), 'templates/js.tpl']);
+        $variables['error_msg'] = $this->errorMsg;
 
         return [
             'tabOverviewReplacementTemplate' => $templateFile,
-            'templateVariables' => $variables
+            'templateVariables' => $variables,
         ];
+    }
+
+    protected function setErrorMsg(string $errorMsg): void
+    {
+        $this->errorMsg = $errorMsg;
     }
 
     /**

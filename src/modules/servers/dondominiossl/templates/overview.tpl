@@ -2,7 +2,7 @@
 
 <hr>
 
-<div data-error-dd-ssl class="alert alert-danger" role="alert" style="display: none;"></div>
+<div data-error-dd-ssl class="alert alert-danger" role="alert" {if not $error_msg}style="display: none;"{/if}>{$error_msg}</div>
 <div data-success-dd-ssl class="alert alert-success" role="alert" style="display: none;"></div>
 
 <div class="row">
@@ -226,16 +226,34 @@
                         {/if}
                     </td>
                 </tr>
-                {if $can_download}
                 <tr>
                     <td colspan="2">
-                        <a class="btn btn-primary" href="{$links.download_crt}" download>Descargar Certificado</a>
+                        <form data-dd-download-form action="{$links.download_crt}" method="POST" style="display: inline-block;">
+                        <div class="btn-group">
+                                <input type="hidden" name="password" value="">
+                                <input type="hidden" name="need_pass" value="">
+                                <input type="hidden" name="type" value="zip">
+                                <a data-dd-download-crt href="#" class="btn btn-primary">Descargar</a>
+                                <a href="#" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
+                                    aria-haspopup="true" aria-expanded="false">
+                                    <span data-dd-download-text>ZIP</span>
+                                    <span class="caret"></span>
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    {foreach from=$download_types key=type item=name}
+                                    <li><a data-dd-download-type='{$type}'
+                                            data-dd-download-type-need-pass="{$name.need_pass}"
+                                            href="#">{$name.name}</a></li>
+                                    {/foreach}
+                                </ul>
+                            </div>
+                        </form>
                         {if $is_valid}
                         <a href="{$links.viewreissue}" class="btn btn-primary">Remitir</a>
                         {/if}
                     </td>
                 </tr>
-                {/if}
             </tbody>
         </table>
     </div>
@@ -279,7 +297,6 @@
                         <a data-dd-modal data-toggle="modal" data-target="#resendmail" href="#"
                             class="btn btn-xs btn-primary pull-right">Reenviar</a>
                         {/if}
-
                     </div>
                 </div>
             </td>
@@ -324,27 +341,45 @@
 <div id="resendmail" class="modal" tabindex="-1" role="modal">
     <form data-form-dd-ssl action='{$links.resendmail}' method='post'>
         <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content panel panel-primary">
-                    <div class="modal-header panel-heading">
-                        <h5 class="modal-title">Reenviar correo de validación</h5>
+            <div class="modal-content panel panel-primary">
+                <div class="modal-header panel-heading">
+                    <h5 class="modal-title">Reenviar correo de validación</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="common_name">Dominio</label>
+                        <input data-dd-domain class="form-control" name="common_name" id="common_name" readonly />
                     </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="common_name">Dominio</label>
-                            <input data-dd-domain class="form-control" name="common_name" id="common_name" readonly />
-                        </div>
 
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        <input type='submit' name='submit_button' id='settings_submit' class='btn btn-primary'
-                            value="Reenviar" />
-                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <input type='submit' name='submit_button' id='settings_submit' class='btn btn-primary'
+                        value="Reenviar" />
                 </div>
             </div>
         </div>
     </form>
+</div>
+
+<div id="crtpassword" class="modal" tabindex="-1" role="modal">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content panel panel-primary">
+            <div class="modal-header panel-heading">
+                <h5 class="modal-title">Para generar este formato es necesaria una contraseña</h5>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input data-dd-download-pass type="password" class="form-control" name="password" id="password" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <a data-dd-download-crt class='btn btn-primary'>Descargar</a>
+            </div>
+        </div>
+    </div>
 </div>
 
 <hr>
@@ -373,6 +408,48 @@
 
             $('[data-dd-domain]').val(domain);
             $('[data-dd-validation-method]').val(method);
+        });
+
+        $('[data-dd-download-type]').click(function (e) {
+            e.preventDefault();
+            let text = $(this).text();
+            let form = $('[data-dd-download-form]')
+            let type = $(this).data('dd-download-type');
+            let needPass = $(this).data('dd-download-type-need-pass');
+
+            $('[data-dd-download-text]').text(text);
+            form.find('[name="type"]').val(type);
+            form.find('[name="need_pass"]').val(needPass);
+        });
+
+        $('[data-dd-download-crt]').click(function (e) {
+            e.preventDefault();
+            let form = $('[data-dd-download-form]');
+            let needPass = form.find('[name="need_pass"]').val();
+            let password = form.find('[name="password"]').val();
+
+            if (needPass && password.length < 1) {
+                $('#crtpassword').modal('show');
+                return;
+            }
+
+            form.submit();
+            $('#crtpassword').modal('hide');
+            $('[data-dd-download-pass]').val('');
+        });
+
+        $('[data-dd-download-pass]').on('change', function () {
+            let pass = $(this).val();
+            let form = $('[data-dd-download-form]');
+
+            form.find('[name="password"]').val(pass);
+        });
+
+        $('#crtpassword').on('hidden.bs.modal', function () {
+            $('[data-dd-download-pass]').val('');
+            let form = $('[data-dd-download-form]');
+
+            form.find('[name="password"]').val('');
         });
     });
 </script>

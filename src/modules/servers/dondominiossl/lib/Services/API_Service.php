@@ -58,11 +58,11 @@ class API_Service implements \WHMCS\Module\Server\Dondominiossl\Services\Contrac
         try {
             $response = $connection->ssl_productList($args);
             $products = json_decode($response->getResponseData(), true);
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             return [];
         }
 
-        if (isset($products['products'])){
+        if (isset($products['products'])) {
             return $products['products'];
         }
 
@@ -96,10 +96,13 @@ class API_Service implements \WHMCS\Module\Server\Dondominiossl\Services\Contrac
      *
      * @return \Dondominio\API\Response\Response
      */
-    public function getCertificateInfo(int $certificateID, string $infoType = 'ssldata'): \Dondominio\API\Response\Response
+    public function getCertificateInfo(int $certificateID, string $infoType = 'ssldata', string $pfxpassword = ''): \Dondominio\API\Response\Response
     {
         $connection = $this->getApiConnection();
-        return $connection->ssl_getInfo($certificateID, ['infoType' => $infoType]);
+        return $connection->ssl_getInfo($certificateID, [
+            'infoType' => $infoType,
+            'pfxpass' => $pfxpassword
+        ]);
     }
 
     /**
@@ -149,5 +152,4 @@ class API_Service implements \WHMCS\Module\Server\Dondominiossl\Services\Contrac
         $connection = $this->getApiConnection();
         return $connection->ssl_resendValidationMail($certificateID, $commonName);
     }
-
 }
