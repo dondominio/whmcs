@@ -3,7 +3,7 @@
 namespace WHMCS\Module\Server\Dondominiossl\Lang;
 
 
-class English implements \WHMCS\Module\Server\Dondominiossl\Lang\Translations
+class English extends \WHMCS\Module\Server\Dondominiossl\Lang\Base
 {
 
     public function getTranslations(): array
@@ -52,6 +52,20 @@ class English implements \WHMCS\Module\Server\Dondominiossl\Lang\Translations
             'cert_validation_create_link' => 'Create link',
             'cert_validation_with_content' => 'with content',
             'cert_load_validation' => 'Load Validation Status',
+            'cert_resend_mail_success' => 'Mail resend successfully',
+            'cert_change_method_success' => 'Method changed successfully',
+            'cert_reissue_success' => 'Certificate submitted successfully',
+            'cert_download_fail' => 'Error getting file',
+            'cert_validation_mail' => 'Email validation',
+            'cert_validation_dns' => 'Validation using dns',
+            'cert_validation_http' => 'Validation using http protocol',
+            'cert_validation_https' => 'Validation using https protocol',
+            'cert_status_process' => 'In progress',
+            'cert_status_valid' => 'Valid',
+            'cert_status_expired' => 'Expired',
+            'cert_status_renew' => 'Renovation in process',
+            'cert_status_reissue' => 'In process of reissue',
+            'cert_status_cancel' => 'Cancelled',
         ];
     }
 }

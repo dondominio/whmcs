@@ -5,6 +5,8 @@ namespace WHMCS\Module\Server\Dondominiossl\Controllers;
 
 abstract class Base
 {
+    const VIEW_INDEX = 'index';
+
     protected ?\WHMCS\Module\Server\Dondominiossl\App $app = null;
     protected ?\WHMCS\Module\Addon\Dondominio\Helpers\Response $response = null;
     protected ?\WHMCS\Module\Addon\Dondominio\Helpers\Request $request = null;
@@ -21,8 +23,8 @@ abstract class Base
     {
         $customAction = $this->getRequest()->getParam('custom_action', static::VIEW_INDEX);
         $views = $this->getViews();
-        
-        if (isset($views[$customAction]) && method_exists($this, $views[$customAction])){
+
+        if (isset($views[$customAction]) && method_exists($this, $views[$customAction])) {
             $function = $views[$customAction];
             return $this->$function();
         }
@@ -34,7 +36,7 @@ abstract class Base
     {
         $variables['js'] = implode(DIRECTORY_SEPARATOR, [dirname(dirname(__DIR__)), 'templates/js.tpl']);
         $variables['error_msg'] = $this->errorMsg;
-        $variables['DD_LANG'] = $this->app->getLanguage()->getTranslations();
+        $variables['DD_LANG'] = $this->getApp()->getLanguage()->getTranslations();
 
         return [
             'tabOverviewReplacementTemplate' => $templateFile,
@@ -75,10 +77,16 @@ abstract class Base
 
     protected function getApp(): \WHMCS\Module\Server\Dondominiossl\App
     {
-        if (is_null($this->app)){
+        if (is_null($this->app)) {
             $this->app = new \WHMCS\Module\Server\Dondominiossl\App();
         }
 
         return $this->app;
+    }
+
+    public function translate(string $toTranslate): string
+    {
+        $language = $this->getApp()->getLanguage();
+        return $language->translate($toTranslate);
     }
 }

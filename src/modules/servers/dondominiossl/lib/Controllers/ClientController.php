@@ -5,7 +5,6 @@ namespace WHMCS\Module\Server\Dondominiossl\Controllers;
 
 class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Base
 {
-    const VIEW_INDEX = 'index';
     const VIEW_VALIDATION = 'validation';
     const VIEW_REISSUE = 'reissue';
     const ACTION_REISSUE = 'actionreissue';
@@ -40,22 +39,22 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
     protected function getValidationMethods(): array
     {
         return [
-            'mail' => 'Validación por correo electrónico',
-            'dns' => 'Validación mediante dns',
-            'http' => 'Validación mediante protocolo http',
-            'https' => 'Validación mediante protocolo https',
+            'mail' =>  $this->translate('cert_validation_mail'),
+            'dns' => $this->translate('cert_validation_dns'),
+            'http' =>  $this->translate('cert_validation_http'),
+            'https' =>  $this->translate('cert_validation_https'),
         ];
     }
 
     protected function getValidationStatus(): array
     {
         return [
-            'process' => 'En proceso',
-            'valid' => 'Válido',
-            'expired' => 'Expirado',
-            'renew' => 'Renovación en proceso',
-            'reissue' => 'En proceso de reemisión',
-            'cancel' => 'Cancelado',
+            'process' => $this->translate('cert_status_process'),
+            'valid' => $this->translate('cert_status_valid'),
+            'expired' => $this->translate('cert_status_expired'),
+            'renew' => $this->translate('cert_status_renew'),
+            'reissue' => $this->translate('cert_status_reissue'),
+            'cancel' => $this->translate('cert_status_cancel'),
         ];
     }
 
@@ -197,7 +196,7 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
 
         $response = [
             'success' => $isSuccess,
-            'msg' => $isSuccess ? 'Certificado remitido correctamente' : $reissueResponse,
+            'msg' => $isSuccess ? $this->translate('cert_reissue_success') : $reissueResponse,
         ];
 
         $this->getResponse()->setContentType(\WHMCS\Module\Addon\Dondominio\Helpers\Response::CONTENT_JSON);
@@ -216,7 +215,7 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
 
         $response = [
             'success' => $isSuccess,
-            'msg' => $isSuccess ? 'Metodo cambiado correctamente' : $changeMethodResponse,
+            'msg' => $isSuccess ? $this->translate('cert_change_method_success') : $changeMethodResponse,
         ];
 
         $this->getResponse()->setContentType(\WHMCS\Module\Addon\Dondominio\Helpers\Response::CONTENT_JSON);
@@ -233,7 +232,7 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
 
         $response = [
             'success' => $isSuccess,
-            'msg' => $isSuccess ? 'Correo reenviado correctamente' : $resendResponse,
+            'msg' => $isSuccess ? $this->translate('cert_resend_mail_success') : $resendResponse,
         ];
 
         $this->getResponse()->setContentType(\WHMCS\Module\Addon\Dondominio\Helpers\Response::CONTENT_JSON);
@@ -250,7 +249,7 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
         $response = $this->getApp()->getCertificateInfo($infoType, $pass);
 
         if (empty($response) || !is_array($response->get('content'))) {
-            $this->setErrorMsg('Error al obtener el archivo');
+            $this->setErrorMsg('cert_download_fail');
             return $this->view_Index();
         }
 
