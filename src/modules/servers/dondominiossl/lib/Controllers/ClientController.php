@@ -98,6 +98,8 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
             $ddProductName = is_object($ddProduct) ? $ddProduct->product_name : '';
             $certificate = $infoResponse->getResponseData();
             $crtStatus = $infoResponse->get('status');
+            $status = $this->getValidationStatus();
+            $certificate['displayStatus'] = isset($status[$crtStatus]) ? $status[$crtStatus] : $crtStatus;
 
             if (empty($infoResponse->get('sslKey'))) {
                 unset($downloadTypes['pfx']);
@@ -129,9 +131,6 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
         if (is_object($infoResponse)) {
             $certificate = $infoResponse->getResponseData();
             $crtStatus = $infoResponse->get('status');
-
-            $status = $this->getValidationStatus();
-            $certificate['displayStatus'] = isset($status[$crtStatus]) ? $status[$crtStatus] : $crtStatus;
             $domains = isset($certificate['validationData']['dcv']) ? $certificate['validationData']['dcv'] : [];
 
             foreach ($domains as $key => $domain) {
@@ -162,10 +161,21 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
     {
         $getInfoResponse = $this->getApp()->getCertificateInfo('validationStatus');
         $user = $this->getApp()->getParams()['clientsdetails'];
+        $certificate = [];
+
+        if (is_object($getInfoResponse)){
+            $certificate = $getInfoResponse->getResponseData();
+            $canReissue = $getInfoResponse->get('status') === 'valid';
+
+            if (!$canReissue){
+                $this->setErrorMsg($this->translate('cert_can_not_reissue'));
+            }
+        }
 
         return $this->send('templates/reissue.tpl', [
             'user' => $user,
-            'certificate' => is_object($getInfoResponse) ? $getInfoResponse->getResponseData() : [],
+            'certificate' => $certificate,
+            'can_reissue' => $canReissue,
             'validation_methods' => $this->getValidationMethods(),
             'links' => [
                 'action_reissue' => $this->buildUrl(static::ACTION_REISSUE),

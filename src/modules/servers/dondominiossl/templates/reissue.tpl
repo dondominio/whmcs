@@ -2,8 +2,11 @@
 
 <hr>
 
-<div data-error-dd-ssl class="alert alert-danger" role="alert" style="display: none;"></div>
+<div data-error-dd-ssl class="alert alert-danger" role="alert" {if not $error_msg}style="display: none;" {/if}>
+    {$error_msg}</div>
 <div data-success-dd-ssl class="alert alert-success" role="alert" style="display: none;"></div>
+
+{if $can_reissue}
 
 <form data-form-dd-ssl action='{$links.action_reissue}' method='post'>
     <div class="form-group">
@@ -86,6 +89,12 @@
         <input type='submit' name='submit_button' id='settings_submit' class='btn btn-primary' value="Remitir" />
     </div>
 </form>
+
+{/if}
+
+<div data-dd-back-btn class="form-group text-right" {if $can_reissue} style="display: none;" {/if}>
+    <a href="{$links.index}" class='btn btn-default'>{$DD_LANG.back}</a>
+</div>
 
 <input data-dd-max-alt-domains type="hidden" value="{$certificate.sanMaxDomains}">
 

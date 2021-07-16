@@ -30,6 +30,7 @@
                     if (json.success) {
                         $('[data-success-dd-ssl]').text(json.msg);
                         $('[data-success-dd-ssl]').show();
+                        $('[data-dd-back-btn]').show();
 
                         if (modal.length < 1) {
                             form.hide();

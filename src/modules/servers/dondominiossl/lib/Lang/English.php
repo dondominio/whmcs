@@ -66,6 +66,8 @@ class English extends \WHMCS\Module\Server\Dondominiossl\Lang\Base
             'cert_status_renew' => 'Renovation in process',
             'cert_status_reissue' => 'In process of reissue',
             'cert_status_cancel' => 'Cancelled',
+            'cert_can_not_reissue' => 'This certificate cannot be reissued',
+            'back' => 'Go Back',
         ];
     }
 }
