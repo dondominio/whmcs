@@ -5,6 +5,12 @@ namespace WHMCS\Module\Server\Dondominiossl\Actions;
 
 class ResendValidationMail extends \WHMCS\Module\Server\Dondominiossl\Actions\Base
 {
+    protected string $commonName = '';
+
+    public function setCommonName(string $commonName): void
+    {
+        $this->commonName = $commonName;
+    }
 
     /**
      * Resend validation mail of a SSL Certificate
@@ -15,7 +21,6 @@ class ResendValidationMail extends \WHMCS\Module\Server\Dondominiossl\Actions\Ba
     {
         $certificate = $this->getCertificateIDCustomFieldValue();
         $certificateID = $certificate->value;
-        $commonName = $this->params['domain'];
 
         try {
             $this->checkParams();
@@ -25,7 +30,7 @@ class ResendValidationMail extends \WHMCS\Module\Server\Dondominiossl\Actions\Ba
                 return 'Can\'t resend validation mail if certificate is not in process';
             }
 
-            $this->api->resendValidationMail($certificateID, $commonName);
+            $this->api->resendValidationMail($certificateID, $this->commonName);
         } catch (\Exception $e) {
             return $e->getMessage();
         }

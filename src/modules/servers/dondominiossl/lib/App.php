@@ -66,7 +66,6 @@ class App
             $certificateID = $this->getParams()['customfields'][\WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::CUSTOM_FIELD_CERTIFICATE_ID];
             $response = $api->getCertificateInfo($certificateID, $infoType, $password);
         } catch (\Exception $e) {
-            throw $e;
             return null;
         }
 
@@ -127,9 +126,25 @@ class App
      *
      * @return string 'success' or error
      */
-    public function resendValidationMail(): string
+    public function resendValidationMail(string $commonName): string
     {
         $resendValidationMail = new \WHMCS\Module\Server\Dondominiossl\Actions\ResendValidationMail($this->getApiService(), $this->getParams());
+        $resendValidationMail->setCommonName($commonName);
         return $resendValidationMail->execute();
+    }
+
+    public function getCommonNameValidationEmails(string $commonName): array
+    {
+        try {
+            $response = $this->getApiService()->getValidationEmails($commonName);
+        } catch (\Exception $e){
+            return [];
+        }
+
+        if (is_array($response->get('valMethods'))){
+            return $response->get('valMethods');
+        }
+
+        return [];
     }
 }

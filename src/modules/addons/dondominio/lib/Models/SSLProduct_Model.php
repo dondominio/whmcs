@@ -16,6 +16,7 @@ class SSLProduct_Model extends AbstractModel
     const PRICE_INCREMENT_TYPE_NONE = '';
 
     const CUSTOM_FIELD_CERTIFICATE_ID = 'CertificateID';
+    const CUSTOM_FIELD_COMMON_NAMEM = 'CommonName';
 
     protected $table = 'mod_dondominio_ssl_products';
     protected $primaryKey = 'dd_product_id';
@@ -60,6 +61,11 @@ class SSLProduct_Model extends AbstractModel
     public static function getCustomFields(): array
     {
         return [
+            static::CUSTOM_FIELD_COMMON_NAMEM => [
+                'type' => 'text',
+                'required' => true,
+                'showorder' => true
+            ],
             static::CUSTOM_FIELD_CERTIFICATE_ID => [
                 'type' => 'text',
                 'required' => false,
@@ -166,7 +172,7 @@ class SSLProduct_Model extends AbstractModel
             'configoption1' => $this->dd_product_id,
             'configoption2' => $vatNumberID,
             'pricing' => $pricing,
-            'showdomainoptions' => true
+            'showdomainoptions' => false
         ];
 
         $results = localAPI($command, $postData);

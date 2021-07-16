@@ -14,7 +14,7 @@ class Reissue extends \WHMCS\Module\Server\Dondominiossl\Actions\Base
     public function setCsrDataArgs(array $csrDataArgs): void
     {
         $this->csrDataArgs = $csrDataArgs;
-        $this->csrDataArgs['commonName'] = $this->params['domain'];
+        $this->csrDataArgs['commonName'] = $this->params['customfields'][$this->fieldCommonName];
     }
 
     public function setValidationMethod(string $validationMethod): void
