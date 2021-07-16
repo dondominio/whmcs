@@ -190,11 +190,11 @@
                     <td colspan="2">
                         <form data-dd-download-form action="{$links.download_crt}" method="POST"
                             style="display: inline-block;">
+                            <input type="hidden" name="password" value="">
+                            <input type="hidden" name="need_pass" value="">
+                            <input type="hidden" name="type" value="zip">
                             <div class="btn-group">
-                                <input type="hidden" name="password" value="">
-                                <input type="hidden" name="need_pass" value="">
-                                <input type="hidden" name="type" value="zip">
-                                <a data-dd-download-crt href="#" class="btn btn-primary">{$DD_LANG.cert_download}</a>
+                                <a data-dd-download-crt href="#" class="btn btn-primary"><i class="fa fa-download"></i> {$DD_LANG.cert_download}</a>
                                 <a href="#" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
                                     aria-haspopup="true" aria-expanded="false">
                                     <span data-dd-download-text>ZIP</span>
@@ -205,7 +205,7 @@
                                     {foreach from=$download_types key=type item=name}
                                     <li><a data-dd-download-type='{$type}'
                                             data-dd-download-type-need-pass="{$name.need_pass}"
-                                            href="#">{$name.name}</a></li>
+                                            href="#"><i class="fa fa-download"></i> {$name.name}</a></li>
                                     {/foreach}
                                 </ul>
                             </div>
@@ -230,9 +230,9 @@
 </div>
 
 <div data-dd-validation-view></div>
-{/if}
 
 <hr>
+{/if}
 
 <div class="row">
     <div class="col-sm-6 pull-right">
@@ -247,7 +247,25 @@
     </div>
 </div>
 
-
+<div id="crtpassword" class="modal" tabindex="-1" role="modal">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content panel panel-primary">
+            <div class="modal-header panel-heading">
+                <h5 class="modal-title">{$DD_LANG.cert_download_need_pass}</h5>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="password">{$DD_LANG.cert_pass}</label>
+                    <input data-dd-download-pass type="password" class="form-control" name="password" id="password" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">{$LANG.close}</button>
+                <a data-dd-download-crt class='btn btn-primary'>{$DD_LANG.cert_download}</a>
+            </div>
+        </div>
+    </div>
+</div>
 
 {literal}
 <script>
@@ -256,7 +274,7 @@
         $('[data-dd-load-validation]').click(function (e) {
             e.preventDefault();
             let url = $(this).attr('href');
-            
+
             $('[data-dd-loading-vacations]').show();
             $('[data-dd-loading-text]').hide();
             $('[data-dd-validation-view]').css('opacity', '0.5');
@@ -275,6 +293,54 @@
             });
         })
 
+        $('[data-dd-download-type]').click(function (e) {
+            e.preventDefault();
+            let text = $(this).text();
+            let form = $('[data-dd-download-form]')
+            let type = $(this).data('dd-download-type');
+            let needPass = $(this).data('dd-download-type-need-pass');
+
+            $('[data-dd-download-text]').text(text);
+            form.find('[name="type"]').val(type);
+            form.find('[name="need_pass"]').val(needPass);
+
+            downloadCRT()
+        });
+
+        $('[data-dd-download-crt]').click(function (e) {
+            e.preventDefault();
+            downloadCRT()
+        });
+
+        $('[data-dd-download-pass]').on('change', function () {
+            let pass = $(this).val();
+            let form = $('[data-dd-download-form]');
+
+            form.find('[name="password"]').val(pass);
+        });
+
+        $('#crtpassword').on('hidden.bs.modal', function () {
+            $('[data-dd-download-pass]').val('');
+            let form = $('[data-dd-download-form]');
+
+            form.find('[name="password"]').val('');
+        });
+
+        function downloadCRT(){
+            let form = $('[data-dd-download-form]');
+            let needPass = form.find('[name="need_pass"]').val();
+            let password = form.find('[name="password"]').val();
+
+            if (needPass && password.length < 1) {
+                $('#crtpassword').modal('show');
+                return;
+            }
+
+            form.submit();
+            $('#crtpassword').modal('hide');
+            $('[data-dd-download-pass]').val('');
+            $('[data-error-dd-ssl]').hide();
+        }
     });
 </script>
 {/literal}

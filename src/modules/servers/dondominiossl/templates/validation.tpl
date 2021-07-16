@@ -162,26 +162,6 @@
             </div>
         </form>
     </div>
-
-    <div id="crtpassword" class="modal" tabindex="-1" role="modal">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content panel panel-primary">
-                <div class="modal-header panel-heading">
-                    <h5 class="modal-title">{$DD_LANG.cert_download_need_pass}</h5>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="password">{$DD_LANG.cert_pass}</label>
-                        <input data-dd-download-pass type="password" class="form-control" name="password"
-                            id="password" />
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{$LANG.close}</button>
-                    <a data-dd-download-crt class='btn btn-primary'>{$DD_LANG.cert_download}</a>
-                </div>
-            </div>
-        </div>
     </div>
 
     {include file=$js}
@@ -209,48 +189,6 @@
                 })
 
                 $('[data-dd-validation-method]').val(method);
-            });
-
-            $('[data-dd-download-type]').click(function (e) {
-                e.preventDefault();
-                let text = $(this).text();
-                let form = $('[data-dd-download-form]')
-                let type = $(this).data('dd-download-type');
-                let needPass = $(this).data('dd-download-type-need-pass');
-
-                $('[data-dd-download-text]').text(text);
-                form.find('[name="type"]').val(type);
-                form.find('[name="need_pass"]').val(needPass);
-            });
-
-            $('[data-dd-download-crt]').click(function (e) {
-                e.preventDefault();
-                let form = $('[data-dd-download-form]');
-                let needPass = form.find('[name="need_pass"]').val();
-                let password = form.find('[name="password"]').val();
-
-                if (needPass && password.length < 1) {
-                    $('#crtpassword').modal('show');
-                    return;
-                }
-
-                form.submit();
-                $('#crtpassword').modal('hide');
-                $('[data-dd-download-pass]').val('');
-            });
-
-            $('[data-dd-download-pass]').on('change', function () {
-                let pass = $(this).val();
-                let form = $('[data-dd-download-form]');
-
-                form.find('[name="password"]').val(pass);
-            });
-
-            $('#crtpassword').on('hidden.bs.modal', function () {
-                $('[data-dd-download-pass]').val('');
-                let form = $('[data-dd-download-form]');
-
-                form.find('[name="password"]').val('');
             });
         });
     </script>

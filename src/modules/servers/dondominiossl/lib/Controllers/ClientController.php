@@ -107,6 +107,7 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
         return $this->send('templates/overview.tpl', [
             'certificate' => $certificate,
             'dd_product_name' => $ddProductName,
+            'download_types' => $downloadTypes,
             'in_process' => $crtStatus === 'process',
             'is_valid' => $crtStatus === 'valid',
             'links' => [
@@ -249,7 +250,7 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
         $response = $this->getApp()->getCertificateInfo($infoType, $pass);
 
         if (empty($response) || !is_array($response->get('content'))) {
-            $this->setErrorMsg('cert_download_fail');
+            $this->setErrorMsg($this->translate('cert_download_fail'));
             return $this->view_Index();
         }
 
