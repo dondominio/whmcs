@@ -72,4 +72,13 @@ abstract class Base
         $serviceID = $this->getRequest()->getParam('id', '');
         return sprintf('clientarea.php?action=productdetails&id=%s&custom_action=%s', $serviceID, $view);
     }
+
+    protected function getApp(): \WHMCS\Module\Server\Dondominiossl\App
+    {
+        if (is_null($this->app)){
+            $this->app = new \WHMCS\Module\Server\Dondominiossl\App();
+        }
+
+        return $this->app;
+    }
 }

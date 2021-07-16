@@ -8,6 +8,7 @@
             let modal = form.parents('.modal');
             let url = form.attr('action');
             let data = form.serialize();
+            let reloadValidation = $('[data-dd-load-validation]');
 
             $.ajax({
                 type: "POST",
@@ -21,6 +22,10 @@
                 success: function (json) {
                     modal.modal('hide');
                     form.find('input, select').attr('disabled', false);
+
+                    if (reloadValidation.length > 0){
+                        reloadValidation[0].click();
+                    }
 
                     if (json.success) {
                         $('[data-success-dd-ssl]').text(json.msg);

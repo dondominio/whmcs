@@ -23,7 +23,7 @@ class English implements \WHMCS\Module\Server\Dondominiossl\Lang\Translations
             'cert_external_validation' => 'External validation',
             'cert_download' => 'Download',
             'cert_reissue' => 'Reissue',
-            'cert_dcv' => 'Domain validation control',
+            'cert_validation_data' => 'Certificate validation control',
             'cert_domain' => 'Domain',
             'cert_validation_method' => 'Validation method',
             'cert_validation_status' => 'Validation status',
@@ -42,6 +42,16 @@ class English implements \WHMCS\Module\Server\Dondominiossl\Lang\Translations
             'cert_alt_validation_name' => 'Alternative Domain validation method',
             'cert_add_alt' => 'Add Alternate Domain',
             'cert_cancel' => 'Cancel',
+            'cert_alt_names' => 'Alternatime Names',
+            'cert_resend' => 'Resend',
+            'cert_change' => 'Change',
+            'cert_need' => 'Needed',
+            'cert_not_need' => 'Not needed',
+            'cert_validation_mail_send' => 'Validation email sent',
+            'cert_validation_create_cname' => 'Create CNAME',
+            'cert_validation_create_link' => 'Create link',
+            'cert_validation_with_content' => 'with content',
+            'cert_load_validation' => 'Load Validation Status',
         ];
     }
 }

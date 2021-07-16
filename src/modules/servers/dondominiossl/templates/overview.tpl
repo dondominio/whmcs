@@ -2,7 +2,8 @@
 
 <hr>
 
-<div data-error-dd-ssl class="alert alert-danger" role="alert" {if not $error_msg}style="display: none;"{/if}>{$error_msg}</div>
+<div data-error-dd-ssl class="alert alert-danger" role="alert" {if not $error_msg}style="display: none;" {/if}>
+    {$error_msg}</div>
 <div data-success-dd-ssl class="alert alert-success" role="alert" style="display: none;"></div>
 
 <div class="row">
@@ -132,16 +133,6 @@
                     </td>
                 </tr>
                 {/if}
-                {if $certificate.certificateID}
-                <tr>
-                    <td>
-                        {$DD_LANG.cert_id}
-                    </td>
-                    <td>
-                        {$certificate.certificateID}
-                    </td>
-                </tr>
-                {/if}
                 {if $certificate.displayStatus}
                 <tr>
                     <td>
@@ -159,6 +150,18 @@
                     </td>
                     <td>
                         {$certificate.sanMaxDomains}
+                    </td>
+                </tr>
+                {/if}
+                {if $certificate.alternativeNames|count gt 0}
+                <tr>
+                    <td>
+                        {$DD_LANG.cert_alt_names}
+                    </td>
+                    <td>
+                        {foreach from=$certificate.alternativeNames item=alt_name}
+                        <span style="display: block;">{$alt_name}</span>
+                        {/foreach}
                     </td>
                 </tr>
                 {/if}
@@ -182,52 +185,12 @@
                     </td>
                 </tr>
                 {/if}
-                {if $certificate.validationData.organizationValidationStatus}
-                <tr>
-                    <td>
-                        {$DD_LANG.cert_company_validation}
-                    </td>
-                    <td>
-                        {$certificate.validationData.organizationValidationStatus}
-                    </td>
-                </tr>
-                {/if}
-                {if $certificate.validationData.brandValidationStatus}
-                <tr>
-                    <td>
-                        {$DD_LANG.cert_brand_company_validation}
-                    </td>
-                    <td>
-                        {$certificate.validationData.brandValidationStatus}
-                    </td>
-                </tr>
-                {/if}
-                {if $certificate.validationData.message}
-                <tr>
-                    <td>
-                        {$DD_LANG.cert_msg_validation}
-                    </td>
-                    <td>
-                        {$certificate.validationData.message}
-                    </td>
-                </tr>
-                {/if}
-                <tr>
-                    <td>
-                        {$DD_LANG.cert_external_validation}
-                    </td>
-                    <td>
-                        {if $certificate.validationData.externalValidation}
-                        Necesaria
-                        {else}
-                        No necesaria
-                        {/if}
-                    </td>
-                </tr>
+                {if $is_valid}
                 <tr>
                     <td colspan="2">
-                        <form data-dd-download-form action="{$links.download_crt}" method="POST" style="display: inline-block;">
-                        <div class="btn-group">
+                        <form data-dd-download-form action="{$links.download_crt}" method="POST"
+                            style="display: inline-block;">
+                            <div class="btn-group">
                                 <input type="hidden" name="password" value="">
                                 <input type="hidden" name="need_pass" value="">
                                 <input type="hidden" name="type" value="zip">
@@ -247,138 +210,27 @@
                                 </ul>
                             </div>
                         </form>
-                        {if $is_valid}
                         <a href="{$links.viewreissue}" class="btn btn-primary">{$DD_LANG.cert_reissue}</a>
-                        {/if}
                     </td>
                 </tr>
+                {/if}
             </tbody>
         </table>
     </div>
 </div>
+
 <hr />
 
-<h4>{$DD_LANG.cert_dcv}</h4>
-
-<table class="table table-striped table-bordered">
-    <thead>
-        <tr>
-            <th>{$DD_LANG.cert_domain}</th>
-            <th>{$DD_LANG.cert_validation_method}</th>
-            <th>{$DD_LANG.cert_validation_status}</th>
-        </tr>
-    </thead>
-    <tbody>
-        {foreach $domains item=domain}
-        <tr data-dd-domain="{$domain.domainName}">
-            <td>
-                {$domain.domainName}
-            </td>
-            <td>
-                {$domain.displayValidationMethod}
-                {if $can_change_validation}
-                <a data-dd-modal data-dd-change-method="{$domain.method}" data-toggle="modal"
-                    data-target="#changemethod" href="#" class="btn btn-xs btn-primary pull-right">Cambiar</a>
-                {/if}
-            </td>
-            <td>
-                <div class="row">
-                    <div class="col-sm-7 text-right">
-                        {if $domain.validated}
-                        <i class="fas text-success fa-check"></i>
-                        {else}
-                        <i class="fas text-danger fa-times"></i>
-                        {/if}
-                    </div>
-                    <div class="col-sm-5">
-                        {if not $domain.validated and $in_process and $domain.method eq 'mail'}
-                        <a data-dd-modal data-toggle="modal" data-target="#resendmail" href="#"
-                            class="btn btn-xs btn-primary pull-right">Reenviar</a>
-                        {/if}
-                    </div>
-                </div>
-            </td>
-        </tr>
-        {/foreach}
-    </tbody>
-</table>
-
-<div id="changemethod" class="modal" tabindex="-1" role="modal">
-    <form data-form-dd-ssl action='{$links.changemethod}' method='post'>
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content panel panel-primary">
-                    <div class="modal-header panel-heading">
-                        <h5 class="modal-title">{$DD_LANG.cert_change_method}</h5>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="common_name">{$DD_LANG.cert_domain}</label>
-                            <input data-dd-domain class="form-control" name="common_name" id="common_name" readonly />
-                        </div>
-
-                        <div class="form-group">
-                            <label for="validation_method">{$DD_LANG.cert_new_validation_method}</label>
-                            <select data-dd-validation-method class="form-control" name="validation_method"
-                                id="validation_method">
-                                {html_options options=$validation_methods}
-                            </select>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{$LANG.close}</button>
-                        <input type='submit' name='submit_button' id='settings_submit' class='btn btn-primary'
-                            value="Cambiar" />
-                    </div>
-                </div>
-            </div>
-        </div>
-    </form>
+{if not $is_valid}
+<div class="text-center">
+    <a data-dd-load-validation href="{$links.validation}" class="btn btn-success">
+        <i data-dd-loading-vacations class="fas fa-lg fa-circle-notch fa-spin" style="display: none;"></i>
+        <span data-dd-loading-text>{$DD_LANG.cert_load_validation}</span>
+    </a>
 </div>
 
-<div id="resendmail" class="modal" tabindex="-1" role="modal">
-    <form data-form-dd-ssl action='{$links.resendmail}' method='post'>
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content panel panel-primary">
-                <div class="modal-header panel-heading">
-                    <h5 class="modal-title">{$DD_LANG.cert_resend_mail}</h5>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="common_name">{$DD_LANG.cert_domain}</label>
-                        <input data-dd-domain class="form-control" name="common_name" id="common_name" readonly />
-                    </div>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{$LANG.close}</button>
-                    <input type='submit' name='submit_button' id='settings_submit' class='btn btn-primary'
-                        value="Reenviar" />
-                </div>
-            </div>
-        </div>
-    </form>
-</div>
-
-<div id="crtpassword" class="modal" tabindex="-1" role="modal">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content panel panel-primary">
-            <div class="modal-header panel-heading">
-                <h5 class="modal-title">{$DD_LANG.cert_download_need_pass}</h5>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="password">{$DD_LANG.cert_pass}</label>
-                    <input data-dd-download-pass type="password" class="form-control" name="password" id="password" />
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">{$LANG.close}</button>
-                <a data-dd-download-crt class='btn btn-primary'>{$DD_LANG.cert_download}</a>
-            </div>
-        </div>
-    </div>
-</div>
+<div data-dd-validation-view></div>
+{/if}
 
 <hr>
 
@@ -395,60 +247,34 @@
     </div>
 </div>
 
-{include file=$js}
+
 
 {literal}
 <script>
     $(document).ready(function () {
-        $('[data-dd-modal]').click(function (e) {
-            let domain = $(this).parents('[data-dd-domain]').data('dd-domain');
-            let method = $(this).data('dd-change-method');
 
-            $('[data-dd-domain]').val(domain);
-            $('[data-dd-validation-method]').val(method);
-        });
-
-        $('[data-dd-download-type]').click(function (e) {
+        $('[data-dd-load-validation]').click(function (e) {
             e.preventDefault();
-            let text = $(this).text();
-            let form = $('[data-dd-download-form]')
-            let type = $(this).data('dd-download-type');
-            let needPass = $(this).data('dd-download-type-need-pass');
+            let url = $(this).attr('href');
+            
+            $('[data-dd-loading-vacations]').show();
+            $('[data-dd-loading-text]').hide();
+            $('[data-dd-validation-view]').css('opacity', '0.5');
 
-            $('[data-dd-download-text]').text(text);
-            form.find('[name="type"]').val(type);
-            form.find('[name="need_pass"]').val(needPass);
-        });
+            $.ajax({
+                url: url,
+                dataType: 'html',
+                success: function (response) {
+                    let validationDiv = $(response).find('[data-dd-validation-view]');
 
-        $('[data-dd-download-crt]').click(function (e) {
-            e.preventDefault();
-            let form = $('[data-dd-download-form]');
-            let needPass = form.find('[name="need_pass"]').val();
-            let password = form.find('[name="password"]').val();
+                    $('[data-dd-validation-view]').replaceWith(validationDiv);
 
-            if (needPass && password.length < 1) {
-                $('#crtpassword').modal('show');
-                return;
-            }
+                    $('[data-dd-loading-vacations]').hide();
+                    $('[data-dd-loading-text]').show();
+                }
+            });
+        })
 
-            form.submit();
-            $('#crtpassword').modal('hide');
-            $('[data-dd-download-pass]').val('');
-        });
-
-        $('[data-dd-download-pass]').on('change', function () {
-            let pass = $(this).val();
-            let form = $('[data-dd-download-form]');
-
-            form.find('[name="password"]').val(pass);
-        });
-
-        $('#crtpassword').on('hidden.bs.modal', function () {
-            $('[data-dd-download-pass]').val('');
-            let form = $('[data-dd-download-form]');
-
-            form.find('[name="password"]').val('');
-        });
     });
 </script>
 {/literal}
