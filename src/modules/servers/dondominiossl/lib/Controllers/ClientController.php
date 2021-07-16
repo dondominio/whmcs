@@ -162,11 +162,9 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
     {
         $getInfoResponse = $this->getApp()->getCertificateInfo('validationStatus');
         $user = $this->getApp()->getParams()['clientsdetails'];
-        $domain = $this->getApp()->getParams()['domain'];
 
         return $this->send('templates/reissue.tpl', [
             'user' => $user,
-            'domain' => $domain,
             'certificate' => is_object($getInfoResponse) ? $getInfoResponse->getResponseData() : [],
             'validation_methods' => $this->getValidationMethods(),
             'links' => [

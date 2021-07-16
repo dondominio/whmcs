@@ -8,7 +8,7 @@
 <form data-form-dd-ssl action='{$links.action_reissue}' method='post'>
     <div class="form-group">
         <label for="common_name">{$DD_LANG.cert_domain}</label>
-        <input type="text" class="form-control" name="common_name" id="common_name" value="{$domain}" readonly>
+        <input type="text" class="form-control" name="common_name" id="common_name" value="{$certificate.commonName}" readonly>
     </div>
 
     <div class="form-group">
