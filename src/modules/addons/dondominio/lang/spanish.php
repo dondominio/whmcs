@@ -484,7 +484,7 @@ $_ADDONLANG = array(
     'ssl_state_or_province' => 'Nombre de la provincia o estado de la compañía',
     'ssl_location_name' => 'Nombre de la población de la compañía',
     'ssl_email_address' => 'Correo electrónico',
-    'ssl_reissue' => 'Remitir',
+    'ssl_reissue' => 'Reemitir',
     'ssl_change_method' => 'Cambiar método',
     'ssl_new_group' => 'Crear un nuevo Grupo',
     'ssl_resend_validation_mail' => 'Reenviar Correo de Validación',
@@ -525,6 +525,10 @@ $_ADDONLANG = array(
     'ssl_validation_https' => 'Validación mediante protocolo https',
     'ssl_no_mail_validation' => 'El certificado no contiene ningún dominio con validación por correo',
     'ssl_resend' => 'Reenviar',
+    'ssl_alt_name' => 'Dominio Alternativo',
+    'ssl_alt_validation_name' => 'Método de validación de Dominio Alternativo',
+    'ssl_add_alt' => 'Añadir Dominio Alternativo',
+
     /**
      * CONTENT TITLES
      */

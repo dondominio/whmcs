@@ -11,6 +11,7 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
     const ACTION_CHANGEMETHOD = 'actionchangemethod';
     const ACTION_RESEND_MAIL = 'actionresendmail';
     const ACTION_DOWNLOAD_CRT = 'downloadcrt';
+    const ACTION_GET_DOMAIN_MAILS = 'getdomainmails';
 
     protected function getViews(): array
     {
@@ -22,6 +23,7 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
             static::ACTION_CHANGEMETHOD => 'action_ChangeMethod',
             static::ACTION_RESEND_MAIL => 'action_ResendValidationMail',
             static::ACTION_DOWNLOAD_CRT => 'action_DownloadCRT',
+            static::ACTION_GET_DOMAIN_MAILS => 'action_GetDomainMails',
         ];
     }
 
@@ -180,11 +182,12 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
             'links' => [
                 'action_reissue' => $this->buildUrl(static::ACTION_REISSUE),
                 'index' => $this->buildUrl(static::VIEW_INDEX),
+                'domain_mails' => $this->buildUrl(static::ACTION_GET_DOMAIN_MAILS),
             ],
         ]);
     }
 
-    protected function action_Reissue(): array
+    protected function action_Reissue(): void
     {
         $CSRArgs = [
             'organizationName' => $this->getRequest()->getParam('organization_name'),
@@ -197,10 +200,14 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
 
         $altNames = $this->getRequest()->getArrayParam('alt_name', []);
         $altValidations = $this->getRequest()->getArrayParam('alt_validation', []);
+        $altValidationsMails = $this->getRequest()->getArrayParam('alt_validation_mail', []);
 
         $validationMethod = $this->getRequest()->getParam('validation_method');
+        $validationMail = $this->getRequest()->getParam('validation_mail');
 
-        $reissueResponse = $this->getApp()->reissue($CSRArgs, $validationMethod, $altNames, $altValidations);
+        $validationMethod = $validationMethod === 'mail' ? $validationMail : $validationMethod;
+
+        $reissueResponse = $this->getApp()->reissue($CSRArgs, $validationMethod, $altNames, $altValidations, $altValidationsMails);
         $isSuccess = $reissueResponse === 'success';
 
         $response = [
@@ -210,11 +217,9 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
 
         $this->getResponse()->setContentType(\WHMCS\Module\Addon\Dondominio\Helpers\Response::CONTENT_JSON);
         $this->getResponse()->send(json_encode($response), true);
-
-        return $response;
     }
 
-    protected function action_ChangeMethod(): array
+    protected function action_ChangeMethod(): void
     {
         $commonName = $this->getRequest()->getParam('common_name', '');
         $method = $this->getRequest()->getParam('validation_method', '');
@@ -229,11 +234,9 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
 
         $this->getResponse()->setContentType(\WHMCS\Module\Addon\Dondominio\Helpers\Response::CONTENT_JSON);
         $this->getResponse()->send(json_encode($response), true);
-
-        return $response;
     }
 
-    protected function action_ResendValidationMail(): array
+    protected function action_ResendValidationMail(): void
     {
         $commonName = $this->getRequest()->getParam('common_name', '');
         $resendResponse = $this->getApp()->resendValidationMail($commonName);
@@ -246,8 +249,6 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
 
         $this->getResponse()->setContentType(\WHMCS\Module\Addon\Dondominio\Helpers\Response::CONTENT_JSON);
         $this->getResponse()->send(json_encode($response), true);
-
-        return $response;
     }
 
     protected function action_DownloadCRT(): array
@@ -278,7 +279,19 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
         header(sprintf('Content-Disposition: attachment; filename=%s', $name));
 
         echo $data;
-
         die();
+    }
+
+    protected function action_GetDomainMails(): void
+    {
+        $commonName = $this->getRequest()->getParam('common_name', '');
+        $mails = $this->getApp()->getCommonNameValidationEmails($commonName);
+
+        $response = [
+            'mails' => $mails,
+        ];
+
+        $this->getResponse()->setContentType(\WHMCS\Module\Addon\Dondominio\Helpers\Response::CONTENT_JSON);
+        $this->getResponse()->send(json_encode($response), true);
     }
 }

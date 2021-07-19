@@ -525,6 +525,9 @@ $_ADDONLANG = array(
     'ssl_validation_https' => 'Validation via https protocol',
     'ssl_no_mail_validation' => 'The certificate does not contain any domain with mail validation',
     'ssl_resend' => 'Resend',
+    'ssl_alt_name' => 'Alternative Domain',
+    'ssl_alt_validation_name' => 'Alternative Domain validation method',
+    'ssl_add_alt' => 'Add Alternate Domain',
 
     /**
      * CONTENT TITLES

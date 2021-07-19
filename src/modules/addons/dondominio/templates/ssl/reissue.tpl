@@ -63,14 +63,14 @@
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <label data-dd-alt-name-domain for="alt_name[]">Dominio Alternativo 1</label>
+                                    <label for="alt_name[]">{$LANG.ssl_alt_name} <span
+                                            data-dd-alt-name-count>1</span></label>
                                     <input type="text" class="form-control" name="alt_name[]" id="alt_name[]"
                                         disabled="disabled">
                                 </div>
                                 <div class="col-sm-6">
-                                    <label data-dd-alt-name-method for="alt_validation[]">Método de validación de
-                                        Dominio
-                                        Alternativo 1</label>
+                                    <label for="alt_validation[]">{$LANG.ssl_alt_validation_name} <span
+                                            data-dd-alt-name-count>1</span></label>
                                     <select class="form-control" name="alt_validation[]" id="alt_validation[]"
                                         disabled="disabled">
                                         {html_options options=$validation_methods selected=dns}
@@ -82,8 +82,8 @@
                 </div>
 
                 <div class="form-group text-center">
-                    <a data-dd-add-altdomain href="#" class="btn btn-default"><i class="fa fa-plus"></i> Añadir Dominio
-                        Alternativo</a>
+                    <a data-dd-add-altdomain href="#" class="btn btn-default"><i
+                            class="fa fa-plus"></i>{$LANG.ssl_add_alt}</a>
                 </div>
 
                 {/if}
@@ -121,8 +121,7 @@
             }
 
             altNameDivs.find('[data-dd-close-altdomain]').hide()
-            clone.find('[data-dd-alt-name-domain]').text('Dominio Alternativo ' + altNameCount)
-            clone.find('[data-dd-alt-name-method]').text('Método de validación de Dominio Alternativo ' + altNameCount)
+            clone.find('[data-dd-alt-name-count]').text(altNameCount)
             clone.find('[name="alt_name[]"]').val('');
             clone.find('[name="alt_validation[]"]').val('dns');
             clone.find('[data-dd-close-altdomain]').show();

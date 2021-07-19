@@ -32,6 +32,7 @@
             </td>
         </tr>
         {/if}
+        {if isset($certificate.validationData.externalValidation)}
         <tr>
             <td>
                 {$DD_LANG.cert_external_validation}
@@ -44,6 +45,7 @@
                 {/if}
             </td>
         </tr>
+        {/if}
     </table>
 
     <table class="table table-striped table-bordered">
@@ -81,11 +83,11 @@
                         {$DD_LANG.cert_validation_mail_send}: <span
                             data-dd-domain-check-mail="{$domain.checkvalue}">{$domain.checkvalue}</span>
                         {elseif $domain.method eq dns}
-                        {$DD_LANG.cert_validation_create_cname}: 
+                        {$DD_LANG.cert_validation_create_cname}:
                         <pre>{$domain.checkvalue}</pre>
                         {elseif $domain.method eq http or $domain.method eq https}
-                        {$DD_LANG.cert_validation_create_link} <a
-                            target="_blank" href="{$domain.checkvalue.link}">{$domain.checkvalue.link}</a>
+                        {$DD_LANG.cert_validation_create_link} <a target="_blank"
+                            href="{$domain.checkvalue.link}">{$domain.checkvalue.link}</a>
                         {$DD_LANG.cert_validation_with_content}:
                         <pre>{$domain.checkvalue.contents}</pre>
                         {/if}
@@ -151,7 +153,6 @@
                             <label for="common_name">{$DD_LANG.cert_domain}</label>
                             <input data-dd-domain class="form-control" name="common_name" id="common_name" readonly />
                         </div>
-
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">{$LANG.close}</button>
@@ -161,7 +162,6 @@
                 </div>
             </div>
         </form>
-    </div>
     </div>
 
     {include file=$js}
@@ -186,7 +186,7 @@
                     option.text(element);
 
                     option.appendTo('[data-dd-mail-validation-method]');
-                })
+                });
 
                 $('[data-dd-validation-method]').val(method);
             });

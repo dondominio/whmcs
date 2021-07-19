@@ -224,7 +224,7 @@
 {if not $is_valid}
 <div class="text-center">
     <a data-dd-load-validation href="{$links.validation}" class="btn btn-success">
-        <i data-dd-loading-vacations class="fas fa-lg fa-circle-notch fa-spin" style="display: none;"></i>
+        <i data-dd-loading-validations class="fas fa-lg fa-circle-notch fa-spin" style="display: none;"></i>
         <span data-dd-loading-text>{$DD_LANG.cert_load_validation}</span>
     </a>
 </div>
@@ -275,11 +275,13 @@
             e.preventDefault();
             let url = $(this).attr('href');
 
-            $('[data-dd-loading-vacations]').show();
+            $('[data-dd-loading-validations]').show();
             $('[data-dd-loading-text]').hide();
             $('[data-dd-validation-view]').css('opacity', '0.5');
+            $('[data-dd-validation-view]').css('pointer-events', 'none');
 
             $.ajax({
+                method: 'post',
                 url: url,
                 dataType: 'html',
                 success: function (response) {
@@ -287,7 +289,7 @@
 
                     $('[data-dd-validation-view]').replaceWith(validationDiv);
 
-                    $('[data-dd-loading-vacations]').hide();
+                    $('[data-dd-loading-validations]').hide();
                     $('[data-dd-loading-text]').show();
                 }
             });

@@ -99,11 +99,11 @@ class App
      *
      * @return string 'success' or error
      */
-    public function reissue(array $csrDataArgs, string $validationMethod, array $altNames = [], array $altValidations = []): string
+    public function reissue(array $csrDataArgs, string $validationMethod, array $altNames = [], array $altValidations = [], array $altValidationMail = []): string
     {
         $reissue = new \WHMCS\Module\Server\Dondominiossl\Actions\Reissue($this->getApiService(), $this->getParams());
         $reissue->setCsrDataArgs($csrDataArgs);
-        $reissue->setAltNames($altNames, $altValidations);
+        $reissue->setAltNames($altNames, $altValidations, $altValidationMail);
         $reissue->setValidationMethod($validationMethod);
         return $reissue->execute();
     }

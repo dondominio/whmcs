@@ -23,13 +23,14 @@ abstract class Base
     {
         $customAction = $this->getRequest()->getParam('custom_action', static::VIEW_INDEX);
         $views = $this->getViews();
+        $response = [];
 
         if (isset($views[$customAction]) && method_exists($this, $views[$customAction])) {
             $function = $views[$customAction];
-            return $this->$function();
+            $response = $this->$function();
         }
 
-        return [];
+        return is_array($response) ? $response : [];
     }
 
     protected function send(string $templateFile, array $variables = []): array
