@@ -22,20 +22,15 @@ class Reissue extends \WHMCS\Module\Server\Dondominiossl\Actions\Base
         $this->validationMethod = $validationMethod;
     }
 
-    public function setAltNames(array $altNames, array $altValidations, array $altValidationMails): void
+    public function setAltNames(array $altNames, array $altValidations): void
     {
         $altNamesFiltred = [];
         $altValidationsFiltred = [];
-        $mailCount = 0;
 
         foreach ($altNames as $key => $val) {
             if (!empty($val) && !empty($altValidations[$key])) {
-                $isMail = $altValidations[$key] === 'mail';
-
                 $altNamesFiltred[] = $altNames[$key];
-                $altValidationsFiltred[] = $isMail ? $altValidationMails[$mailCount] : $altValidations[$key];
-
-                $mailCount += (int) $isMail;
+                $altValidationsFiltred[] =  $altValidations[$key];
             }
         }
 

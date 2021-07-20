@@ -17,17 +17,11 @@
 
     <div class="form-group">
         <label for="validation_method">{$DD_LANG.cert_validation_method}</label>
-        <select data-dd-alt-name-method="0" class="form-control" name="validation_method" id="validation_method">
+        <select class="form-control" name="validation_method" id="validation_method">
             {html_options options=$validation_methods selected=dns}
-        </select>
-    </div>
-
-    <div class="form-group">
-        <div class="text-center" data-dd-loading-mails style="display: none;">
-            <i class="fas fa-lg fa-circle-notch fa-spin"></i>
-        </div>
-        <select data-dd-alt-name-mails="0" class="form-control" name="validation_mail" id="validation_mail"
-            style="display: none;">
+            <optgroup label="{$DD_LANG.cert_mail}">
+                {html_options options=$validation_mails}
+            </optgroup>
         </select>
     </div>
 
@@ -65,40 +59,68 @@
     </div>
 
     {if $certificate.sanMaxDomains gt 0}
-
     <div data-dd-alt-name-container>
+
+        {if $alt_names|count gt 0}
+
+        {foreach from=$alt_names key=key item=name}
+        <div data-dd-alt-name class="panel panel-default" style="padding: 10px;">
+            <div class="text-right">
+                <a data-dd-close-altdomain href='#'><i class="fa fa-times"></i></a>
+            </div>
+            <div class="row">
+                <div class="col-sm-8">
+                    <div class="form-group">
+                        <label for="alt_name[]">{$DD_LANG.cert_alt_name} <span data-dd-alt-name-count>{$key +
+                                1}</span></label>
+                        <input data-dd-alt-name-domain="{$key + 1}" type="text" class="form-control" name="alt_name[]"
+                            id="alt_name[]" value="{$name}">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label data-dd-alt-name-method-title="{$key + 1}" data-dd-default-val="{$default_method_title}"
+                            for="change_alt_validation[]">{$default_method_title}</label>
+                        <input data-dd-alt-name-change="{$key + 1}" data-dd-modal data-dd-change-method="dns"
+                            data-toggle="modal" data-target="#changemethod" type="button" id='change_alt_validation[]'
+                            name='change_alt_validation[]' class="form-control btn btn-primary" value="Cambiar" />
+                    </div>
+
+                    <input data-dd-alt-name-method="{$key + 1}" type="hidden" class="form-control"
+                        name="alt_validation[]" id="alt_validation[]" value="dns">
+                </div>
+            </div>
+        </div>
+        {/foreach}
+
+        {else}
         <div data-dd-alt-name class="panel panel-default" style="display: none; padding: 10px;">
             <div class="text-right">
                 <a data-dd-close-altdomain href='#'><i class="fa fa-times"></i></a>
             </div>
             <div class="row">
-                <div class="col-sm-6">
+                <div class="col-sm-8">
                     <div class="form-group">
                         <label for="alt_name[]">{$DD_LANG.cert_alt_name} <span data-dd-alt-name-count>1</span></label>
                         <input data-dd-alt-name-domain="1" type="text" class="form-control" name="alt_name[]"
                             id="alt_name[]" disabled="disabled">
                     </div>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-4">
                     <div class="form-group">
-                        <label for="alt_validation[]">{$DD_LANG.cert_alt_validation_name} <span
-                                data-dd-alt-name-count>1</span></label>
-                        <select data-dd-alt-name-method="1" class="form-control" name="alt_validation[]"
-                            id="alt_validation[]" disabled="disabled">
-                            {html_options options=$validation_methods selected=dns}
-                        </select>
+                        <label data-dd-alt-name-method-title="1" data-dd-default-val="{$default_method_title}"
+                            for="change_alt_validation[]">{$default_method_title}</label>
+                        <input data-dd-alt-name-change="1" data-dd-modal data-dd-change-method="dns" data-toggle="modal"
+                            data-target="#changemethod" type="button" id='change_alt_validation[]'
+                            name='change_alt_validation[]' class="form-control btn btn-primary" value="Cambiar" />
                     </div>
-                    <div class="form-group">
-                        <div class="text-center" data-dd-loading-mails style="display: none;">
-                            <i class="fas fa-lg fa-circle-notch fa-spin"></i>
-                        </div>
-                        <select data-dd-alt-name-mails="1" class="form-control" name="alt_validation_mail[]"
-                            id="alt_validation_mail[]" disabled="disabled" style="display: none;">
-                        </select>
-                    </div>
+
+                    <input data-dd-alt-name-method="1" type="hidden" class="form-control" name="alt_validation[]"
+                        id="alt_validation[]" disabled="disabled">
                 </div>
             </div>
         </div>
+        {/if}
     </div>
 
     <div class="form-group text-center">
@@ -122,47 +144,82 @@
 <input data-dd-max-alt-domains type="hidden" value="{$certificate.sanMaxDomains}">
 <input data-dd-domain-mail-url type="hidden" value="{$links.domain_mails}">
 
+<div id="changemethod" class="modal" tabindex="-1" role="modal">
+    <form data-dd-change-method-form action='{$links.changemethod}' method='post'>
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content panel panel-primary">
+                    <div class="modal-header panel-heading">
+                        <h5 class="modal-title">{$DD_LANG.cert_change_method}</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div data-dd-mails-loading class="text-center" style="display: none;">
+                            <i class="fas fa-lg fa-circle-notch fa-spin"></i>
+                        </div>
+
+                        <div data-dd-mails-error class="alert alert-danger" role="alert" style="display: none;">{$DD_LANG.invalid_common_name}</div>
+                        
+                        <div data-dd-mails class="form-group">
+                            <label for="common_name">{$DD_LANG.cert_domain}</label>
+                            <input data-dd-domain class="form-control" name="common_name" readonly />
+                        </div>
+
+                        <div data-dd-mails class="form-group">
+                            <label for="validation_method">{$DD_LANG.cert_new_validation_method}</label>
+                            <select data-dd-validation-method class="form-control" name="validation_method">
+                                {html_options options=$validation_methods}
+                                <optgroup data-dd-mail-validation-method label="{$DD_LANG.cert_mail}"></optgroup>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{$LANG.close}</button>
+                        <input data-dd-mails type='submit' name='submit_button' class='btn btn-primary' value="Cambiar" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
 {include file=$js}
 
 {literal}
 <script>
     $(document).ready(function () {
+        checkMaxAltNames();
+
         $('[data-dd-add-altdomain]').click(function (e) {
             e.preventDefault();
-            let maxAlts = $('[data-dd-max-alt-domains]').val()
             let altNameContainer = $('[data-dd-alt-name-container]');
             let altNameDivs = $('[data-dd-alt-name]');
             let altNameDiv = altNameDivs.first();
             let altNameCount = altNameDivs.length + 1;
             let clone = altNameDiv.clone();
+            let defaultValTitle = $('[data-dd-default-val]').data('dd-default-val');
 
             if (altNameDiv.is(":hidden")) {
                 altNameDiv.show();
-                altNameDiv.find('[data-dd-alt-name-domain]').attr('disabled', false);
+                altNameDiv.find('input, select').attr('disabled', false);
                 altNameDiv.find('[name="alt_name[]"]').val('');
                 altNameDiv.find('[name="alt_validation[]"]').val('dns');
+                altNameDiv.find('[data-dd-alt-name-method-title]').text(defaultValTitle)
                 altNameDiv.find('[data-dd-close-altdomain]').show();
                 return;
             }
 
-            altNameDivs.find('[data-dd-close-altdomain]').hide()
             clone.find('[data-dd-alt-name-count]').text(altNameCount);
             clone.find('[data-dd-alt-name-domain]').attr('data-dd-alt-name-domain', altNameCount);
             clone.find('[data-dd-alt-name-method]').attr('data-dd-alt-name-method', altNameCount);
-            clone.find('[data-dd-alt-name-mails]').attr('data-dd-alt-name-mails', altNameCount);
-            clone.find('[data-dd-alt-name-mails]').attr('disabled', true);
-            clone.find('[data-dd-alt-name-method]').attr('disabled', true);
+            clone.find('[data-dd-alt-name-change]').attr('data-dd-alt-name-change', altNameCount);
+            clone.find('[data-dd-alt-name-method-title]').attr('data-dd-alt-name-method-title', altNameCount);
             clone.find('[name="alt_name[]"]').val('');
             clone.find('[name="alt_validation[]"]').val('dns');
-            clone.find('[data-dd-close-altdomain]').show();
-            clone.find('[data-dd-alt-name-mails]').hide();
-            clone.find('[data-dd-alt-name-mails]').attr('disabled', true)
+            clone.find('[data-dd-alt-name-method-title]').text(defaultValTitle)
 
             altNameContainer.append(clone);
-
-            if (altNameCount >= maxAlts) {
-                $(this).hide();
-            }
+            
+            checkMaxAltNames();
         });
 
         $('body').on('click', '[data-dd-close-altdomain]', function (e) {
@@ -173,6 +230,7 @@
             if (altNameCount === 1) {
                 altNameDiv.hide()
                 altNameDiv.find('input, select').attr('disabled', true);
+                resetAltNamesKeys();
                 return;
             }
 
@@ -180,81 +238,53 @@
             $('[data-dd-alt-name]').last().find('[data-dd-close-altdomain]').show();
 
             $('[data-dd-add-altdomain]').show();
+
+            resetAltNamesKeys();
         });
 
-        $('body').on('change', '[data-dd-alt-name-method]', function (e) {
-            let num = $(this).data('dd-alt-name-method');
-            let method = $(this).val();
-            let domain = $('[data-dd-alt-name-domain="' + num + '"]').val();
-            let url = $('[data-dd-domain-mail-url]').val();
-            let mailSelect = $('[data-dd-alt-name-mails="' + num + '"]');
-            let container = mailSelect.parents('[data-dd-alt-name]');
-            let loading = mailSelect.siblings('[data-dd-loading-mails]');
-            let form = $('[data-form-dd-ssl]');
-            let addBtn = $('[data-dd-add-altdomain]');
+        $('form[data-dd-change-method-form]').submit(function (e) {
+            e.preventDefault();
+            let validationMethod = $(this).find('[name="validation_method"]').val();
+            let validationMethodText = $(this).find('[name="validation_method"] option:selected').text();
+            let num = $(this).attr('data-dd-change-method-form');
 
-            if (method !== 'mail') {
-                mailSelect.hide();
-                mailSelect.attr('disabled', true)
-                return;
+            $('[data-dd-alt-name-method="' + num + '"]').val(validationMethod);
+            $('[data-dd-alt-name-method-title="' + num + '"]').text(validationMethodText);
+            $('[data-dd-alt-name-change="' + num + '"]').attr('data-dd-change-method', validationMethod);
+
+            $(this).parents('.modal').modal('hide');
+        });
+
+        $('body').on('click', '[data-dd-alt-name-change]', function (e) {
+            let num = $(this).data('dd-alt-name-change');
+            let selectedMthod = $('[data-dd-alt-name-method="' + num + '"]').val();
+
+            $('[data-dd-change-method-form]').attr('data-dd-change-method-form', num);
+            $('form[data-dd-change-method-form]').find('[name="validation_method"]')
+        });
+
+        function resetAltNamesKeys() {
+
+            $('[data-dd-alt-name]').each(function (key, element) {
+                let altNameKey = ++key;
+                let altName = $(element);
+
+                altName.find('[data-dd-alt-name-count]').text(altNameKey);
+                altName.find('[data-dd-alt-name-domain]').attr('data-dd-alt-name-domain', altNameKey);
+                altName.find('[data-dd-alt-name-method]').attr('data-dd-alt-name-method', altNameKey);
+                altName.find('[data-dd-alt-name-change]').attr('data-dd-alt-name-change', altNameKey);
+                altName.find('[data-dd-alt-name-method-title]').attr('data-dd-alt-name-method-title', altNameKey);
+            })
+
+        }
+
+        function checkMaxAltNames() {
+            let maxAlts = $('[data-dd-max-alt-domains]').val();
+            let count = ++$('[data-dd-alt-name]').length;
+
+            if (count > maxAlts){
+                $('[data-dd-add-altdomain]').hide();
             }
-
-            loading.show();
-            container.css('opacity', '0.5');
-            addBtn.css('opacity', '0.5');
-            addBtn.css('pointer-events', 'none');
-            form.find('input, select').attr('disabled', true);
-
-            $.ajax({
-                method: 'post',
-                data: { common_name: domain },
-                url: url,
-                type: 'json',
-                success: function (json) {
-                    mailSelect.empty();
-
-                    if (json.mails) {
-                        $.each(json.mails, function (key, val) {
-                            let option = $('<option></option>');
-                            option.val(val);
-                            option.text(val);
-
-                            mailSelect.append(option);
-                        });
-                    }
-
-                    mailSelect.attr('disabled', false);
-                    mailSelect.show();
-                    loading.hide();
-                    container.css('opacity', '1');
-                    form.find('input, select').not('[data-dd-alt-name-mails]:hidden').attr('disabled', false);
-                    addBtn.css('pointer-events', 'auto');
-                    addBtn.css('opacity', '1');
-                    
-                    $('[data-dd-alt-name-domain]').each(function (key, element) {
-                        let elementNum = $(element).data('dd-alt-name-domain');
-                        let methodSelect = $('[data-dd-alt-name-method="' + elementNum + '"]');
-                        methodSelect.attr('disabled', !isValidDomain($(element).val()));
-                    });
-                }
-            });
-
-        });
-
-        $('body').on('input', '[data-dd-alt-name-domain]', function (e) {
-            let domain = $(this).val();
-            let num = $(this).data('dd-alt-name-domain');
-            let methodSelect = $('[data-dd-alt-name-method="' + num + '"]');
-
-            methodSelect.attr('disabled', !isValidDomain(domain));
-
-            methodSelect.val('dns');
-            methodSelect.trigger('change');
-        });
-
-        function isValidDomain(domain) {
-            var re = new RegExp(/^((?:(?:(?:\w[\.\-\+]?)*)\w)+)((?:(?:(?:\w[\.\-\+]?){0,62})\w)+)\.(\w{2,6})$/);
-            return domain.match(re);
         }
     });
 </script>

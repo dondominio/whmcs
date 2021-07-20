@@ -161,6 +161,6 @@ class API_Service implements \WHMCS\Module\Server\Dondominiossl\Services\Contrac
     public function getValidationEmails(string $commonName, bool $includeAlternativeMethods = false): \Dondominio\API\Response\Response
     {
         $connection = $this->getApiConnection();
-        return $connection->ssl_getValidationEmails($commonName, ['includeAlternativeMethods' => $includeAlternativeMethods]);
+        return $connection->ssl_getValidationEmails($commonName, ['includeAlternativeMethods' => (int) $includeAlternativeMethods]);
     }
 }

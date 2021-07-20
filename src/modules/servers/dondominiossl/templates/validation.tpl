@@ -115,16 +115,20 @@
                             <h5 class="modal-title">{$DD_LANG.cert_change_method}</h5>
                         </div>
                         <div class="modal-body">
-                            <div class="form-group">
-                                <label for="common_name">{$DD_LANG.cert_domain}</label>
-                                <input data-dd-domain class="form-control" name="common_name" id="common_name"
-                                    readonly />
+                            <div data-dd-mails-loading class="text-center" style="display: none;">
+                                <i class="fas fa-lg fa-circle-notch fa-spin"></i>
                             </div>
 
-                            <div class="form-group">
+                            <div data-dd-mails-error class="alert alert-danger" role="alert" style="display: none;"></div>
+
+                            <div data-dd-mails class="form-group">
+                                <label for="common_name">{$DD_LANG.cert_domain}</label>
+                                <input data-dd-domain class="form-control" name="common_name" readonly />
+                            </div>
+    
+                            <div data-dd-mails class="form-group">
                                 <label for="validation_method">{$DD_LANG.cert_new_validation_method}</label>
-                                <select data-dd-validation-method class="form-control" name="validation_method"
-                                    id="validation_method">
+                                <select data-dd-validation-method class="form-control" name="validation_method">
                                     {html_options options=$validation_methods}
                                     <optgroup data-dd-mail-validation-method label="{$DD_LANG.cert_mail}"></optgroup>
                                 </select>
@@ -132,8 +136,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">{$LANG.close}</button>
-                            <input type='submit' name='submit_button' id='settings_submit' class='btn btn-primary'
-                                value="Cambiar" />
+                            <input type='submit' name='submit_button' class='btn btn-primary' value="Cambiar" />
                         </div>
                     </div>
                 </div>
@@ -165,32 +168,4 @@
     </div>
 
     {include file=$js}
-
-    {literal}
-    <script>
-        $(document).ready(function () {
-            $('[data-dd-modal]').click(function (e) {
-                let domainParent = $(this).parents('[data-dd-domain]');
-                let domain = domainParent.data('dd-domain');
-                let mails = domainParent.data('dd-domain-mails');
-                let mail = domainParent.find('[data-dd-domain-check-mail]').data('dd-domain-check-mail');
-                let method = mail !== undefined && mail.length > 0 ? mail : $(this).data('dd-change-method');
-                let mailList = mails.split(',');
-
-                $('[data-dd-domain]').val(domain);
-                $('[data-dd-mail-validation-method]').empty();
-
-                mailList.forEach(function (element) {
-                    let option = $('<option></option>');
-                    option.val(element);
-                    option.text(element);
-
-                    option.appendTo('[data-dd-mail-validation-method]');
-                });
-
-                $('[data-dd-validation-method]').val(method);
-            });
-        });
-    </script>
-    {/literal}
 </div>

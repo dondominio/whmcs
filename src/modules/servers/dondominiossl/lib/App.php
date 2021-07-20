@@ -99,11 +99,11 @@ class App
      *
      * @return string 'success' or error
      */
-    public function reissue(array $csrDataArgs, string $validationMethod, array $altNames = [], array $altValidations = [], array $altValidationMail = []): string
+    public function reissue(array $csrDataArgs, string $validationMethod, array $altNames = [], array $altValidations = []): string
     {
         $reissue = new \WHMCS\Module\Server\Dondominiossl\Actions\Reissue($this->getApiService(), $this->getParams());
         $reissue->setCsrDataArgs($csrDataArgs);
-        $reissue->setAltNames($altNames, $altValidations, $altValidationMail);
+        $reissue->setAltNames($altNames, $altValidations);
         $reissue->setValidationMethod($validationMethod);
         return $reissue->execute();
     }
@@ -133,12 +133,12 @@ class App
         return $resendValidationMail->execute();
     }
 
-    public function getCommonNameValidationEmails(string $commonName): array
+    public function getCommonNameValidationEmails(string $commonName, bool $includeAlternativeMethods = false): ?array
     {
         try {
-            $response = $this->getApiService()->getValidationEmails($commonName);
+            $response = $this->getApiService()->getValidationEmails($commonName, $includeAlternativeMethods);
         } catch (\Exception $e){
-            return [];
+            return null;
         }
 
         if (is_array($response->get('valMethods'))){

@@ -10,6 +10,7 @@ class English extends \WHMCS\Module\Server\Dondominiossl\Lang\Base
     {
         return [
             'product_data' => 'Product dates',
+            'cert_title' => 'Certificate details',
             'cert_data' => 'Certificate Data',
             'cert_type' => 'Certificate type',
             'cert_id' => 'Certificate ID',
@@ -68,6 +69,7 @@ class English extends \WHMCS\Module\Server\Dondominiossl\Lang\Base
             'cert_status_cancel' => 'Cancelled',
             'cert_can_not_reissue' => 'This certificate cannot be reissued',
             'back' => 'Go Back',
+            'invalid_common_name' => 'Dominio inválido',
         ];
     }
 }

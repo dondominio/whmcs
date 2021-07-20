@@ -1,4 +1,4 @@
-<h3>{$LANG.clientareaproductdetails}</h3>
+<h3>{$DD_LANG.cert_title} {$certificate.commonName}</h3>
 
 <hr>
 
@@ -123,6 +123,16 @@
                 </tr>
             </thead>
             <tbody>
+                {if $certificate.commonName}
+                <tr>
+                    <td>
+                        Common Name
+                    </td>
+                    <td>
+                        {$certificate.commonName}
+                    </td>
+                </tr>
+                {/if}
                 {if $dd_product_name}
                 <tr>
                     <td>
@@ -160,7 +170,9 @@
                     </td>
                     <td>
                         {foreach from=$certificate.alternativeNames item=alt_name}
+                        {if $alt_name neq $certificate.commonName}
                         <span style="display: block;">{$alt_name}</span>
+                        {/if}
                         {/foreach}
                     </td>
                 </tr>
@@ -194,7 +206,8 @@
                             <input type="hidden" name="need_pass" value="">
                             <input type="hidden" name="type" value="zip">
                             <div class="btn-group">
-                                <a data-dd-download-crt href="#" class="btn btn-primary"><i class="fa fa-download"></i> {$DD_LANG.cert_download}</a>
+                                <a data-dd-download-crt href="#" class="btn btn-primary"><i class="fa fa-download"></i>
+                                    {$DD_LANG.cert_download}</a>
                                 <a href="#" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
                                     aria-haspopup="true" aria-expanded="false">
                                     <span data-dd-download-text>ZIP</span>
@@ -204,8 +217,8 @@
                                 <ul class="dropdown-menu">
                                     {foreach from=$download_types key=type item=name}
                                     <li><a data-dd-download-type='{$type}'
-                                            data-dd-download-type-need-pass="{$name.need_pass}"
-                                            href="#"><i class="fa fa-download"></i> {$name.name}</a></li>
+                                            data-dd-download-type-need-pass="{$name.need_pass}" href="#"><i
+                                                class="fa fa-download"></i> {$name.name}</a></li>
                                     {/foreach}
                                 </ul>
                             </div>
@@ -328,7 +341,7 @@
             form.find('[name="password"]').val('');
         });
 
-        function downloadCRT(){
+        function downloadCRT() {
             let form = $('[data-dd-download-form]');
             let needPass = form.find('[name="need_pass"]').val();
             let password = form.find('[name="password"]').val();

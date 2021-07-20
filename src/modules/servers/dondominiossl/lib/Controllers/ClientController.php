@@ -118,6 +118,7 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
                 'download_crt' => $this->buildUrl(static::ACTION_DOWNLOAD_CRT),
                 'viewreissue' => $this->buildUrl(static::VIEW_REISSUE),
                 'validation' => $this->buildUrl(static::VIEW_VALIDATION),
+                'domain_mails' => $this->buildUrl(static::ACTION_GET_DOMAIN_MAILS),
             ]
         ]);
     }
@@ -155,6 +156,7 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
             'links' => [
                 'changemethod' => $this->buildUrl(static::ACTION_CHANGEMETHOD),
                 'resendmail' => $this->buildUrl(static::ACTION_RESEND_MAIL),
+                'domain_mails' => $this->buildUrl(static::ACTION_GET_DOMAIN_MAILS),
             ]
         ]);
     }
@@ -163,14 +165,27 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
     {
         $getInfoResponse = $this->getApp()->getCertificateInfo('validationStatus');
         $user = $this->getApp()->getParams()['clientsdetails'];
+        $validationMethods = $this->getValidationMethods();
+        unset($validationMethods['mail']);
         $certificate = [];
+        $mails = [];
+        $alternativeNames = [];
 
-        if (is_object($getInfoResponse)){
+        if (is_object($getInfoResponse)) {
             $certificate = $getInfoResponse->getResponseData();
             $canReissue = $getInfoResponse->get('status') === 'valid';
+            $alternativeNames = $getInfoResponse->get('alternativeNames');
 
-            if (!$canReissue){
+            if (!$canReissue) {
                 $this->setErrorMsg($this->translate('cert_can_not_reissue'));
+            }
+
+            $mails = $this->getApp()->getCommonNameValidationEmails($getInfoResponse->get('commonName'));
+
+            foreach ($alternativeNames as $key => $alts) {
+                if ($alts === $getInfoResponse->get('commonName')) {
+                    unset($alternativeNames[$key]);
+                }
             }
         }
 
@@ -178,7 +193,10 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
             'user' => $user,
             'certificate' => $certificate,
             'can_reissue' => $canReissue,
-            'validation_methods' => $this->getValidationMethods(),
+            'validation_methods' => $validationMethods,
+            'validation_mails' => array_combine($mails, $mails),
+            'default_method_title' => $this->translate('cert_validation_dns'),
+            'alt_names' => array_values($alternativeNames),
             'links' => [
                 'action_reissue' => $this->buildUrl(static::ACTION_REISSUE),
                 'index' => $this->buildUrl(static::VIEW_INDEX),
@@ -200,14 +218,10 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
 
         $altNames = $this->getRequest()->getArrayParam('alt_name', []);
         $altValidations = $this->getRequest()->getArrayParam('alt_validation', []);
-        $altValidationsMails = $this->getRequest()->getArrayParam('alt_validation_mail', []);
 
         $validationMethod = $this->getRequest()->getParam('validation_method');
-        $validationMail = $this->getRequest()->getParam('validation_mail');
 
-        $validationMethod = $validationMethod === 'mail' ? $validationMail : $validationMethod;
-
-        $reissueResponse = $this->getApp()->reissue($CSRArgs, $validationMethod, $altNames, $altValidations, $altValidationsMails);
+        $reissueResponse = $this->getApp()->reissue($CSRArgs, $validationMethod, $altNames, $altValidations);
         $isSuccess = $reissueResponse === 'success';
 
         $response = [
@@ -288,6 +302,7 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
         $mails = $this->getApp()->getCommonNameValidationEmails($commonName);
 
         $response = [
+            'success' => !is_null($mails),
             'mails' => $mails,
         ];
 

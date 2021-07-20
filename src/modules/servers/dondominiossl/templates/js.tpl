@@ -1,3 +1,5 @@
+<input data-dd-domain-mail-url type="hidden" value="{$links.domain_mails}">
+
 {literal}
 <script>
     $(document).ready(function () {
@@ -23,7 +25,7 @@
                     modal.modal('hide');
                     form.find('input, select').attr('disabled', false);
 
-                    if (reloadValidation.length > 0){
+                    if (reloadValidation.length > 0) {
                         reloadValidation[0].click();
                     }
 
@@ -45,6 +47,54 @@
             });
 
         });
+
+        $('body').on('click', '[data-dd-modal]', function (e) {
+            let domainParent = $(this).parents('[data-dd-domain]');
+            let domain = domainParent.data('dd-domain');
+            let mail = domainParent.find('[data-dd-domain-check-mail]').data('dd-domain-check-mail');
+            let method = mail !== undefined && mail.length > 0 ? mail : $(this).attr('data-dd-change-method');
+            let url = $('[data-dd-domain-mail-url]').val();
+
+            if (domain === undefined) {
+                domain = $(this).parents('[data-dd-alt-name]').find('[data-dd-alt-name-domain]').val();
+            }
+
+            $('[data-dd-domain]').val(domain);
+            $('[data-dd-mail-validation-method]').empty();
+
+            $('[data-dd-mails-loading]').show();
+            $('[data-dd-mails-error]').hide();
+            $('[data-dd-mails]').hide();
+
+            $.ajax({
+                method: 'post',
+                data: { common_name: domain },
+                url: url,
+                type: 'json',
+                success: function (json) {
+                    $('[data-dd-mails-loading]').hide();
+
+                    if (json.success) {
+                        $('[data-dd-mails]').show();
+
+                        json.mails.forEach(function (element) {
+                            let option = $('<option></option>');
+                            option.val(element);
+                            option.text(element);
+
+                            option.appendTo('[data-dd-mail-validation-method]');
+                        });
+
+                        $('[data-dd-validation-method]').val(method);
+                        return;
+                    }
+
+                    $('[data-dd-mails-error]').show();
+                }
+            });
+
+        });
+
     });
 </script>
 {/literal}
