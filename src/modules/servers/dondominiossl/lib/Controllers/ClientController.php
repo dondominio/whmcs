@@ -114,6 +114,7 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
             'download_types' => $downloadTypes,
             'in_process' => $crtStatus === 'process',
             'is_valid' => $crtStatus === 'valid',
+            'product_is_pending' => $this->getApp()->getParams()['status'] === 'Pending',
             'links' => [
                 'download_crt' => $this->buildUrl(static::ACTION_DOWNLOAD_CRT),
                 'viewreissue' => $this->buildUrl(static::VIEW_REISSUE),

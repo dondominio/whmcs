@@ -61,10 +61,15 @@ class App
 
     public function getCertificateInfo(string $infoType = 'ssldata', string $password = ''): ?\Dondominio\API\Response\Response
     {
+        $api = $this->getApiService();
+        $certificateID = $this->getParams()['customfields'][\WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::CUSTOM_FIELD_CERTIFICATE_ID];
+
+        if (empty($certificateID)) {
+            return null;
+        }
+
         try {
-            $api = $this->getApiService();
-            $certificateID = $this->getParams()['customfields'][\WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::CUSTOM_FIELD_CERTIFICATE_ID];
-            $response = $api->getCertificateInfo($certificateID, $infoType, $password);
+            $response = $api->getCertificateInfo((int) $certificateID, $infoType, $password);
         } catch (\Exception $e) {
             return null;
         }
@@ -137,11 +142,11 @@ class App
     {
         try {
             $response = $this->getApiService()->getValidationEmails($commonName, $includeAlternativeMethods);
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             return null;
         }
 
-        if (is_array($response->get('valMethods'))){
+        if (is_array($response->get('valMethods'))) {
             return $response->get('valMethods');
         }
 

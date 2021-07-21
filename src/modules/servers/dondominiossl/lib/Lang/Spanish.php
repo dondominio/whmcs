@@ -70,6 +70,7 @@ class Spanish extends \WHMCS\Module\Server\Dondominiossl\Lang\Base
             'cert_can_not_reissue' => 'Este certificado no puede ser reemitido',
             'back' => 'Volver',
             'invalid_common_name' => 'Dominio inválido',
+            'product_is_pending' => 'El producto aún está pendiente',
         ];
     }
 }

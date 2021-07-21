@@ -114,6 +114,7 @@
         </table>
     </div>
     <div class="col-md-6">
+        {if not $product_is_pending}
         <table class="table table-condensed">
             <thead>
                 <tr>
@@ -229,12 +230,13 @@
                 {/if}
             </tbody>
         </table>
+        {/if}
     </div>
 </div>
 
 <hr />
 
-{if not $is_valid}
+{if not $is_valid and not $product_is_pending}
 <div class="text-center">
     <a data-dd-load-validation href="{$links.validation}" class="btn btn-success">
         <i data-dd-loading-validations class="fas fa-lg fa-circle-notch fa-spin" style="display: none;"></i>
