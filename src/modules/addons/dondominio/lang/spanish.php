@@ -520,7 +520,7 @@ $_ADDONLANG = array(
     'ssl_whmcs_products_not_found' => 'No se han encontrado productos en WHMCS relacionados con los productos de DonDominio',
     'ssl_add_product' => 'Añadir productos',
     'ssl_validation_mail' => 'Validación por correo electrónico',
-    'ssl_validation_dns' => 'Validación mediante registro dns en la zona dns del dominio',
+    'ssl_validation_dns' => 'Validación mediante registro dns',
     'ssl_validation_http' => 'Validación mediante protocolo http',
     'ssl_validation_https' => 'Validación mediante protocolo https',
     'ssl_no_mail_validation' => 'El certificado no contiene ningún dominio con validación por correo',
@@ -528,6 +528,9 @@ $_ADDONLANG = array(
     'ssl_alt_name' => 'Dominio Alternativo',
     'ssl_alt_validation_name' => 'Método de validación de Dominio Alternativo',
     'ssl_add_alt' => 'Añadir Dominio Alternativo',
+    'ssl_change_method' => 'Cambiar método',
+    'ssl_new_validation_method' => 'Nuevo método de validación',
+    'ssl_mail' => 'Correo',
 
     /**
      * CONTENT TITLES

@@ -505,6 +505,17 @@ class API_Service extends AbstractService implements APIService_Interface
         ]);
     }
 
+    /**
+     * Send a request to DonDominio API for get the validation mails of a common name
+     *
+     * @return \Dondominio\API\Response\Response
+     */
+    public function getValidationEmails(string $commonName, bool $includeAlternativeMethods = false): \Dondominio\API\Response\Response
+    {
+        $connection = $this->getApiConnection();
+        return $connection->ssl_getValidationEmails($commonName, ['includeAlternativeMethods' => (int) $includeAlternativeMethods]);
+    }
+
     public function printApiInfo()
     {
         $this->getApiConnection()->info();

@@ -528,6 +528,9 @@ $_ADDONLANG = array(
     'ssl_alt_name' => 'Alternative Domain',
     'ssl_alt_validation_name' => 'Alternative Domain validation method',
     'ssl_add_alt' => 'Add Alternate Domain',
+    'ssl_change_method' => 'Change method',
+    'ssl_new_validation_method' => 'New validation method',
+    'ssl_mail' => 'Mail',
 
     /**
      * CONTENT TITLES

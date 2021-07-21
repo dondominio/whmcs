@@ -29,7 +29,7 @@ class SSL_Controller extends Controller
     const ACTION_RESEND_VALIDATION_MAIL = 'actionresendvalidationmail';
     const ACTION_SYNC = 'actionsync';
     const ACTION_UPDATEPRODUCT = 'updateproduct';
-    const ACTION_INSTALL = 'install';
+    const ACTION_DOMAN_VALIDATION_MAILS = 'domainvalidationmails';
 
     /**
      * Gets available actions for Controller
@@ -55,7 +55,7 @@ class SSL_Controller extends Controller
             static::ACTION_RESEND_VALIDATION_MAIL => 'action_ResendValidationMail',
             static::ACTION_SYNC => 'action_Sync',
             static::ACTION_UPDATEPRODUCT => 'action_UpdateProduct',
-            static::ACTION_INSTALL => 'action_Install',
+            static::ACTION_DOMAN_VALIDATION_MAILS => 'action_GetDomainValidationMails',
         ];
     }
 
@@ -483,7 +483,7 @@ class SSL_Controller extends Controller
         $apiService = $app->getService('api');
 
         $certificateID = $this->getRequest()->getParam('certificate_id');
-        $certificateOrder = $sslService->getCertificateOrder($certificateID);
+        $certificateOrder = $sslService->getvalidationmails($certificateID);
         $user = [];
         $certificatesData = [];
 
@@ -494,6 +494,14 @@ class SSL_Controller extends Controller
         try {
             $certificates = $apiService->getSSLCertificateInfo($certificateID);
             $certificatesData =  $certificates->getResponseData();
+            $alternativeNames = $certificates->get('alternativeNames');
+
+            foreach ($alternativeNames as $key => $alts) {
+                if ($alts === $certificates->get('commonName')) {
+                    unset($alternativeNames[$key]);
+                }
+            }
+
         } catch (\Exception $e) {
             $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
         }
@@ -504,11 +512,13 @@ class SSL_Controller extends Controller
             'certificate' => $certificatesData,
             'user' => $user,
             'validation_methods' => $this->getValidationMethods(),
+            'alt_names' => array_values($alternativeNames),
             'actions' => [
                 'reissue' => static::ACTION_REISSUE
             ],
             'links' => [
                 'view_certificateinfo' =>  static::makeUrl(static::VIEW_CERTIFICATE_INFO, ['certificate_id' => $certificateID]),
+                'domain_mails' => static::makeUrl(static::ACTION_DOMAN_VALIDATION_MAILS),
             ]
         ];
 
@@ -550,7 +560,7 @@ class SSL_Controller extends Controller
             $validationsFiltred = [];
 
             foreach ($altNames as $key => $val) {
-                if (!empty($val)) {
+                if (!empty($val) && !empty($altValidations[$key])) {
                     $altNamesFiltred[] = $altNames[$key];
                     $validationsFiltred[] = $altValidations[$key];
                 }
@@ -586,6 +596,7 @@ class SSL_Controller extends Controller
 
         $certificateID = $this->getRequest()->getParam('certificate_id');
         $domain = [];
+        $validationMails = [];
         $validationMethods = $this->getValidationMethods();
 
         try {
@@ -597,6 +608,10 @@ class SSL_Controller extends Controller
             foreach ($dcv as $val) {
                 $domain[$val['domainName']] = $val['domainName'];
             }
+
+            $apiResponse = $apiService->getValidationEmails(reset($domain), false);
+
+            $validationMails = $apiResponse->get('valMethods');
         } catch (\Exception $e) {
             $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
         }
@@ -607,11 +622,13 @@ class SSL_Controller extends Controller
             'certificate' => $certificatesData,
             'domains' => $domain,
             'validation_methods' => $validationMethods,
+            'validation_mails' => $validationMails,
             'actions' => [
                 'change_validaton_method' => static::ACTION_CHANGE_VALIDATION_METHOD
             ],
             'links' => [
                 'view_certificateinfo' =>  static::makeUrl(static::VIEW_CERTIFICATE_INFO, ['certificate_id' => $certificateID]),
+                'domain_mails' => static::makeUrl(static::ACTION_DOMAN_VALIDATION_MAILS),
             ]
         ];
 
@@ -865,6 +882,28 @@ class SSL_Controller extends Controller
         ];
 
         return $this->view('install', $params);
+    }
+
+    public function action_GetDomainValidationMails(): void
+    {
+        $app = $this->getApp();
+        $apiService = $app->getService('api');
+        $commonName = $this->getRequest()->getParam('common_name', '');
+        $response = [];
+
+        try {
+            $apiResponse = $apiService->getValidationEmails($commonName, false);
+
+            $response = [
+                'success' => true,
+                'mails' => $apiResponse->get('valMethods'),
+            ];
+        } catch (\Exception $e){
+            $response['success'] = false;
+        }
+
+        $this->getResponse()->setContentType(\WHMCS\Module\Addon\Dondominio\Helpers\Response::CONTENT_JSON);
+        $this->getResponse()->send(json_encode($response), true);
     }
 
     /**
