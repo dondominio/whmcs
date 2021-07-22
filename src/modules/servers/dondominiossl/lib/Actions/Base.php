@@ -9,7 +9,7 @@ abstract class Base
     protected \WHMCS\Module\Server\Dondominiossl\Services\Contracts\APIService_Interface $api;
 
     protected string $fieldCertificateID = \WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::CUSTOM_FIELD_CERTIFICATE_ID;
-    protected string $fieldCommonName = \WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::CUSTOM_FIELD_COMMON_NAMEM;
+    protected string $fieldCommonName = \WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::CUSTOM_FIELD_COMMON_NAME;
 
     public function __construct(
         \WHMCS\Module\Server\Dondominiossl\Services\Contracts\APIService_Interface $api,
@@ -17,9 +17,26 @@ abstract class Base
     ) {
         $this->api = $api;
         $this->params = $params;
+        $this->setCustomFields();
     }
 
     public abstract function execute(): string;
+
+    protected function setCustomFields(): void
+    {
+        $service = \WHMCS\Service\Service::where('id', 35)->first();
+        $customFields = [];
+
+        if (!is_object($service)) {
+            return;
+        }
+
+        foreach ($service->customFieldValues as $cf) {
+            $customFields[$cf->customField->getAttributes()['fieldname']] = $cf->value;
+        }
+
+        $this->params['customfields'] = $customFields;
+    }
 
     /**
      * Get the certificate ID in Custom Fields of the order

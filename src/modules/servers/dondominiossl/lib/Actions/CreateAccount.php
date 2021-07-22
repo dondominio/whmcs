@@ -5,6 +5,7 @@ namespace WHMCS\Module\Server\Dondominiossl\Actions;
 
 class CreateAccount extends \WHMCS\Module\Server\Dondominiossl\Actions\Base
 {
+    protected string $fieldAltName = \WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::CUSTOM_FIELD_ALT_NAME;
 
     /**
      * Create a SSL Certificate
@@ -31,8 +32,10 @@ class CreateAccount extends \WHMCS\Module\Server\Dondominiossl\Actions\Base
             $args['csrData'] = $csrResponse->get('csrData');
             $args['keyData'] = $csrResponse->get('csrKey');
 
+            $this->addAltNames($args);
+
             $response = $this->api->createCertificate($this->params['configoption1'], $args);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return $e->getMessage();
         }
 
@@ -69,4 +72,27 @@ class CreateAccount extends \WHMCS\Module\Server\Dondominiossl\Actions\Base
 
         return $this->api->createCSRData($args);
     }
+
+    protected function addAltNames(array &$args): void
+    {
+        $product = \WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::where(['dd_product_id' => $this->params['configoption1']])->first();
+        $sanMaxDomains = $product->getSanMaxDomains();
+        $altNameCount = 1;
+
+        if (!$product->isMultiDomain()) {
+            return;
+        }
+
+        for ($i = 0; $i < $sanMaxDomains; $i++) {
+            if (empty($this->params['customfields'][$this->fieldAltName . $i])) {
+                continue;
+            }
+
+            $args['alt_name_' . $altNameCount] = $this->params['customfields'][$this->fieldAltName . $i];
+            $args['alt_validation_' . $altNameCount] = 'dns';
+
+            $altNameCount++;
+        }
+    }
+
 }

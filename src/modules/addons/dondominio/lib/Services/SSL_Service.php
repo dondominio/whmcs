@@ -64,6 +64,7 @@ class SSL_Service extends AbstractService implements SSLService_Interface
         $this->setIfExists($insert, 'price_create', $args, ['create', 'create']);
         $this->setIfExists($insert, 'price_renew', $args, ['renew', 'create']);
         $this->setIfExists($insert, 'trial_period', $args, ['trialPeriod']);
+        $this->setIfExists($insert, 'san_max_domains', $args, ['sanMaxDomains']);
 
         $insert['status'] = $this->validProduct($args['productID']);
 

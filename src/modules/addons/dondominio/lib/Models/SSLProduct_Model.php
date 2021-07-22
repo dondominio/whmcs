@@ -16,7 +16,8 @@ class SSLProduct_Model extends AbstractModel
     const PRICE_INCREMENT_TYPE_NONE = '';
 
     const CUSTOM_FIELD_CERTIFICATE_ID = 'CertificateID';
-    const CUSTOM_FIELD_COMMON_NAMEM = 'CommonName';
+    const CUSTOM_FIELD_COMMON_NAME = 'CommonName';
+    const CUSTOM_FIELD_ALT_NAME = 'altName';
 
     protected $table = 'mod_dondominio_ssl_products';
     protected $primaryKey = 'dd_product_id';
@@ -58,27 +59,6 @@ class SSLProduct_Model extends AbstractModel
      * 
      * @return array
      */
-    public static function getCustomFields(): array
-    {
-        return [
-            static::CUSTOM_FIELD_COMMON_NAMEM => [
-                'type' => 'text',
-                'required' => true,
-                'showorder' => true
-            ],
-            static::CUSTOM_FIELD_CERTIFICATE_ID => [
-                'type' => 'text',
-                'required' => false,
-                'showorder' => false
-            ],
-        ];
-    }
-
-    /**
-     * Return a list with the Custom Fields to add to the WHMCS Product
-     * 
-     * @return array
-     */
     protected static function getCurrencyID(): int
     {
         $currencyID = \WHMCS\Database\Capsule::table('tblcurrencies')
@@ -92,6 +72,75 @@ class SSLProduct_Model extends AbstractModel
         }
 
         return (int) $currencyID;
+    }
+
+    /**
+     * Return a list with the Custom Fields to add to the WHMCS Product
+     * 
+     * @return array
+     */
+    public function getCustomFields(): array
+    {
+        $customFields = [
+            static::CUSTOM_FIELD_COMMON_NAME => [
+                'type' => 'text',
+                'required' => true,
+                'showorder' => true,
+                'regex' => '',
+                'translations' => [
+                    'name' =>  [
+                        'spanish' => 'Common Name',
+                        'english' => 'Common Name',
+                    ],
+                    'description' => [],
+                ],
+            ],
+            static::CUSTOM_FIELD_CERTIFICATE_ID => [
+                'type' => 'text',
+                'required' => false,
+                'showorder' => false,
+                'regex' => '',
+                'translations' => [
+                    'name' => [],
+                    'description' => [],
+                ],
+            ],
+        ];
+
+        if ($this->isWildCard()){
+            $customFields[static::CUSTOM_FIELD_COMMON_NAME]['regex'] = '/^(\*\.)[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$/';
+            $customFields[static::CUSTOM_FIELD_COMMON_NAME]['translations']['description'] = [
+                'spanish' => 'El common name para un Wildard debe empezar por un * (*.example.com)',
+                'english' => 'The common name for a Wildcard must start with * (* .example.com)',
+            ];
+        }
+
+        if ($this->isMultiDomain()){
+            $this->generateAltNameCustomFields($customFields);
+        }
+
+        return $customFields;
+    }
+
+    protected function generateAltNameCustomFields(array &$customField): void
+    {
+        $sanMaxDomains = $this->getSanMaxDomains();
+
+        for ($i = 1 ; $i <= $sanMaxDomains ; $i++){
+            $customField[static::CUSTOM_FIELD_ALT_NAME . $i] = [
+                'type' => 'text',
+                'required' => false,
+                'showorder' => true,
+                'regex' => '',
+                'translations' => [
+                    'name' =>  [
+                        'spanish' => 'Nombre Alternativo ' . $i,
+                        'english' => 'Alternative Name ' . $i,
+                    ],
+                    'description' => [],
+                ],
+            ];
+        }
     }
 
     /**
@@ -224,7 +273,7 @@ class SSLProduct_Model extends AbstractModel
             return;
         }
 
-        $customFields = static::getCustomFields();
+        $customFields = $this->getCustomFields();
 
         foreach ($customFields as $key => $cf) {
             $customField = new \WHMCS\CustomField();
@@ -235,8 +284,22 @@ class SSLProduct_Model extends AbstractModel
             $customField->fieldtype = $cf['type'];
             $customField->required = $cf['required'] ? 'on' : '';
             $customField->showorder = $cf['showorder'] ? 'on' : '';
+            $customField->regularExpression = $cf['regex'];
 
             $customField->save();
+
+            foreach ($cf['translations'] as $type => $translations) {
+                foreach ($translations as $lang => $trans){
+                    \WHMCS\Database\Capsule::table('tbldynamic_translations')->updateOrInsert([
+                        'related_type' => 'custom_field.{id}.' . $type,
+                        'related_id' => $customField->id,
+                        'language' => $lang,
+                    ], [
+                        'translation' => $trans,
+                        'input_type' => 'text'
+                    ]);
+                }
+            }
         }
     }
 
@@ -341,5 +404,20 @@ class SSLProduct_Model extends AbstractModel
         }
 
         return $increment;
+    }
+
+    public function isWildCard(): bool
+    {
+        return (bool) $this->is_wildcard;
+    }
+
+    public function isMultiDomain(): bool
+    {
+        return (bool) $this->is_multi_domain;
+    }
+
+    public function getSanMaxDomains(): int
+    {
+        return (int) $this->san_max_domains;
     }
 }
