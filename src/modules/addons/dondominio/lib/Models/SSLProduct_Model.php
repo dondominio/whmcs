@@ -86,7 +86,7 @@ class SSLProduct_Model extends AbstractModel
                 'type' => 'text',
                 'required' => true,
                 'showorder' => true,
-                'regex' => '',
+                'regex' => '/^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$/',
                 'translations' => [
                     'name' =>  [
                         'spanish' => 'Common Name',
@@ -107,7 +107,7 @@ class SSLProduct_Model extends AbstractModel
             ],
         ];
 
-        if ($this->isWildCard()){
+        if ($this->isWildCard()) {
             $customFields[static::CUSTOM_FIELD_COMMON_NAME]['regex'] = '/^(\*\.)[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$/';
             $customFields[static::CUSTOM_FIELD_COMMON_NAME]['translations']['description'] = [
                 'spanish' => 'El common name para un Wildard debe empezar por un * (*.example.com)',
@@ -115,18 +115,25 @@ class SSLProduct_Model extends AbstractModel
             ];
         }
 
-        if ($this->isMultiDomain()){
+        if ($this->isMultiDomain()) {
             $this->generateAltNameCustomFields($customFields);
         }
 
         return $customFields;
     }
 
+    /**
+     * Add the alternative names to custom fields array 
+     * 
+     * @param array $customField
+     * 
+     * @return void
+     */
     protected function generateAltNameCustomFields(array &$customField): void
     {
-        $sanMaxDomains = $this->getSanMaxDomains();
+        $numDomains = $this->getNumDomains();
 
-        for ($i = 1 ; $i <= $sanMaxDomains ; $i++){
+        for ($i = 1; $i <= $numDomains; $i++) {
             $customField[static::CUSTOM_FIELD_ALT_NAME . $i] = [
                 'type' => 'text',
                 'required' => false,
@@ -289,7 +296,7 @@ class SSLProduct_Model extends AbstractModel
             $customField->save();
 
             foreach ($cf['translations'] as $type => $translations) {
-                foreach ($translations as $lang => $trans){
+                foreach ($translations as $lang => $trans) {
                     \WHMCS\Database\Capsule::table('tbldynamic_translations')->updateOrInsert([
                         'related_type' => 'custom_field.{id}.' . $type,
                         'related_id' => $customField->id,
@@ -406,18 +413,43 @@ class SSLProduct_Model extends AbstractModel
         return $increment;
     }
 
+    /**
+     * Return if product is a Wildcard
+     * 
+     * @return bool
+     */
     public function isWildCard(): bool
     {
         return (bool) $this->is_wildcard;
     }
 
+    /**
+     * Return if product is a Multi Domain
+     * 
+     * @return bool
+     */
     public function isMultiDomain(): bool
     {
         return (bool) $this->is_multi_domain;
     }
 
+    /**
+     * Return the san max domains of product
+     * 
+     * @return bool
+     */
     public function getSanMaxDomains(): int
     {
         return (int) $this->san_max_domains;
+    }
+
+    /**
+     * Return the nom domains of product
+     * 
+     * @return bool
+     */
+    public function getNumDomains(): int
+    {
+        return (int) $this->num_domains;
     }
 }

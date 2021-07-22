@@ -8,6 +8,11 @@ use WHMCS\Database\Capsule;
 class SSL_Service extends AbstractService implements SSLService_Interface
 {
 
+    /**
+     * Sync the mod_dondominio_ssl_product table, and the created products in WHMCS with the DonDominio API
+     * 
+     * @return void
+     */
     public function apiSync(bool $updatePrices = false, int $page = 0): void
     {
         $apiService = $this->getApp()->getService('api');
@@ -31,7 +36,12 @@ class SSL_Service extends AbstractService implements SSLService_Interface
         }
     }
 
-    public function getProduct(int $id): \WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model
+    /**
+     * Return a instance of SSLProduct_model (mod_dondominio_ssl_product) by id
+     * 
+     * @return null|\WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model
+     */
+    public function getProduct(int $id): ?\WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model
     {
         return \WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::where(['dd_product_id' => $id])->first();
     }
@@ -47,6 +57,11 @@ class SSL_Service extends AbstractService implements SSLService_Interface
         return $groups;
     }
 
+    /**
+     * Create a mod_dondominio_ssl_product
+     * 
+     * @return void
+     */
     public function createProduct(array $args): void
     {
         $insert = [];
@@ -66,11 +81,14 @@ class SSL_Service extends AbstractService implements SSLService_Interface
         $this->setIfExists($insert, 'trial_period', $args, ['trialPeriod']);
         $this->setIfExists($insert, 'san_max_domains', $args, ['sanMaxDomains']);
 
-        $insert['status'] = $this->validProduct($args['productID']);
-
         Capsule::table('mod_dondominio_ssl_products')->updateOrInsert(['dd_product_id' => $args['productID']], $insert);
     }
 
+    /**
+     * Set a array variable if exists
+     * 
+     * @return void
+     */
     protected function setIfExists(array &$insert, string $insertKey, array $response, array $responseKeys): void
     {
         foreach ($responseKeys as $value) {
@@ -84,15 +102,12 @@ class SSL_Service extends AbstractService implements SSLService_Interface
         $insert[$insertKey] = $response;
     }
 
-    protected function validProduct(int $productID): int
-    {
-        return true;
-        $validProducts = [55, 56];
-
-        return (int) in_array($productID, $validProducts);
-    }
-
-    public function getCertificateOrder(int $certificateID)
+    /**
+     * Return a mod_dondominio_ssl_certificate_orders by the certificateID if exists
+     * 
+     * @return null|\WHMCS\Module\Addon\Dondominio\Models\SSLCertificateOrder_Model
+     */
+    public function getCertificateOrder(int $certificateID): ?\WHMCS\Module\Addon\Dondominio\Models\SSLCertificateOrder_Model
     {
         $order = \WHMCS\Module\Addon\Dondominio\Models\SSLCertificateOrder_Model::where([
             'certificate_id' => $certificateID

@@ -357,7 +357,6 @@ class Migrations
                 $table->integer('trial_period')->default(0);
                 $table->integer('san_max_domains')->default(0);
                 $table->decimal('san_price')->default(0);
-                $table->tinyInteger('status')->default(0);
                 $table->decimal('price_create_increment')->default(0);
                 $table->enum('price_create_increment_type', $priceIncrementsType)->default($priceIncrementsTypeNone);
             });

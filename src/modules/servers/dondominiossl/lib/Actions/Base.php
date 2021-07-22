@@ -22,9 +22,14 @@ abstract class Base
 
     public abstract function execute(): string;
 
+    /**
+     * Set the customfields with consistent keys
+     * 
+     * @return void
+     */
     protected function setCustomFields(): void
     {
-        $service = \WHMCS\Service\Service::where('id', 35)->first();
+        $service = \WHMCS\Service\Service::where('id', $this->params['serviceid'])->first();
         $customFields = [];
 
         if (!is_object($service)) {

@@ -6,6 +6,12 @@ use Lang;
 
 class SideBar
 {
+
+    /**
+     * Function for ClientAreaPrimarySidebar hock to generate a side bar
+     * 
+     * @return void
+     */
     public function __invoke(\WHMCS\View\Menu\Item  $primarySidebar): void
     {
         $servicePanel = $primarySidebar->getChild('Service Details Overview');
@@ -31,6 +37,11 @@ class SideBar
         $servicePanel->getChild($this->getSelectedChild($childs))->setClass('active');
     }
 
+    /**
+     * Return the service id
+     * 
+     * @return int
+     */
     protected function getServiceID(): int
     {
         $service = \WHMCS\Application\Support\Facades\Menu::context('service');
@@ -55,6 +66,11 @@ class SideBar
         return (int) $serviceID;
     }
 
+    /**
+     * Get the side bar childrens
+     * 
+     * @return array
+     */
     protected function getChilds(int $serviceID): array
     {
         return [
@@ -69,6 +85,11 @@ class SideBar
         ];
     }
 
+    /**
+     * Get the actual side bar children
+     * 
+     * @return string
+     */
     protected function getSelectedChild(array $childs): string
     {
         $customAction = 'index';

@@ -8,11 +8,21 @@ class ChangeValidationMethod extends \WHMCS\Module\Server\Dondominiossl\Actions\
     protected string $domain = '';
     protected string $method = '';
 
+    /**
+     * Set the domain for change the validation method
+     * 
+     * @return void
+     */
     public function setDomains(string $domain): void
     {
         $this->domain = $domain;
     }
 
+    /**
+     * Set the validation method
+     * 
+     * @return void
+     */
     public function setMethod(string $method): void
     {
         $this->method = $method;

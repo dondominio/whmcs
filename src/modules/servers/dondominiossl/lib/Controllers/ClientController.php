@@ -13,6 +13,11 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
     const ACTION_DOWNLOAD_CRT = 'downloadcrt';
     const ACTION_GET_DOMAIN_MAILS = 'getdomainmails';
 
+    /**
+     * Return list with the controller views/actions
+     * 
+     * @return array
+     */
     protected function getViews(): array
     {
         return [
@@ -27,6 +32,11 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
         ];
     }
 
+    /**
+     * Process a request and return a array for dondominiossl_ClientArea
+     * 
+     * @return array
+     */
     public function process(): array
     {
         $response = parent::process();
@@ -38,6 +48,11 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
         return $response;
     }
 
+    /**
+     * Return array with the validation methods
+     * 
+     * @return array
+     */
     protected function getValidationMethods(): array
     {
         return [
@@ -48,6 +63,11 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
         ];
     }
 
+    /**
+     * Return array with the validation status
+     * 
+     * @return array
+     */
     protected function getValidationStatus(): array
     {
         return [
@@ -60,6 +80,11 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
         ];
     }
 
+    /**
+     * Return array with the download types
+     * 
+     * @return array
+     */
     protected function getDownloadInfoTypes(): array
     {
         $downloadTypes = [
@@ -88,6 +113,11 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
         return $downloadTypes;
     }
 
+    /**
+     * Return array with the certificate index info
+     * 
+     * @return array
+     */
     protected function view_Index(): array
     {
         $infoResponse = $this->getApp()->getCertificateInfo('ssldata');
@@ -124,6 +154,11 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
         ]);
     }
 
+    /**
+     * Return array with the validation view info
+     * 
+     * @return array
+     */
     protected function view_Validation(): array
     {
         $infoResponse = $this->getApp()->getCertificateInfo('validationStatus');
@@ -162,6 +197,11 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
         ]);
     }
 
+    /**
+     * Return array with the reissue view info
+     * 
+     * @return array
+     */
     protected function view_Reissue(): array
     {
         $getInfoResponse = $this->getApp()->getCertificateInfo('validationStatus');
@@ -206,6 +246,11 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
         ]);
     }
 
+    /**
+     * Reissue the certificate
+     * 
+     * @return void
+     */
     protected function action_Reissue(): void
     {
         $CSRArgs = [
@@ -234,6 +279,11 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
         $this->getResponse()->send(json_encode($response), true);
     }
 
+    /**
+     * Change a common name validation method of the certificate
+     * 
+     * @return void
+     */
     protected function action_ChangeMethod(): void
     {
         $commonName = $this->getRequest()->getParam('common_name', '');
@@ -251,6 +301,11 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
         $this->getResponse()->send(json_encode($response), true);
     }
 
+    /**
+     * Resend a common name validation mail of the certificate
+     * 
+     * @return void
+     */
     protected function action_ResendValidationMail(): void
     {
         $commonName = $this->getRequest()->getParam('common_name', '');
@@ -266,6 +321,11 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
         $this->getResponse()->send(json_encode($response), true);
     }
 
+    /**
+     * Download the Certificate
+     * 
+     * @return array if can't download return the index
+     */
     protected function action_DownloadCRT(): array
     {
         $infoType = $this->getRequest()->getParam('type', 'zip');
@@ -297,6 +357,11 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
         die();
     }
 
+    /**
+     * Return JSON with the common name validation mails
+     * 
+     * @return void
+     */
     protected function action_GetDomainMails(): void
     {
         $commonName = $this->getRequest()->getParam('common_name', '');

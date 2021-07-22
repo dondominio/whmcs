@@ -38,6 +38,14 @@ class Renew extends \WHMCS\Module\Server\Dondominiossl\Actions\Base
         return 'success';
     }
 
+    /**
+     * Add alternative names to args
+     *
+     * @param array $args args for renew
+     * @param \Dondominio\API\Response\Response $response Certificate API info response
+     * 
+     * @return void
+     */
     protected function addAltNames(array &$args, \Dondominio\API\Response\Response $response): void
     {
         $sanMaxDomains = (int) $response->get('sanMaxDomains');
@@ -53,7 +61,7 @@ class Renew extends \WHMCS\Module\Server\Dondominiossl\Actions\Base
         for ($i = 0; $i < count($altNames); $i++) {
             $altKey = $i + 1;
 
-            if ($commonName === [$altNames[$i]] || $altKey > $sanMaxDomains){
+            if ($commonName === [$altNames[$i]] || $altKey > $sanMaxDomains) {
                 continue;
             }
 

@@ -11,17 +11,32 @@ class Reissue extends \WHMCS\Module\Server\Dondominiossl\Actions\Base
     protected array $altNames = [];
     protected array $altValidations = [];
 
+    /**
+     * Set the args to generate the CSR
+     * 
+     * @return void
+     */
     public function setCsrDataArgs(array $csrDataArgs): void
     {
         $this->csrDataArgs = $csrDataArgs;
         $this->csrDataArgs['commonName'] = $this->params['customfields'][$this->fieldCommonName];
     }
 
+    /**
+     * Set the common name validation method
+     * 
+     * @return void
+     */
     public function setValidationMethod(string $validationMethod): void
     {
         $this->validationMethod = $validationMethod;
     }
 
+    /**
+     * Set the alternative names of certificate
+     * 
+     * @return void
+     */
     public function setAltNames(array $altNames, array $altValidations): void
     {
         $altNamesFiltred = [];

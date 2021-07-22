@@ -608,8 +608,10 @@ class SSL_Controller extends Controller
 
             $dcv = $certificatesData['validationData']['dcv'];
 
-            foreach ($dcv as $val) {
-                $domain[$val['domainName']] = $val['domainName'];
+            foreach ($dcv as $key => $val) {
+                if (!$val['validated']){
+                    $domain[$key] = $val['domainName'];
+                }
             }
 
             $apiResponse = $apiService->getValidationEmails(reset($domain), false);
@@ -682,9 +684,9 @@ class SSL_Controller extends Controller
 
             $dcv = $certificatesData['validationData']['dcv'];
 
-            foreach ($dcv as $val) {
-                if ($val['method'] === 'mail') {
-                    $domain[$val['domainName']] = $val['domainName'];
+            foreach ($dcv as $key => $val) {
+                if ($val['method'] === 'mail' && !$val['validated']) {
+                    $domain[$key] = $val['domainName'];
                 }
             }
         } catch (\Exception $e) {
@@ -787,7 +789,7 @@ class SSL_Controller extends Controller
         $sslService = $app->getSSLService();
         $whmcsService = $app->getService('whmcs');
         $utilsService = $app->getService('utils');
-        $id = $this->getRequest()->getParam('productid', 0);
+        $id = (int) $this->getRequest()->getParam('productid', 0);
         $product = $sslService->getProduct($id);
 
         try {
@@ -798,7 +800,7 @@ class SSL_Controller extends Controller
         }
 
         $whmcsProductGroups = $sslService->getProductGroups();
-        $whmcsProduct = $product->getWhmcsProduct();
+        $whmcsProduct = is_null($product) ? null : $product->getWhmcsProduct();
         $productName = $this->getRequest()->getParam('name', $product->product_name);
         $productGroup = $this->getRequest()->getParam('group', '');
         $vatNumber = $whmcsService->getVatNumberID();
@@ -817,7 +819,7 @@ class SSL_Controller extends Controller
             'product_group' => $productGroup,
             'groups' => $whmcsProductGroups,
             'increment_type' => $product->price_create_increment_type,
-            'has_whmcs_product' => $product->hasWhmcsProduct(),
+            'has_whmcs_product' => is_null($product) ? false : $product->hasWhmcsProduct(),
             'client_custom_field' => $whmcsService->getCustomClientFields(),
             'vat_number_id' => $vatNumber,
             'links' => [
@@ -844,14 +846,20 @@ class SSL_Controller extends Controller
         $sslService = $app->getSSLService();
         $utilsService = $app->getService('utils');
 
-        $id = $this->getRequest()->getParam('productid', 0);
-        $group = $this->getRequest()->getParam('group', 0);
+        $id = (int) $this->getRequest()->getParam('productid', 0);
+        $group = (int) $this->getRequest()->getParam('group', 0);
         $name = $this->getRequest()->getParam('name', '');
         $increment = $this->getRequest()->getParam('increment', 0);
         $vatNumber = $this->getRequest()->getParam('vat_number', 0);
         $incrementType = $this->getRequest()->getParam('increment_type', '');
 
         $product = $sslService->getProduct($id);
+
+        if (is_null($product)){
+            $this->getResponse()->addError($app->getLang('ssl_product_not_found'));
+            return $this->view_EditProduct();
+        }
+
         $product->price_create_increment = $increment;
         $product->price_create_increment_type = $incrementType;
 
@@ -887,6 +895,11 @@ class SSL_Controller extends Controller
         return $this->view('install', $params);
     }
 
+    /**
+     * Return JSON with the validation mails of a domain
+     * 
+     * @return void
+     */
     public function action_GetDomainValidationMails(): void
     {
         $app = $this->getApp();

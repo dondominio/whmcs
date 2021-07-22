@@ -7,6 +7,11 @@ class ResendValidationMail extends \WHMCS\Module\Server\Dondominiossl\Actions\Ba
 {
     protected string $commonName = '';
 
+    /**
+     * Set the common name to resend validation mail
+     * 
+     * @return void
+     */
     public function setCommonName(string $commonName): void
     {
         $this->commonName = $commonName;

@@ -73,6 +73,13 @@ class CreateAccount extends \WHMCS\Module\Server\Dondominiossl\Actions\Base
         return $this->api->createCSRData($args);
     }
 
+    /**
+     * Add alternative names to args
+     *
+     * @param array $args args for create
+     * 
+     * @return void
+     */
     protected function addAltNames(array &$args): void
     {
         $product = \WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::where(['dd_product_id' => $this->params['configoption1']])->first();

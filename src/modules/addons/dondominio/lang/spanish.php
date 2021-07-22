@@ -530,6 +530,7 @@ $_ADDONLANG = array(
     'ssl_change_method' => 'Cambiar método',
     'ssl_new_validation_method' => 'Nuevo método de validación',
     'ssl_mail' => 'Correo',
+    'ssl_product_not_found' => 'Producto SSL no encontrado',
 
     /**
      * CONTENT TITLES

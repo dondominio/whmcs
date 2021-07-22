@@ -70,12 +70,22 @@ abstract class Base
         return \WHMCS\Module\Addon\Dondominio\Helpers\Response::getInstance();
     }
 
+    /**
+     * Generate a url of the client area
+     * 
+     * @return string
+     */
     protected function buildUrl(string $view): string
     {
         $serviceID = $this->getRequest()->getParam('id', '');
         return sprintf('clientarea.php?action=productdetails&id=%s&custom_action=%s', $serviceID, $view);
     }
 
+    /**
+     * Get a instance of App
+     * 
+     * @return \WHMCS\Module\Server\Dondominiossl\App
+     */
     protected function getApp(): \WHMCS\Module\Server\Dondominiossl\App
     {
         if (is_null($this->app)) {
@@ -85,6 +95,11 @@ abstract class Base
         return $this->app;
     }
 
+    /**
+     * Translate a string with a implementation of WHMCS\Module\Server\Dondominiossl\Lang\Translations
+     * 
+     * @return string
+     */
     public function translate(string $toTranslate): string
     {
         $language = $this->getApp()->getLanguage();
