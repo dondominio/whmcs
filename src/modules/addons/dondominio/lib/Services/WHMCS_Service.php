@@ -170,7 +170,7 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
             $queryBuilder->where('is_wildcard', '=', $filters['product_wildcard']);
         }
 
-        if (array_key_exists('product_trial', $filters) && strlen($filters['product_trial'])) {
+        if (array_key_exists('product_trial', $filters)) {
             $queryBuilder->where('is_trial', '=', $filters['product_trial']);
         }
 

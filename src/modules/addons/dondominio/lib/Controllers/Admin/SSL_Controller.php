@@ -31,6 +31,8 @@ class SSL_Controller extends Controller
     const ACTION_UPDATEPRODUCT = 'updateproduct';
     const ACTION_DOMAN_VALIDATION_MAILS = 'domainvalidationmails';
 
+    const SHOW_TRIAL = false;
+
     /**
      * Gets available actions for Controller
      *
@@ -177,6 +179,7 @@ class SSL_Controller extends Controller
         $filters = [
             'whmcs_product_name' => $this->getRequest()->getParam('whmcs_product_name'),
             'product_imported' => true,
+            'product_trial' => static::SHOW_TRIAL,
         ];
 
         $page = $this->getRequest()->getParam('page', 1);
@@ -223,7 +226,7 @@ class SSL_Controller extends Controller
             'product_name' => $this->getRequest()->getParam('product_name'),
             'product_multi_domain' => $this->getRequest()->getParam('product_multi_domain'),
             'product_wildcard' => $this->getRequest()->getParam('product_wildcard'),
-            'product_trial' => $this->getRequest()->getParam('product_trial'),
+            'product_trial' => static::SHOW_TRIAL,
             'product_validation_type' => $this->getRequest()->getParam('product_validation_type'),
             'product_imported' => false,
         ];

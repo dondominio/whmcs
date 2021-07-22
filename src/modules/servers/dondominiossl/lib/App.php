@@ -152,4 +152,18 @@ class App
 
         return [];
     }
+
+    public function getProductSelect(): array
+    {
+        $products = $this->getApiService()->getProductList();
+        $productOptions = [];
+
+        foreach ($products as $p) {
+            if (!$p['isTrial']) {
+                $productOptions[$p['productID']] = $p['productName'];
+            }
+        }
+
+        return $productOptions;
+    }
 }

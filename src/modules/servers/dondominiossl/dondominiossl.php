@@ -86,14 +86,7 @@ function dondominiossl_MetaData()
 function dondominiossl_ConfigOptions()
 {
     $app = new \WHMCS\Module\Server\Dondominiossl\App();
-    $api = $app->getApiService();
-
-    $products = $api->getProductList();
-    $productOptions = [];
-
-    foreach ($products as $p) {
-        $productOptions[$p['productID']] = $p['productName'];
-    }
+    $productOptions = $app->getProductSelect();
 
     return [
         'Product' => [

@@ -41,14 +41,6 @@
                                 {$LANG.ssl_label_product_wildcard}
                             </label>
                         </td>
-
-                        <td width='15%' class='fieldlabel'>
-                            <label for='product_trial'>
-                                <input type='checkbox' name='product_trial' id="product_trial" value='1' {if
-                                    $filters.product_trial}checked{/if} />
-                                {$LANG.ssl_label_product_trial}
-                            </label>
-                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -112,10 +104,6 @@
                 {$LANG.ssl_label_product_wildcard}
             </th>
 
-            <th>
-                {$LANG.ssl_label_product_trial}
-            </th>
-
             <th style="width: 20px;"></th>
         </tr>
     </thead>
@@ -149,14 +137,6 @@
 
             <td class="text-center">
                 {if $product.is_wildcard}
-                <i class="fad fa-check text-success"></i>
-                {else}
-                <i class="fad fa-times text-danger"></i>
-                {/if}
-            </td>
-
-            <td class="text-center">
-                {if $product.is_trial}
                 <i class="fad fa-check text-success"></i>
                 {else}
                 <i class="fad fa-times text-danger"></i>
@@ -198,10 +178,6 @@
 
             <th>
                 {$LANG.ssl_label_product_wildcard}
-            </th>
-
-            <th>
-                {$LANG.ssl_label_product_trial}
             </th>
 
             <th style="width: 20px;"></th>
