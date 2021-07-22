@@ -306,7 +306,7 @@
 
         function resetAltNamesKeys() {
             $('[data-dd-alt-name]').each(function (key, element) {
-                let altNameKey = ++key;
+                let altNameKey = key + 1;
                 let altName = $(element);
 
                 altName.find('[data-dd-alt-name-count]').text(altNameKey);
@@ -319,7 +319,7 @@
 
         function checkMaxAltNames() {
             let maxAlts = $('[data-dd-max-alt-domains]').val();
-            let count = ++$('[data-dd-alt-name]').length;
+            let count = $('[data-dd-alt-name]').length + 1;
 
             if (count > maxAlts) {
                 $('[data-dd-add-altdomain]').hide();

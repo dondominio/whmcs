@@ -28,11 +28,37 @@ class Renew extends \WHMCS\Module\Server\Dondominiossl\Actions\Base
             $args['csrData'] = $info->get('sslCert');
             $args['keyData'] = $info->get('sslKey');
 
+            $this->addAltNames($args, $info);
+
             $this->api->renewCertificate($certificateID, $this->getArgs());
         } catch (\Exception $e) {
             return $e->getMessage();
         }
 
         return 'success';
+    }
+
+    protected function addAltNames(array &$args, \Dondominio\API\Response\Response $response): void
+    {
+        $sanMaxDomains = (int) $response->get('sanMaxDomains');
+        $commonName = $response->get('commonName');
+        $altNames = $response->get('alternativeNames');
+
+        if (!is_array($altNames)) {
+            return;
+        }
+
+        $altNames = array_values($altNames);
+
+        for ($i = 0; $i < count($altNames); $i++) {
+            $altKey = $i + 1;
+
+            if ($commonName === [$altNames[$i]] || $altKey > $sanMaxDomains){
+                continue;
+            }
+
+            $args['alt_name_' . $altKey] = $altNames[$i];
+            $args['alt_validation_' . $altKey] = 'dns';
+        }
     }
 }
