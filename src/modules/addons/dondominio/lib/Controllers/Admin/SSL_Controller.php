@@ -458,12 +458,10 @@ class SSL_Controller extends Controller
         ];
 
         try {
-            throw new \Exception('test');
             $csrResponse = $apiService->createCSRData($CSRArgs);
 
             $renewArgs['csrData'] = $csrResponse->get('csrData');
             $renewArgs['keyData'] = $csrResponse->get('csrKey');
-
 
             $apiService->renewCertificate($certificateID, $renewArgs);
             $this->getResponse()->addSuccess($app->getLang('ssl_success_renew'));
