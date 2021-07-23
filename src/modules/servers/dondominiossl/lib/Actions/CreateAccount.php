@@ -83,14 +83,14 @@ class CreateAccount extends \WHMCS\Module\Server\Dondominiossl\Actions\Base
     protected function addAltNames(array &$args): void
     {
         $product = \WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::where(['dd_product_id' => $this->params['configoption1']])->first();
-        $sanMaxDomains = $product->getSanMaxDomains();
+        $numDomains = $product->getNumDomains() - 1;
         $altNameCount = 1;
 
         if (!$product->isMultiDomain()) {
             return;
         }
 
-        for ($i = 0; $i < $sanMaxDomains; $i++) {
+        for ($i = 0; $i < $numDomains; $i++) {
             if (empty($this->params['customfields'][$this->fieldAltName . $i])) {
                 continue;
             }

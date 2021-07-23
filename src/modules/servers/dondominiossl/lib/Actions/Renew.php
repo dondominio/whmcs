@@ -48,11 +48,12 @@ class Renew extends \WHMCS\Module\Server\Dondominiossl\Actions\Base
      */
     protected function addAltNames(array &$args, \Dondominio\API\Response\Response $response): void
     {
-        $sanMaxDomains = (int) $response->get('sanMaxDomains');
+        $product = \WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::where(['dd_product_id' => $this->params['configoption1']])->first();
+        $numDomains = (int) $response->get('numDomains');
         $commonName = $response->get('commonName');
         $altNames = $response->get('alternativeNames');
 
-        if (!is_array($altNames)) {
+        if (!is_array($altNames) || $numDomains <= 1 || !$product->isMultiDomain()) {
             return;
         }
 
@@ -61,7 +62,7 @@ class Renew extends \WHMCS\Module\Server\Dondominiossl\Actions\Base
         for ($i = 0; $i < count($altNames); $i++) {
             $altKey = $i + 1;
 
-            if ($commonName === [$altNames[$i]] || $altKey > $sanMaxDomains) {
+            if ($commonName === [$altNames[$i]] || $altKey > $numDomains) {
                 continue;
             }
 

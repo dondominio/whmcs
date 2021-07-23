@@ -154,13 +154,13 @@
                     </td>
                 </tr>
                 {/if}
-                {if $certificate.sanMaxDomains}
+                {if $certificate.numDomains}
                 <tr>
                     <td>
                         {$DD_LANG.cert_max_domains}
                     </td>
                     <td>
-                        {$certificate.sanMaxDomains}
+                        {$certificate.numDomains}
                     </td>
                 </tr>
                 {/if}

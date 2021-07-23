@@ -486,9 +486,10 @@ class SSL_Controller extends Controller
         $apiService = $app->getService('api');
 
         $certificateID = $this->getRequest()->getParam('certificate_id');
-        $certificateOrder = $sslService->getvalidationmails($certificateID);
+        $certificateOrder = $sslService->getCertificateOrder($certificateID);
         $user = [];
         $certificatesData = [];
+        $maxDomains = 0;
 
         if (is_object($certificateOrder)) {
             $user = $certificateOrder->getClientDetails();
@@ -498,6 +499,7 @@ class SSL_Controller extends Controller
             $certificates = $apiService->getSSLCertificateInfo($certificateID);
             $certificatesData =  $certificates->getResponseData();
             $alternativeNames = $certificates->get('alternativeNames');
+            $maxDomains = $certificates->get('numDomains') - 1;
 
             foreach ($alternativeNames as $key => $alts) {
                 if ($alts === $certificates->get('commonName')) {
@@ -516,6 +518,7 @@ class SSL_Controller extends Controller
             'user' => $user,
             'validation_methods' => $this->getValidationMethods(),
             'alt_names' => array_values($alternativeNames),
+            'max_domains' => $maxDomains,
             'actions' => [
                 'reissue' => static::ACTION_REISSUE
             ],

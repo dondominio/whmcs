@@ -39,23 +39,8 @@ class Reissue extends \WHMCS\Module\Server\Dondominiossl\Actions\Base
      */
     public function setAltNames(array $altNames, array $altValidations): void
     {
-        $altNamesFiltred = [];
-        $altValidationsFiltred = [];
-
-        foreach ($altNames as $key => $val) {
-            if (!empty($val) && !empty($altValidations[$key])) {
-                $altNamesFiltred[] = $altNames[$key];
-                $altValidationsFiltred[] =  $altValidations[$key];
-            }
-        }
-
-        $namesCount = count($altNamesFiltred);
-        $validationsCount = count($altValidationsFiltred);
-
-        for ($i = 1; $i <= $namesCount && $i <= $validationsCount; $i++) {
-            $this->altNames['alt_name_' . $i] = $altNamesFiltred[$i - 1];
-            $this->altValidations['alt_validation_' . $i] = $altValidationsFiltred[$i - 1];
-        }
+        $this->altNames = $altNames;
+        $this->altValidations = $altValidations;
     }
 
     /**
@@ -83,9 +68,7 @@ class Reissue extends \WHMCS\Module\Server\Dondominiossl\Actions\Base
                 'validationMethod' => $this->validationMethod,
             ];
 
-            if ($info->get('sanMaxDomains') > 0) {
-                $args = array_merge($args, $this->altNames, $this->altValidations);
-            }
+            $this->addAlternativeNames($args, $info);
 
             $this->api->reissueCertificate($certificateID, $args);
         } catch (\Exception $e) {
@@ -105,5 +88,40 @@ class Reissue extends \WHMCS\Module\Server\Dondominiossl\Actions\Base
     protected function createCSRData(): \Dondominio\API\Response\Response
     {
         return $this->api->createCSRData($this->csrDataArgs);
+    }
+
+    /**
+     * Add alternative names to args
+     *
+     * @param array $args args for renew
+     * @param \Dondominio\API\Response\Response $response Certificate API info response
+     * 
+     * @return void
+     */
+    protected function addAlternativeNames(array &$args, \Dondominio\API\Response\Response $response): void
+    {
+        $product = \WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::where(['dd_product_id' => $this->params['configoption1']])->first();
+        $numDomains = (int) $response->get('numDomains');
+        $altNamesFiltred = [];
+        $altValidationsFiltred = [];
+
+        if ($numDomains <= 1 || !$product->isMultiDomain()) {
+            return;
+        }
+
+        foreach ($this->altNames as $key => $val) {
+            if (!empty($val) && !empty($this->altValidations[$key])) {
+                $altNamesFiltred[] = $this->altNames[$key];
+                $altValidationsFiltred[] =  $this->altValidations[$key];
+            }
+        }
+
+        $namesCount = count($altNamesFiltred);
+        $validationsCount = count($altValidationsFiltred);
+
+        for ($i = 1; $i <= $namesCount && $i <= $validationsCount && $i <= $numDomains; $i++) {
+            $args['alt_name_' . $i] = $altNamesFiltred[$i - 1];
+            $args['alt_validation_' . $i] = $altValidationsFiltred[$i - 1];
+        }
     }
 }

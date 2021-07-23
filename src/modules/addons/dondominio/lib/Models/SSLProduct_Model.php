@@ -19,6 +19,9 @@ class SSLProduct_Model extends AbstractModel
     const CUSTOM_FIELD_COMMON_NAME = 'CommonName';
     const CUSTOM_FIELD_ALT_NAME = 'altName';
 
+    const DOMAIN_REGEX = '/^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$/';
+    const WILDCARD_DOMAIN_REGEX = '/^(\*\.)([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$/';
+
     protected $table = 'mod_dondominio_ssl_products';
     protected $primaryKey = 'dd_product_id';
 
@@ -86,7 +89,7 @@ class SSLProduct_Model extends AbstractModel
                 'type' => 'text',
                 'required' => true,
                 'showorder' => true,
-                'regex' => '/^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$/',
+                'regex' => static::DOMAIN_REGEX,
                 'translations' => [
                     'name' =>  [
                         'spanish' => 'Common Name',
@@ -108,7 +111,7 @@ class SSLProduct_Model extends AbstractModel
         ];
 
         if ($this->isWildCard()) {
-            $customFields[static::CUSTOM_FIELD_COMMON_NAME]['regex'] = '/^(\*\.)[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$/';
+            $customFields[static::CUSTOM_FIELD_COMMON_NAME]['regex'] = static::WILDCARD_DOMAIN_REGEX;
             $customFields[static::CUSTOM_FIELD_COMMON_NAME]['translations']['description'] = [
                 'spanish' => 'El common name para un Wildard debe empezar por un * (*.example.com)',
                 'english' => 'The common name for a Wildcard must start with * (* .example.com)',
@@ -131,18 +134,18 @@ class SSLProduct_Model extends AbstractModel
      */
     protected function generateAltNameCustomFields(array &$customField): void
     {
-        $numDomains = $this->getNumDomains();
+        $numDomains = $this->getNumDomains() - 1;
 
         for ($i = 1; $i <= $numDomains; $i++) {
             $customField[static::CUSTOM_FIELD_ALT_NAME . $i] = [
                 'type' => 'text',
                 'required' => false,
                 'showorder' => true,
-                'regex' => '',
+                'regex' => static::DOMAIN_REGEX,
                 'translations' => [
                     'name' =>  [
-                        'spanish' => 'Nombre Alternativo ' . $i,
-                        'english' => 'Alternative Name ' . $i,
+                        'spanish' => 'Dominio adicional ' . $i,
+                        'english' => 'Additional domain ' . $i,
                     ],
                     'description' => [],
                 ],

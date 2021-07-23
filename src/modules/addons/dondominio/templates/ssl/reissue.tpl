@@ -53,7 +53,7 @@
                         value="{$user.email}">
                 </div>
 
-                {if $certificate.sanMaxDomains gt 0}
+                {if $max_domains gt 0}
                 <div data-dd-alt-name-container>
 
                     {if $alt_names|count gt 0}
@@ -139,7 +139,7 @@
     </form>
 </div>
 
-<input data-dd-max-alt-domains type="hidden" value="{$certificate.sanMaxDomains}">
+<input data-dd-max-alt-domains type="hidden" value="{$max_domains}">
 <input data-dd-domain-mail-url type="hidden" value="{$links.domain_mails}">
 
 <div id="changemethod" class="modal" tabindex="-1" role="modal">

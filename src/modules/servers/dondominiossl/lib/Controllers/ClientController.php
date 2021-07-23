@@ -211,11 +211,13 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
         $certificate = [];
         $mails = [];
         $alternativeNames = [];
+        $maxDomains = 0;
 
         if (is_object($getInfoResponse)) {
             $certificate = $getInfoResponse->getResponseData();
             $canReissue = $getInfoResponse->get('status') === 'valid';
             $alternativeNames = $getInfoResponse->get('alternativeNames');
+            $maxDomains = $getInfoResponse->get('numDomains') - 1;
 
             if (!$canReissue) {
                 $this->setErrorMsg($this->translate('cert_can_not_reissue'));
@@ -238,6 +240,7 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
             'validation_mails' => array_combine($mails, $mails),
             'default_method_title' => $this->translate('cert_validation_dns'),
             'alt_names' => array_values($alternativeNames),
+            'max_domains' => $maxDomains,
             'links' => [
                 'action_reissue' => $this->buildUrl(static::ACTION_REISSUE),
                 'index' => $this->buildUrl(static::VIEW_INDEX),
