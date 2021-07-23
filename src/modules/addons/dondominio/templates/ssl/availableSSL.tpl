@@ -223,9 +223,9 @@
             if ($(this).is(':checked')) {                
                 $('[data-dd-product-ype-check]').each(function (key, element) {
                     let elementType = $(element).data('dd-product-ype-check');
-                    
+
                     if (elementType !== type) {
-                        $(element).prop("checked", false)
+                        $(element).prop("checked", false);
                     }
                 })
             }
