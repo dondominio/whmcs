@@ -531,6 +531,7 @@ $_ADDONLANG = array(
     'ssl_new_validation_method' => 'New validation method',
     'ssl_mail' => 'Mail',
     'ssl_product_not_found' => 'SSL Product not found',
+    'ssl_product_simple' => 'Simple',
 
     /**
      * CONTENT TITLES

@@ -18,17 +18,26 @@
                         <td class='fieldlabel'>
                             {$LANG.ssl_product_validation_type}
                         </td>
-        
+
                         <td class='fieldarea'>
-                            <select name='product_validation_type' >
+                            <select name='product_validation_type'>
                                 <option value=''>{$LANG.filter_any}</option>
                                 {html_options options=$validation_types selected=$filters.product_validation_type}
                             </select>
                         </td>
 
                         <td width='15%' class='fieldlabel'>
+                            <label for='product_simple'>
+                                <input data-dd-product-ype-check="simple" type='checkbox' name='product_simple'
+                                    id="product_simple" value='1' {if $filters.product_simple}checked{/if} />
+                                {$LANG.ssl_product_simple}
+                            </label>
+                        </td>
+
+                        <td width='15%' class='fieldlabel'>
                             <label for='product_multi_domain'>
-                                <input type='checkbox' name='product_multi_domain' id="product_multi_domain" value='1' {if
+                                <input data-dd-product-ype-check="complex" type='checkbox' name='product_multi_domain'
+                                    id="product_multi_domain" value='1' {if
                                     $filters.product_multi_domain}checked{/if} />
                                 {$LANG.ssl_label_product_multi_domain}
                             </label>
@@ -36,8 +45,8 @@
 
                         <td width='15%' class='fieldlabel'>
                             <label for='product_wildcard'>
-                                <input type='checkbox' name='product_wildcard' id="product_wildcard" value='1' {if
-                                    $filters.product_wildcard}checked{/if} />
+                                <input data-dd-product-ype-check="complex" type='checkbox' name='product_wildcard'
+                                    id="product_wildcard" value='1' {if $filters.product_wildcard}checked{/if} />
                                 {$LANG.ssl_label_product_wildcard}
                             </label>
                         </td>
@@ -204,7 +213,23 @@
 {literal}
 <script>
     $(document).ready(function () {
-        $('form[data-ssl-form] input[type="checkbox"], form[data-ssl-form] select').on('change', function (event) {
+        $('form[data-ssl-form] select').on('change', function () {
+            $('form[data-ssl-form]').submit();
+        });
+
+        $('[data-dd-product-ype-check]').on('change', function () {
+            let type = $(this).data('dd-product-ype-check');
+
+            if ($(this).is(':checked')) {                
+                $('[data-dd-product-ype-check]').each(function (key, element) {
+                    let elementType = $(element).data('dd-product-ype-check');
+                    
+                    if (elementType !== type) {
+                        $(element).prop("checked", false)
+                    }
+                })
+            }
+
             $('form[data-ssl-form]').submit();
         });
     });

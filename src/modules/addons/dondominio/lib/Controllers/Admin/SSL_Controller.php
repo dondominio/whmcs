@@ -228,6 +228,7 @@ class SSL_Controller extends Controller
             'product_wildcard' => $this->getRequest()->getParam('product_wildcard'),
             'product_trial' => static::SHOW_TRIAL,
             'product_validation_type' => $this->getRequest()->getParam('product_validation_type'),
+            'product_simple' => $this->getRequest()->getParam('product_simple'),
             'product_imported' => false,
         ];
 
