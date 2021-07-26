@@ -29,13 +29,18 @@
                         {/if}
                         <tr>
                             <td style="width: 250px">{$LANG.home_domains_dd}</td>
-                            <td><a href="{$links.domains}">{$total_domains}</a></td>
+                            <td class="text-right"><a href="{$links.domains}">{$total_domains}</a></td>
                             <td><a href="{$links.domains}" class="btn btn-primary">{$LANG.home_admin_domains}</a></td>
                         </tr>
                         <tr>
                             <td style="width: 250px">{$LANG.home_tlds_dd}</td>
-                            <td><a href="{$links.tlds}">{$total_tlds}</a></td>
+                            <td class="text-right"><a href="{$links.tlds}">{$total_tlds}</a></td>
                             <td><a href="{$links.tlds}" class="btn btn-primary">{$LANG.home_admin_tlds}</a></td>
+                        </tr>
+                        <tr>
+                            <td style="width: 250px">{$LANG.ssl_certificates}</td>
+                            <td class="text-right"><a href="{$links.ssl}">{$total_ssl}</a></td>
+                            <td><a href="{$links.ssl}" class="btn btn-primary">{$LANG.home_admin_ssl}</a></td>
                         </tr>
                     </tbody>
                 </table>

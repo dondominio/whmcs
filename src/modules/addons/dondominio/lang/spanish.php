@@ -532,6 +532,7 @@ $_ADDONLANG = array(
     'ssl_mail' => 'Correo',
     'ssl_product_not_found' => 'Producto SSL no encontrado',
     'ssl_product_simple' => 'Simple',
+    'ssl_invalid_vat_number' => 'Campo Vat Number inválido',
 
     /**
      * CONTENT TITLES
@@ -556,5 +557,6 @@ $_ADDONLANG = array(
     'home_tlds_dd' => 'TLDs con DonDominio',
     'home_admin_tlds' => 'Administrar TLDs',
     'home_admin_domains' => 'Administrar Dominios',
+    'home_admin_ssl' => 'Administrar SSLs',
 
 );

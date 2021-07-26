@@ -151,7 +151,7 @@ class App
                     $apiService = new API_Service([
                         'apiuser' => $this->getService('settings')->getSetting('api_username'),
                         'apipasswd' => base64_decode($this->getService('settings')->getSetting('api_password')),
-                        'userAgent' => ['DomainManagementAddonForWHMCS' => static::getVersion()]
+                        'userAgent' => ['DomainManagementAddonForWHMCS' => $this->getVersion()]
                     ]);
             
                     $this->setAPIService($apiService);

@@ -83,7 +83,7 @@
                             for="change_alt_validation[]">{$default_method_title}</label>
                         <input data-dd-alt-name-change="{$key + 1}" data-dd-modal data-dd-change-method="dns"
                             data-toggle="modal" data-target="#changemethod" type="button" id='change_alt_validation[]'
-                            name='change_alt_validation[]' class="form-control btn btn-primary" value="Cambiar" />
+                            name='change_alt_validation[]' class="form-control btn btn-primary" value="{$DD_LANG.cert_change_method}" />
                     </div>
 
                     <input data-dd-alt-name-method="{$key + 1}" type="hidden" class="form-control"
@@ -112,7 +112,7 @@
                             for="change_alt_validation[]">{$default_method_title}</label>
                         <input data-dd-alt-name-change="1" data-dd-modal data-dd-change-method="dns" data-toggle="modal"
                             data-target="#changemethod" type="button" id='change_alt_validation[]'
-                            name='change_alt_validation[]' class="form-control btn btn-primary" value="Cambiar" />
+                            name='change_alt_validation[]' class="form-control btn btn-primary" value="{$DD_LANG.cert_change_method}" />
                     </div>
 
                     <input data-dd-alt-name-method="1" type="hidden" class="form-control" name="alt_validation[]"

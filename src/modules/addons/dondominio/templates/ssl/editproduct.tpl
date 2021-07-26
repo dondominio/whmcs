@@ -4,7 +4,7 @@
         <h3 class="panel-title domain-title">{$product->product_name}</h3>
     </div>
 
-    <form action="" method="post">
+    <form data-dd-editproduct-form action="" method="post">
         <div class="panel-body">
             <div class="widget-content-padded">
                 <input type="hidden" name="module" value="{$module_name}">
@@ -43,13 +43,16 @@
 
                                 <td>
                                     <input type="text" name="increment" size="20"
-                                        value="{$product->price_create_increment}" />
+                                        value="{$price_create_increment}" />
 
-                                    <label><input type="radio" name="increment_type" value="FIX" {if $increment_type=="FIX" } checked="checked" {/if}>
+                                    <label><input type="radio" name="increment_type" value="FIX"
+                                            {if $increment_type=="FIX" } checked="checked" {/if}>
                                         {$LANG.settings_prices_type_fixed}</label>
-                                    <label><input type="radio" name="increment_type" value="PERCENTAGE" {if $increment_type=="PERCENTAGE" } checked="checked" {/if}>
+                                    <label><input type="radio" name="increment_type" value="PERCENTAGE"
+                                            {if $increment_type=="PERCENTAGE" } checked="checked" {/if}>
                                         {$LANG.settings_prices_type_percent}</label>
-                                    <label><input type="radio" name="increment_type" value="" {if $increment_type=="" } checked="checked" {/if}>
+                                    <label><input type="radio" name="increment_type" value="" {if $increment_type=="" }
+                                            checked="checked" {/if}>
                                         {$LANG.settings_prices_type_disabled}</label>
                                 </td>
                             </tr>
@@ -62,7 +65,7 @@
                                     <select name="vat_number" id="vat_number">
                                         <option value=""></option>
                                         {html_options options=$client_custom_field selected=$vat_number_id}
-                                    </select>                               
+                                    </select>
                                 </td>
                             </tr>
                         </tbody>
@@ -71,12 +74,25 @@
             </div>
         </div>
         <div class="panel-footer form-footer">
+            <span data-submit-message class="float-left" style="display: none;">{$LANG.ssl_sync_wait}</span>
             {if $has_whmcs_product}
-            <a target="_blank" href="{$links.whmcs_product_edit}" class="pull-left">{$LANG.ssl_whmcs_edit_product}</a>
+                <a target="_blank" href="{$links.whmcs_product_edit}" class="pull-left">{$LANG.ssl_whmcs_edit_product}</a>
             {/if}
-            <button action="submit" name="submit_button" id="settings_submit"
-                class="btn btn-primary">{$LANG.btn_save}</button>
+            <input type="submit" name="submit_button" id="settings_submit" class="btn btn-primary"
+                value="{$LANG.btn_save}" />
             <a href="{$links.ssl_index}" class="btn btn-default">{$LANG.btn_back}</a>
         </div>
     </form>
 </div>
+
+{literal}
+    <script>
+        $(document).ready(function() {
+            $('[data-dd-editproduct-form]').submit(function(e) {
+                $(this).find('input, select').attr('readonly', true);
+
+                $('[data-submit-message]').show();
+            });
+        });
+    </script>
+{/literal}

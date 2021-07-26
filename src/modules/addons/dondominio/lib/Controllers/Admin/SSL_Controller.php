@@ -483,6 +483,8 @@ class SSL_Controller extends Controller
         $app = $this->getApp();
         $sslService = $app->getSSLService();
         $apiService = $app->getService('api');
+        $validationMethods = $this->getValidationMethods();
+        unset($validationMethods['mail']);
 
         $certificateID = $this->getRequest()->getParam('certificate_id');
         $certificateOrder = $sslService->getCertificateOrder($certificateID);
@@ -505,7 +507,6 @@ class SSL_Controller extends Controller
                     unset($alternativeNames[$key]);
                 }
             }
-
         } catch (\Exception $e) {
             $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
         }
@@ -515,7 +516,7 @@ class SSL_Controller extends Controller
             '__c__' => static::CONTROLLER_NAME,
             'certificate' => $certificatesData,
             'user' => $user,
-            'validation_methods' => $this->getValidationMethods(),
+            'validation_methods' => $validationMethods,
             'alt_names' => array_values($alternativeNames),
             'max_domains' => $maxDomains,
             'actions' => [
@@ -611,7 +612,7 @@ class SSL_Controller extends Controller
             $dcv = $certificatesData['validationData']['dcv'];
 
             foreach ($dcv as $key => $val) {
-                if (!$val['validated']){
+                if (!$val['validated']) {
                     $domain[$key] = $val['domainName'];
                 }
             }
@@ -805,6 +806,9 @@ class SSL_Controller extends Controller
         $whmcsProduct = is_null($product) ? null : $product->getWhmcsProduct();
         $productName = $this->getRequest()->getParam('name', $product->product_name);
         $productGroup = $this->getRequest()->getParam('group', '');
+        $incrementType = $this->getRequest()->getParam('increment_type', null);
+        $increment = $this->getRequest()->getParam('increment', null);
+        $requestVatNumber = $this->getRequest()->getParam('vat_number', null);
         $vatNumber = $whmcsService->getVatNumberID();
 
         if (is_object($whmcsProduct)) {
@@ -820,10 +824,11 @@ class SSL_Controller extends Controller
             'product_name' => $productName,
             'product_group' => $productGroup,
             'groups' => $whmcsProductGroups,
-            'increment_type' => $product->price_create_increment_type,
+            'increment_type' => is_null($incrementType) ? $product->price_create_increment_type : $incrementType,
             'has_whmcs_product' => is_null($product) ? false : $product->hasWhmcsProduct(),
             'client_custom_field' => $whmcsService->getCustomClientFields(),
-            'vat_number_id' => $vatNumber,
+            'vat_number_id' => is_null($requestVatNumber) ? $vatNumber : $requestVatNumber,
+            'price_create_increment' => is_null($increment) ? $product->price_create_increment : $increment,
             'links' => [
                 'ssl_index' => static::makeURL(static::VIEW_INDEX),
                 'create_group' => 'configproducts.php?action=creategroup',
@@ -851,14 +856,19 @@ class SSL_Controller extends Controller
         $id = (int) $this->getRequest()->getParam('productid', 0);
         $group = (int) $this->getRequest()->getParam('group', 0);
         $name = $this->getRequest()->getParam('name', '');
-        $increment = $this->getRequest()->getParam('increment', 0);
-        $vatNumber = $this->getRequest()->getParam('vat_number', 0);
+        $increment =  (float) $this->getRequest()->getParam('increment', 0);
+        $vatNumber = (int) $this->getRequest()->getParam('vat_number', 0);
         $incrementType = $this->getRequest()->getParam('increment_type', '');
 
         $product = $sslService->getProduct($id);
 
-        if (is_null($product)){
+        if (is_null($product)) {
             $this->getResponse()->addError($app->getLang('ssl_product_not_found'));
+            return $this->view_EditProduct();
+        }
+
+        if (empty($vatNumber)) {
+            $this->getResponse()->addError($app->getLang('ssl_invalid_vat_number'));
             return $this->view_EditProduct();
         }
 
@@ -916,7 +926,7 @@ class SSL_Controller extends Controller
                 'success' => true,
                 'mails' => $apiResponse->get('valMethods'),
             ];
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             $response['success'] = false;
         }
 
