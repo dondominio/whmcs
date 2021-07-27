@@ -8,7 +8,7 @@ This project has all the developed integrations between MrDomain and WHMCS.
 ## Status
 | Version |
 |:--------|
-| 2.1.7   |
+| 2.2.0   |
 
 ## Requirements
 | Name      | Version   |
@@ -66,15 +66,16 @@ Import your domains from MrDomain, perform mass changes to them, add and configu
 automatically update prices and domain status, and more.
 
 **Features**
-| Name              | Description                                                   |
-|:------------------|:--------------------------------------------------------------|
-| Manage extensions | Import extensions from MrDomain to manage extensions prices   |
-| Manage domains    | Import domains to WHMCS from MrDomain                         |
-| Transfer domains  | Transfer domains from other registrars to MrDomain            |
-| Update contact    | Update domain contact details                                 |
-| Whois             | Use MrDomain as WHOIS tool                                    |
-| Watchlist         | Enable automatic notifications for extensions changing prices |
-| Sync              | Synchronization with MrDomain every day                       |
+| Name              | Description                                                       |
+|:------------------|:------------------------------------------------------------------|
+| Manage extensions | Import extensions from MrDomain to manage extensions prices       |
+| Manage domains    | Import domains to WHMCS from MrDomain                             |
+| Transfer domains  | Transfer domains from other registrars to MrDomain                |
+| Update contact    | Update domain contact details                                     |
+| Whois             | Use MrDomain as WHOIS tool                                        |
+| Watchlist         | Enable automatic notifications for extensions changing prices     |
+| Sync              | Synchronization with MrDomain every day                           |
+| Manage SSL        | Manage the SSL certificates related to your MrDomain API account  |
 
 For more information, documentation, support, and guides, visit [dev.mrdomain.com/whmcs/docs/addon/](https://dev.mrdomain.com/whmcs/docs/addon/)
 
@@ -112,6 +113,21 @@ The module also provides support for managing domain contacts.
 | Get Domain Suggestions    | Get domain suggestions for user recommendations       |
 
 For documentation, more information, support, and guides, visit: [dev.mrdomain.com/whmcs/docs/registrar/](dev.mrdomain.com/whmcs/docs/registrar/)
+
+### 3. Provisioning Module
+---
+
+This module offers the possibility to sell SSL Certificates using the MrDomain API and its management in the client and administration part
+
+**Features**
+| Name                      | Description                                                           |
+|:--------------------------|:----------------------------------------------------------------------|
+| Product creation          | Create WHMCS products from DonDominio/MrDomain's SSL Certificates     |
+| SSL certificate creation  | Create an SSL certificate when purchasing a product                   |
+| Reissue certificate       | Reissue valid certificates                                            |
+| Renew certificate         | Automatically renew certificates                                      |
+| Change validation method  | Change the method of validating alternative names for a certificate   |
+| Resend validation email   | Resend the validation mail of the alternative names of a certificate  |
 
 ## Changelog
 

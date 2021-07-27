@@ -77,7 +77,7 @@
                                 {/if}
                                 {if not $domain.validated and $in_process and ( $domain.method eq 'https' or $domain.method eq 'http' )}
                                     <a href="{$domain.download_http}" class="btn btn-xs btn-primary" download>
-                                        <i class="fa fa-download"></i> Descargar
+                                        <i class="fa fa-download"></i> {$DD_LANG.cert_download}
                                     </a>
                                 {/if}
                             </div>
