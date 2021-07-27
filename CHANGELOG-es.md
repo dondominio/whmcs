@@ -7,6 +7,23 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.
 
 ## [Pendiente por lanzar]
 
+## [2.2.0] - 2021-07-27
+### Añadido
+- Nuevo Módulo de Aprovisionamiento para la creación de productos dentro de WHMCS a partir de productos SSL de DonDominio.
+- Nuevo apartado para la gestión de los Certificados y Productos SSL.
+- Listado de certificados SSL relacionados con tu usuario API.
+- Listado de productos disponibles de la API de DonDominio.
+- Listado de productos importados de DonDominio a WHMCS.
+- Sincronización diaria de los productos de WHMCS con los productos de DonDominio.
+- Vista con la información detallada de un Certificado SSL.
+- Formulario para la creación de productos de WHMCS a partir de un Producto SSL de DonDominio.
+- Vista de la información de un certificado desde la parte de cliente.
+- Cambio de método validación de nombres alternativos del certificado desde la parte de cliente y administración.
+- Reenvío de email de validación de nombre alternativo desde la parte de cliente y administración.
+- Formulario para re-emitir un certificado desde la parte de cliente y administración.
+- Descarga de certificado en distintos formatos en la parte de cliente.
+- Popup en dashboard para avisar de que la instalación del módulo no está terminada.
+
 ## [2.1.7] - 2021-07-07
 ### Changed
 - Adaptar sistema de actualizaciones para poder añadir módulos de DonDominio.

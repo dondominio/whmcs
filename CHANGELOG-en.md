@@ -6,16 +6,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [2.2.0] - ...
+## [2.2.0] - 2021-07-27
 ### Añadido
-- New Provisioning Module for creating products within WHMCS from MrDomain/DonDominio SSL products.
+- New Provisioning Module for creating products within WHMCS from MrDomain's SSL products.
 - New section for the management of SSL Certificates and Products.
 - List of SSL certificates related to your API user.
-- List of products available from MrDomain/DonDominio API.
-- List of imported products from MrDomain/DonDominio to WHMCS.
-- Daily synchronization of WHMCS products with MrDomain/DonDomini products.
+- List of products available from MrDominio's API.
+- List of imported products from MrDomain to WHMCS.
+- Daily synchronization of WHMCS products with MrDomain's products.
 - View with the detailed information of an SSL Certificate.
-- Form for creating WHMCS products from a MrDomain/DonDominio SSL Product.
+- Form for the creation of WHMCS products from a MrDomain SSL Product.
+- View of the information of a certificate from the client side.
+- Change of validation method of alternative names of the certificate from the client and administration side.
+- Forwarding of alternative name validation email from the client and administration side.
+- Form to re-issue a certificate from the client and administration side.
+- Download of certificate in different formats on the client side.
+- Popup in dashboard to notify that the module installation is not finished.
  
 ## [2.1.7] - 2021-07-07
 ### Fixed
