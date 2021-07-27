@@ -533,6 +533,8 @@ $_ADDONLANG = array(
     'ssl_product_not_found' => 'SSL Product not found',
     'ssl_product_simple' => 'Simple',
     'ssl_invalid_vat_number' => 'Invalid Vat Number',
+    'ssl_error_no_available_product' => 'The Product %s is no longer in MrDomain, we recommend that you hide or delete it, as it will not work correctly',
+    'ssl_product_no_available' => 'The product is no longer in DonDominio/MrDomain',
 
     /**
      * CONTENT TITLES

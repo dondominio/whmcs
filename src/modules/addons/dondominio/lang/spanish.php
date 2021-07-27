@@ -533,6 +533,8 @@ $_ADDONLANG = array(
     'ssl_product_not_found' => 'Producto SSL no encontrado',
     'ssl_product_simple' => 'Simple',
     'ssl_invalid_vat_number' => 'Campo Vat Number inválido',
+    'ssl_error_no_available_product' => 'El Producto %s ya no se encuentra en DonDominio, recomendamos que lo oculte o elimine, ya que no funcionara de forma correcta',
+    'ssl_product_no_available' => 'El producto ya no se encuentra en DonDominio',
 
     /**
      * CONTENT TITLES

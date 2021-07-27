@@ -359,6 +359,7 @@ class Migrations
                 $table->decimal('san_price')->default(0);
                 $table->decimal('price_create_increment')->default(0);
                 $table->enum('price_create_increment_type', $priceIncrementsType)->default($priceIncrementsTypeNone);
+                $table->tinyInteger('available')->default(1);
             });
         }
 

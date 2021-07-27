@@ -15,6 +15,10 @@ class SSL_Service extends AbstractService implements SSLService_Interface
      */
     public function apiSync(bool $updatePrices = false, int $page = 0): void
     {
+        if ($page === 0){
+            Capsule::table('mod_dondominio_ssl_products')->update(['available' => 0]);
+        }
+
         $apiService = $this->getApp()->getService('api');
         $productResponse = $apiService->getSSLProductList($page);
         $products = $productResponse->get("products");
@@ -46,6 +50,11 @@ class SSL_Service extends AbstractService implements SSLService_Interface
         return \WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::where(['dd_product_id' => $id])->first();
     }
 
+    /**
+     * Return a array of the WHMCS groups for a editproduct select
+     * 
+     * @return array
+     */
     public function getProductGroups(): array
     {
         $groups = [];
@@ -64,7 +73,7 @@ class SSL_Service extends AbstractService implements SSLService_Interface
      */
     public function createProduct(array $args): void
     {
-        $insert = [];
+        $insert = ['available' => 1];
 
         $this->setIfExists($insert, 'dd_product_id', $args, ['productID']);
         $this->setIfExists($insert, 'product_name', $args, ['productName']);

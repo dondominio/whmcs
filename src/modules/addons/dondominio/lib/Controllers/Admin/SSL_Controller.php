@@ -168,6 +168,7 @@ class SSL_Controller extends Controller
         $app = $this->getApp();
         $whmcsService = $app->getService('whmcs');
         $utilsService = $app->getService('utils');
+        $errorMsg = $app->getLang('ssl_error_no_available_product');
 
         try {
             $utilsService->findSSLProvisioningModule();
@@ -188,6 +189,17 @@ class SSL_Controller extends Controller
 
         $products = $whmcsService->getSSLProducts($filters, $offset, $limit);
         $totalRecords = $whmcsService->getSSLProductsTotal($filters);
+
+        $errorProducts =  $whmcsService->getSSLProducts([
+            'product_imported' => true,
+            'available' => false,
+        ]);
+
+        foreach ($errorProducts as $product){
+            if ( (int) $product->available === 0){
+                $this->getResponse()->addError(sprintf($errorMsg, $product->getWhmcsProduct()->name));
+            }
+        }
 
         $params = [
             'module_name' => $this->getApp()->getName(),
@@ -230,6 +242,7 @@ class SSL_Controller extends Controller
             'product_validation_type' => $this->getRequest()->getParam('product_validation_type'),
             'product_simple' => $this->getRequest()->getParam('product_simple'),
             'product_imported' => false,
+            'available' => true,
         ];
 
         $page = $this->getRequest()->getParam('page', 1);
@@ -800,6 +813,10 @@ class SSL_Controller extends Controller
         } catch (\Exception $e) {
             $this->getResponse()->addError($app->getLang($e->getMessage()));
             return $this->view_Install();
+        }
+
+        if (!is_null($product) && (int) $product->available === 0){
+            $this->getResponse()->addError($app->getLang('ssl_product_no_available'));
         }
 
         $whmcsProductGroups = $sslService->getProductGroups();

@@ -179,6 +179,10 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
             $queryBuilder->where('is_trial', '=', $filters['product_trial']);
         }
 
+        if (array_key_exists('available', $filters)) {
+            $queryBuilder->where('available', '=', (int) $filters['available']);
+        }
+
         if (array_key_exists('product_imported', $filters) && $filters['product_imported']) {
             $queryBuilder->join('tblproducts', 'tblproducts.id', '=', 'tblproducts_id', 'inner');
 

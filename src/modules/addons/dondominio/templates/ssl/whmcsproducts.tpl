@@ -79,6 +79,9 @@
         {foreach $products item=product}
         <tr>
             <td>
+                {if $product->available eq 0}
+                    <i class="fa fa-exclamation-triangle text-danger" title="{$LANG.ssl_product_no_available}"></i>
+                {/if}
                 {$product->getWhmcsProduct()->name} &nbsp;
             </td>
 
