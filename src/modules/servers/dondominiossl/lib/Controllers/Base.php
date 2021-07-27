@@ -75,10 +75,16 @@ abstract class Base
      * 
      * @return string
      */
-    protected function buildUrl(string $view): string
+    protected function buildUrl(string $view, array $extraParams = []): string
     {
         $serviceID = $this->getRequest()->getParam('id', '');
-        return sprintf('clientarea.php?action=productdetails&id=%s&custom_action=%s', $serviceID, $view);
+        $url = sprintf('clientarea.php?action=productdetails&id=%s&custom_action=%s', $serviceID, $view);
+
+        foreach ($extraParams as $key => $param){
+            $url .= sprintf('&%s=%s', $key, $param);
+        }
+
+        return $url;
     }
 
     /**

@@ -18,6 +18,7 @@ class Spanish extends \WHMCS\Module\Server\Dondominiossl\Lang\Base
             'cert_max_domains' => 'Número máximo de dominios',
             'cert_creation' => 'Creación',
             'cert_expiration' => 'Expiración',
+            'cert_expiration_title' => 'Fecha de expiración',
             'cert_company_validation' => 'Estado validación de empresa',
             'cert_brand_company_validation' => 'Estado validación de la marca de empresa',
             'cert_msg_validation' => 'Mensaje de validación',
@@ -71,6 +72,7 @@ class Spanish extends \WHMCS\Module\Server\Dondominiossl\Lang\Base
             'back' => 'Volver',
             'invalid_common_name' => 'Dominio inválido',
             'product_is_pending' => 'El producto aún está pendiente',
+            'invoice' => 'Factura',
         ];
     }
 }

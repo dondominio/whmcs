@@ -12,6 +12,7 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
     const ACTION_RESEND_MAIL = 'actionresendmail';
     const ACTION_DOWNLOAD_CRT = 'downloadcrt';
     const ACTION_GET_DOMAIN_MAILS = 'getdomainmails';
+    const ACTION_DOWNLOAD_HTTP = 'downloadhttp';
 
     /**
      * Return list with the controller views/actions
@@ -29,6 +30,7 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
             static::ACTION_RESEND_MAIL => 'action_ResendValidationMail',
             static::ACTION_DOWNLOAD_CRT => 'action_DownloadCRT',
             static::ACTION_GET_DOMAIN_MAILS => 'action_GetDomainMails',
+            static::ACTION_DOWNLOAD_HTTP => 'action_DownloadHTTP',
         ];
     }
 
@@ -122,6 +124,7 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
     {
         $infoResponse = $this->getApp()->getCertificateInfo('ssldata');
         $downloadTypes = $this->getDownloadInfoTypes();
+        $invoiceId = $this->getApp()->getInvoiceId();
         $certificate = [];
         $crtStatus = '';
 
@@ -142,14 +145,16 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
             'certificate' => $certificate,
             'dd_product_name' => $ddProductName,
             'download_types' => $downloadTypes,
-            'in_process' => $crtStatus === 'process',
+            'show_validation' => in_array($crtStatus, ['process', 'renew', 'reissue']),
             'is_valid' => $crtStatus === 'valid',
             'product_is_pending' => $this->getApp()->getParams()['status'] === 'Pending',
+            'has_invoice' => !is_null($invoiceId),
             'links' => [
                 'download_crt' => $this->buildUrl(static::ACTION_DOWNLOAD_CRT),
                 'viewreissue' => $this->buildUrl(static::VIEW_REISSUE),
                 'validation' => $this->buildUrl(static::VIEW_VALIDATION),
                 'domain_mails' => $this->buildUrl(static::ACTION_GET_DOMAIN_MAILS),
+                'invoice' => sprintf('viewinvoice.php?id=%d', $invoiceId),
             ]
         ]);
     }
@@ -177,6 +182,7 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
                 $displayValidationMethod = isset($validationMethods[$method]) ? $validationMethods[$method] : $method;
                 $domains[$key]['displayValidationMethod'] = $displayValidationMethod;
                 $domains[$key]['validationMails'] = implode(',', $this->getApp()->getCommonNameValidationEmails($key));
+                $domains[$key]['download_http'] = $this->buildUrl(static::ACTION_DOWNLOAD_HTTP, ['domain' => $key]);
             }
         }
 
@@ -377,5 +383,32 @@ class ClientController extends \WHMCS\Module\Server\Dondominiossl\Controllers\Ba
 
         $this->getResponse()->setContentType(\WHMCS\Module\Addon\Dondominio\Helpers\Response::CONTENT_JSON);
         $this->getResponse()->send(json_encode($response), true);
+    }
+
+    protected function action_DownloadHTTP(): void
+    {
+        $infoResponse = $this->getApp()->getCertificateInfo('validationStatus');
+        $domainHttp = $this->getRequest()->getParam('domain', '');
+        $txtTitle = '';
+        $txtContent = 'sdfsdf';
+
+        if (is_object($infoResponse)) {
+            $certificate = $infoResponse->getResponseData();
+            $domains = isset($certificate['validationData']['dcv']) ? $certificate['validationData']['dcv'] : [];
+
+            foreach ($domains as $key => $domain) {
+                if ($domainHttp === $key && in_array($domain['method'], ['http', 'https'])) {
+                    $txtTitle = $domain['checkvalue']['file'];
+                    $txtContent = $domain['checkvalue']['contents'];
+                }
+            }
+        }
+
+        header('Content-type: text/plain');
+        header(sprintf('Content-Length: %s', strlen($txtContent)));
+        header(sprintf('Content-Disposition: attachment; filename=%s', $txtTitle));
+
+        echo $txtContent;
+        die();
     }
 }

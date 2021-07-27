@@ -20,6 +20,11 @@ class App
         return $this->params;
     }
 
+    /**
+     * Return the Translations with the actual lang
+     *
+     * @return \WHMCS\Module\Server\Dondominiossl\Lang\Translations
+     */
     public function getLanguage(): \WHMCS\Module\Server\Dondominiossl\Lang\Translations
     {
         $lang = static::DEFAULT_LANG;
@@ -59,6 +64,11 @@ class App
         return $this->api;
     }
 
+    /**
+     * Return the certificateinfo API Response
+     *
+     * @return \Dondominio\API\Response\Response
+     */
     public function getCertificateInfo(string $infoType = 'ssldata', string $password = ''): ?\Dondominio\API\Response\Response
     {
         $api = $this->getApiService();
@@ -138,6 +148,11 @@ class App
         return $resendValidationMail->execute();
     }
 
+    /**
+     * Return array with the common name validation mails
+     *
+     * @return null|array
+     */
     public function getCommonNameValidationEmails(string $commonName, bool $includeAlternativeMethods = false): ?array
     {
         try {
@@ -153,6 +168,11 @@ class App
         return [];
     }
 
+    /**
+     * Return array with the DonDominio SSL Products for create WHMCS Products 
+     *
+     * @return array
+     */
     public function getProductSelect(): array
     {
         $products = $this->getApiService()->getProductList();
@@ -165,5 +185,32 @@ class App
         }
 
         return $productOptions;
+    }
+
+    /**
+     * Return the order invoice id 
+     *
+     * @return null|int
+     */
+    public function getInvoiceId(): ?int
+    {
+        $userId = $this->getParams()['userid'];
+        $serviceId = $this->getParams()['serviceid'];
+
+        $item = \WHMCS\Billing\Invoice\Item::where([
+            'type' => 'Hosting',
+            'relid' => $serviceId,
+            'userid' => $userId,
+        ])->first();
+
+        if (!is_object($item)) {
+            return null;
+        }
+
+        if (!empty($item->invoiceid)) {
+            return (int) $item->invoiceid;
+        }
+
+        return null;
     }
 }
