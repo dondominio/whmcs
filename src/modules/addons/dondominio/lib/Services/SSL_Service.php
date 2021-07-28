@@ -138,7 +138,7 @@ class SSL_Service extends AbstractService implements SSLService_Interface
     public function updateCertificatesRenewDate(): void
     {
         $certificates = \WHMCS\Module\Addon\Dondominio\Models\SSLCertificateOrder_Model::where([
-            'renew_data_seted' => 0
+            'renew_date_flag' => 0
         ])->get();
 
         foreach ($certificates as $certificate) {
@@ -162,6 +162,11 @@ class SSL_Service extends AbstractService implements SSLService_Interface
             return;
         }
 
+
+        if ($response->get('status') !== 'valid'){
+            return;
+        }
+
         $date = \DateTime::createFromFormat('Y-m-d', $response->get('tsExpir'));
         $service = $certificate->getService();
 
@@ -169,7 +174,7 @@ class SSL_Service extends AbstractService implements SSLService_Interface
             $date->modify(sprintf('-%d days', static::RENEW_DAYS_TO_SUBTRACT));
             $service->nextDueDate = $date;
             $service->nextInvoiceDate = $date;
-            $certificate->renew_data_seted = 1;
+            $certificate->renew_date_flag = 1;
             $service->save();
             $certificate->save();
         }

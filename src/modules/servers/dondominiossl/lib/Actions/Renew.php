@@ -31,6 +31,7 @@ class Renew extends \WHMCS\Module\Server\Dondominiossl\Actions\Base
             $this->addAltNames($args, $info);
 
             $this->api->renewCertificate($certificateID, $this->getArgs());
+            $this->resetCertificateRenew($certificateID);
         } catch (\Exception $e) {
             return $e->getMessage();
         }

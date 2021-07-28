@@ -207,4 +207,21 @@ abstract class Base
         $certificateID = $this->params['customfields'][$this->fieldCertificateID];
         return $this->api->getCertificateInfo($certificateID);
     }
+
+    /**
+     * Reset the certificate renew flag
+     * 
+     * @return void
+     */
+    protected function resetCertificateRenew(int $certificateID): void
+    {
+        $certificate = \WHMCS\Module\Addon\Dondominio\Models\SSLCertificateOrder_Model::where([
+            'certificate_id' => $certificateID
+        ])->first();
+
+        if (is_object($certificate)){
+            $certificate->renew_date_flag = 0;
+            $certificate->save();
+        }
+    }
 }

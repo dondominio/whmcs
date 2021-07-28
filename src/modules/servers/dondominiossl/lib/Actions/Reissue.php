@@ -71,6 +71,7 @@ class Reissue extends \WHMCS\Module\Server\Dondominiossl\Actions\Base
             $this->addAlternativeNames($args, $info);
 
             $this->api->reissueCertificate($certificateID, $args);
+            $this->resetCertificateRenew($certificateID);
         } catch (\Exception $e) {
             return $e->getMessage();
         }
