@@ -21,10 +21,8 @@
                         {if $is_valid}
                         <li><a href="{$links.view_reissue}">{$LANG.ssl_reissue}</a></li>
                         {/if}
-                        {if $in_process}
-                        <li><a href="{$links.view_resend_validation_mail}">{$LANG.ssl_resend_validation_mail}</a></li>
-                        {/if}
                         {if $in_process || $in_reissue}
+                        <li><a href="{$links.view_resend_validation_mail}">{$LANG.ssl_resend_validation_mail}</a></li>
                         <li><a href="{$links.view_change_validation_method}">{$LANG.ssl_change_validation_method}</a></li>
                         {/if}
                         {if $certificate.renewable}

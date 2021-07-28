@@ -129,4 +129,21 @@ class SSLCertificateOrder_Model extends AbstractModel
 
         return localAPI($command, $postData);
     }
+
+    /**
+     * Return the certificate hostingid if this exists
+     * 
+     * @return int|null
+     */
+    public function getHostingId(): ?int
+    {
+        $hostingID = $this->tblhosting_id;
+        $hosting = \WHMCS\Service\Service::where(['id' => $hostingID])->first();
+
+        if (is_object($hosting)){
+            return $hostingID;
+        }
+
+        return null;
+    }
 }

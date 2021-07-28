@@ -535,6 +535,7 @@ $_ADDONLANG = array(
     'ssl_invalid_vat_number' => 'Campo Vat Number inválido',
     'ssl_error_no_available_product' => 'El Producto %s ya no se encuentra en DonDominio, recomendamos que lo oculte o elimine, ya que no funcionara de forma correcta',
     'ssl_product_no_available' => 'El producto ya no se encuentra en DonDominio',
+    'ssl_no_change_method_domain_text' => 'El certificado no contiene ningún nombre de dominio sin validar para cambiar su método de validación.',
 
     /**
      * CONTENT TITLES

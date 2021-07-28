@@ -535,6 +535,7 @@ $_ADDONLANG = array(
     'ssl_invalid_vat_number' => 'Invalid Vat Number',
     'ssl_error_no_available_product' => 'The Product %s is no longer in MrDomain, we recommend that you hide or delete it, as it will not work correctly',
     'ssl_product_no_available' => 'The product is no longer in DonDominio/MrDomain',
+    'ssl_no_change_method_domain_text' => 'The certificate does not contain any unvalidated domain names to change its validation method.',
 
     /**
      * CONTENT TITLES

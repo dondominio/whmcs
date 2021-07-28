@@ -131,7 +131,7 @@ class SSL_Controller extends Controller
 
             $certificatesData[$key]['displayStatus'] = isset($status[$statusKey]) ? $status[$statusKey] : $statusKey;
             $certificatesData[$key]['productName'] = isset($products[$productID]) ? $products[$productID] : $productID;
-            $certificatesData[$key]['order_id'] = is_object($certificateOrder) ? $certificateOrder->tblhosting_id : null;
+            $certificatesData[$key]['order_id'] = is_object($certificateOrder) ? $certificateOrder->getHostingId() : null;
         }
 
         $params = [
