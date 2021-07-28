@@ -4,6 +4,8 @@ namespace WHMCS\Module\Server\Dondominiossl\Services;
 
 class API_Service implements \WHMCS\Module\Server\Dondominiossl\Services\Contracts\APIService_Interface
 {
+    const SSL_MODULE_NAME = 'dondominiossl';
+
     protected $api;
 
     /**
@@ -14,16 +16,6 @@ class API_Service implements \WHMCS\Module\Server\Dondominiossl\Services\Contrac
     public function __construct(array $options = [])
     {
         $this->api = new \WHMCS\Module\Server\Dondominiossl\Helpers\API($options);
-    }
-
-    /**
-     * Gets App
-     *
-     * @return WHMCS\Module\Server\Dondominio\App
-     */
-    public function getApp()
-    {
-        return $this->app;
     }
 
     /**
@@ -47,6 +39,23 @@ class API_Service implements \WHMCS\Module\Server\Dondominiossl\Services\Contrac
     }
 
     /**
+     * Create a Module Log in WHMCS
+     *
+     * @return \Dondominio\API\API
+     */
+    protected function logResponse(\Dondominio\API\Response\Response $response, array $params = []): void
+    {
+        // Call internal WHMCS function logModuleCall
+        if (function_exists('logModuleCall')) {
+            logModuleCall(static::SSL_MODULE_NAME, $response->getAction(), $params, $response->getRawResponse(), $response->getArray());
+        }
+
+        if (!$response->getSuccess()) {
+            throw new \Exception($response->getErrorCodeMsg(), $response->getErrorCode());
+        }
+    }
+
+    /**
      * Collect a list of products from DonDominio API
      *
      * @return array
@@ -57,6 +66,7 @@ class API_Service implements \WHMCS\Module\Server\Dondominiossl\Services\Contrac
 
         try {
             $response = $connection->ssl_productList($args);
+            $this->logResponse($response, $args);
             $products = json_decode($response->getResponseData(), true);
         } catch (\Exception $e) {
             return [];
@@ -77,7 +87,9 @@ class API_Service implements \WHMCS\Module\Server\Dondominiossl\Services\Contrac
     public function createCSRData(array $args): \Dondominio\API\Response\Response
     {
         $connection = $this->getApiConnection();
-        return $connection->ssl_csrCreate($args);
+        $response = $connection->ssl_csrCreate($args);
+        $this->logResponse($response, $args);
+        return $response;
     }
 
     /**
@@ -88,7 +100,9 @@ class API_Service implements \WHMCS\Module\Server\Dondominiossl\Services\Contrac
     public function createCertificate(int $productID, array $args): \Dondominio\API\Response\Response
     {
         $connection = $this->getApiConnection();
-        return $connection->ssl_create($productID, $args);
+        $response = $connection->ssl_create($productID, $args);
+        $this->logResponse($response, $args);
+        return $response;
     }
 
     /**
@@ -99,10 +113,13 @@ class API_Service implements \WHMCS\Module\Server\Dondominiossl\Services\Contrac
     public function getCertificateInfo(int $certificateID, string $infoType = 'ssldata', string $pfxpassword = ''): \Dondominio\API\Response\Response
     {
         $connection = $this->getApiConnection();
-        return $connection->ssl_getInfo($certificateID, [
+        $args = [
             'infoType' => $infoType,
             'pfxpass' => $pfxpassword
-        ]);
+        ];
+        $response = $connection->ssl_getInfo($certificateID, $args);
+        $this->logResponse($response, $args);
+        return $response;
     }
 
     /**
@@ -113,7 +130,9 @@ class API_Service implements \WHMCS\Module\Server\Dondominiossl\Services\Contrac
     public function renewCertificate(int $certificateID, array $args): \Dondominio\API\Response\Response
     {
         $connection = $this->getApiConnection();
-        return $connection->ssl_renew($certificateID, $args);
+        $response = $connection->ssl_renew($certificateID, $args);
+        $this->logResponse($response, $args);
+        return $response;
     }
 
     /**
@@ -124,7 +143,9 @@ class API_Service implements \WHMCS\Module\Server\Dondominiossl\Services\Contrac
     public function reissueCertificate(int $certificateID, array $args): \Dondominio\API\Response\Response
     {
         $connection = $this->getApiConnection();
-        return $connection->ssl_reissue($certificateID, $args);
+        $response = $connection->ssl_reissue($certificateID, $args);
+        $this->logResponse($response, $args);
+        return $response;
     }
 
     /**
@@ -135,11 +156,14 @@ class API_Service implements \WHMCS\Module\Server\Dondominiossl\Services\Contrac
     public function changeValidationMethod(int $certificateID, string $commonName, string $validationMethod): \Dondominio\API\Response\Response
     {
         $connection = $this->getApiConnection();
-        return $connection->ssl_changeValidationMethod([
+        $args = [
             'certificateID' => $certificateID,
             'commonName' => $commonName,
             'validationMethod' => $validationMethod,
-        ]);
+        ];
+        $response = $connection->ssl_changeValidationMethod($args);
+        $this->logResponse($response, $args);
+        return $response;
     }
 
     /**
@@ -150,7 +174,9 @@ class API_Service implements \WHMCS\Module\Server\Dondominiossl\Services\Contrac
     public function resendValidationMail(int $certificateID, string $commonName): \Dondominio\API\Response\Response
     {
         $connection = $this->getApiConnection();
-        return $connection->ssl_resendValidationMail($certificateID, $commonName);
+        $response = $connection->ssl_resendValidationMail($certificateID, $commonName);
+        $this->logResponse($response, ['commonName' => $commonName]);
+        return $response;
     }
 
     /**
@@ -161,6 +187,9 @@ class API_Service implements \WHMCS\Module\Server\Dondominiossl\Services\Contrac
     public function getValidationEmails(string $commonName, bool $includeAlternativeMethods = false): \Dondominio\API\Response\Response
     {
         $connection = $this->getApiConnection();
-        return $connection->ssl_getValidationEmails($commonName, ['includeAlternativeMethods' => (int) $includeAlternativeMethods]);
+        $args = ['includeAlternativeMethods' => (int) $includeAlternativeMethods];
+        $response = $connection->ssl_getValidationEmails($commonName, $args);
+        $this->logResponse($response, ['commonName' => $commonName]);
+        return $response;
     }
 }
