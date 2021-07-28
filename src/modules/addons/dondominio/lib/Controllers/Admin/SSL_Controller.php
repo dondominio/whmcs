@@ -848,6 +848,8 @@ class SSL_Controller extends Controller
             'price_create_increment' => is_null($increment) ? $product->price_create_increment : $increment,
             'links' => [
                 'ssl_index' => static::makeURL(static::VIEW_INDEX),
+                'ssl_products' => static::makeURL(static::VIEW_WHMCS_PRODUCTS),
+                'ssl_availables' => static::makeURL(static::VIEW_AVAILABLE_SSL),
                 'create_group' => 'configproducts.php?action=creategroup',
                 'whmcs_product_edit' => sprintf('configproducts.php?action=edit&id=%d', $product->tblproducts_id),
             ],

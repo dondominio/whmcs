@@ -42,8 +42,7 @@
                                 </td>
 
                                 <td>
-                                    <input type="text" name="increment" size="20"
-                                        value="{$price_create_increment}" />
+                                    <input type="text" name="increment" size="20" value="{$price_create_increment}" />
 
                                     <label><input type="radio" name="increment_type" value="FIX"
                                             {if $increment_type=="FIX" } checked="checked" {/if}>
@@ -80,7 +79,11 @@
             {/if}
             <input type="submit" name="submit_button" id="settings_submit" class="btn btn-primary"
                 value="{$LANG.btn_save}" />
-            <a href="{$links.ssl_index}" class="btn btn-default">{$LANG.btn_back}</a>
+            {if $has_whmcs_product}
+                <a href="{$links.ssl_products}" class="btn btn-default">{$LANG.btn_back}</a>
+            {else}
+                <a href="{$links.ssl_availables}" class="btn btn-default">{$LANG.btn_back}</a>
+            {/if}
         </div>
     </form>
 </div>
