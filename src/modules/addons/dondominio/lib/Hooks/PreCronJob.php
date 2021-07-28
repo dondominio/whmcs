@@ -24,6 +24,7 @@ class PreCronJob
         try {
             $app->getService('pricing')->apiSync(false);
             $app->getSSLService()->apiSync((bool) $updatePices);
+            $app->getSSLService()->updateCertificatesRenewDate();
         } catch (Exception $e) {
             // log Activity just in case
             logActivity($e);

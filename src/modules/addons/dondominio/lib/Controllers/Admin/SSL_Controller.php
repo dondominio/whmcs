@@ -762,6 +762,7 @@ class SSL_Controller extends Controller
 
         try {
             $app->getSSLService()->apiSync($updatePrices);
+            $app->getSSLService()->updateCertificatesRenewDate();
             $this->getResponse()->addSuccess($app->getLang('ssl_sync_success'));
         } catch (\Exception $e) {
             $this->getResponse()->addError($app->getLang($e->getMessage()));

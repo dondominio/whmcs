@@ -369,6 +369,7 @@ class Migrations
                 $table->primary('certificate_id');
                 $table->integer('tblhosting_id')->default(0);
                 $table->integer('dd_product_id')->default(0);
+                $table->tinyInteger('renew_data_seted')->default(0);
             });
         }
     }

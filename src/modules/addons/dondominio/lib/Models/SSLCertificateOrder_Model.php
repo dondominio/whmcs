@@ -137,11 +137,8 @@ class SSLCertificateOrder_Model extends AbstractModel
      */
     public function getHostingId(): ?int
     {
-        $hostingID = $this->tblhosting_id;
-        $hosting = \WHMCS\Service\Service::where(['id' => $hostingID])->first();
-
-        if (is_object($hosting)){
-            return $hostingID;
+        if (is_object($this->getService())){
+            return $this->tblhosting_id;
         }
 
         return null;

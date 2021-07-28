@@ -7,6 +7,7 @@ use WHMCS\Database\Capsule;
 
 class SSL_Service extends AbstractService implements SSLService_Interface
 {
+    const RENEW_DAYS_TO_SUBTRACT = 29;
 
     /**
      * Sync the mod_dondominio_ssl_product table, and the created products in WHMCS with the DonDominio API
@@ -15,7 +16,7 @@ class SSL_Service extends AbstractService implements SSLService_Interface
      */
     public function apiSync(bool $updatePrices = false, int $page = 0): void
     {
-        if ($page === 0){
+        if ($page === 0) {
             Capsule::table('mod_dondominio_ssl_products')->update(['available' => 0]);
         }
 
@@ -122,10 +123,55 @@ class SSL_Service extends AbstractService implements SSLService_Interface
             'certificate_id' => $certificateID
         ])->first();
 
-        if (is_object($order)){
+        if (is_object($order)) {
             return $order;
         }
 
         return null;
+    }
+
+    /**
+     * Update the renew date of all the ssl certificate products
+     * 
+     * @return void
+     */
+    public function updateCertificatesRenewDate(): void
+    {
+        $certificates = \WHMCS\Module\Addon\Dondominio\Models\SSLCertificateOrder_Model::where([
+            'renew_data_seted' => 0
+        ])->get();
+
+        foreach ($certificates as $certificate) {
+            $this->updateRenewDate($certificate);
+        }
+    }
+
+    /**
+     * Update the renew date of a ssl certificate products
+     * 
+     * @return void
+     */
+    protected function updateRenewDate(\WHMCS\Module\Addon\Dondominio\Models\SSLCertificateOrder_Model $certificate): void
+    {
+        $api = $this->getApp()->getService('api');
+        $certificateID = $certificate->certificate_id;
+
+        try {
+            $response = $api->getSSLCertificateInfo($certificateID);
+        } catch (\Exception $e) {
+            return;
+        }
+
+        $date = \DateTime::createFromFormat('Y-m-d', $response->get('tsExpir'));
+        $service = $certificate->getService();
+
+        if (is_object($date) && is_object($service)) {
+            $date->modify(sprintf('-%d days', static::RENEW_DAYS_TO_SUBTRACT));
+            $service->nextDueDate = $date;
+            $service->nextInvoiceDate = $date;
+            $certificate->renew_data_seted = 1;
+            $service->save();
+            $certificate->save();
+        }
     }
 }
