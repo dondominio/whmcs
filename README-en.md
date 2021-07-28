@@ -31,16 +31,6 @@ For example, if you want to install only the addon module, the final folder will
 
 Finally, if you chose the easy installation or decided to install the registrar module, you must follow the next instructions:
 
->**WHMCS 6**
->
->You must edit the `/path/to/whmcs/includes/additionaldomainfields.php` file included on your WHMCS 6
->
->At the end of this field you must add this line:
->
->```php
->include(ROOTDIR . "/modules/registrars/dondominio/additionalfields.php");
->```
-
 >**WHMCS 7.x and 8.x**
 >
 >You must copy the file `/path/to/whmcs/modules/registrars/dondominio/additionalfields.php` into `/path/to/whmcs/resources/domains` folder.

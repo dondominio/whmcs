@@ -33,16 +33,6 @@ Por ejemplo, si solo desea instalar el módulo addon, la carpeta final sería `/
 
 Finalmente, si ha escogido la instalación sencilla o ha decidido instalar el módulo de registrador, debe realizar las siguientes instrucciones:
 
->**WHMCS 6**
->
->Es necesario editar el fichero `/path/to/whmcs/includes/additionaldomainfields.php` incluido en la instalación de WHMCS 6
->
->Al final de este fichero, debe añadirse esta línea:
->
->```php
->include(ROOTDIR . "/modules/registrars/dondominio/additionalfields.php");
->```
-
 >**WHMCS 7.x y 8.x**
 >
 >Es necesario copiar el archivo `/path/to/whmcs/modules/registrars/dondominio/additionalfields.php` dentro de la carpeta `/path/to/whmcs/resources/domains`.
