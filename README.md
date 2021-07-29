@@ -10,7 +10,7 @@ Este proyecto contiene todos los módulos desarrollados entre DonDominio y WHMCS
 ## Estado
 | Version |
 |:--------|
-| 2.1.7   |
+| 2.2.0   |
 
 ## Requerimientos
 | Name      | Version       |
@@ -32,16 +32,6 @@ y después copie la carpeta `src/modules/xxx/dondominio` en `/path/to/whmcs/modu
 Por ejemplo, si solo desea instalar el módulo addon, la carpeta final sería `/path/to/whmcs/modules/addons/dondominio`.
 
 Finalmente, si ha escogido la instalación sencilla o ha decidido instalar el módulo de registrador, debe realizar las siguientes instrucciones:
-
->**WHMCS 6**
->
->Es necesario editar el fichero `/path/to/whmcs/includes/additionaldomainfields.php` incluido en la instalación de WHMCS 6
->
->Al final de este fichero, debe añadirse esta línea:
->
->```php
->include(ROOTDIR . "/modules/registrars/dondominio/additionalfields.php");
->```
 
 >**WHMCS 7.x y 8.x**
 >
@@ -70,11 +60,12 @@ Importe sus dominios directamente desde DonDominio, realice cambios masivos, añ
 |:------------------------------|:------------------------------------------------------------------------------|
 | Gestionar extensiones         | Importar extensiones desde DonDominio para gestionar precios                  |
 | Gestionar dominios            | Importar dominios a WHMCS desde DonDominio                                    |
-| Transferir dominios          | Transferir dominios desde otros registradores a DonDominio                    |
+| Transferir dominios           | Transferir dominios desde otros registradores a DonDominio                    |
 | Cambiar contacto              | Actualizar contacto de dominios                                               |
 | Whois                         | Usar DonDominio como herramienta WHOIS                                        |
 | Lista de TLDs en seguimiento  | Habilitar notificaciones automáticas para cambios de precios en extensiones   |
 | Sincronización                | Sincronización cada día con DonDominio                                        |
+| Gestionar Certificados SSL    | Gestionar los certificados SSL relacionados con tu cuenta API de DonDominio   |
 
 Para más información, documentación, soporte, y guías, visite [dev.dondominio.com/whmcs/docs/addon/](https://dev.dondominio.com/whmcs/docs/addon/)
 
@@ -105,10 +96,25 @@ permitirá registrar, renovar y transferir dominios, aparte de muchás utilidade
 | Eliminar Glue Record                  | Eliminar Glue Record existente                                    |
 | Sincronización de dominios            | Sincronizacón de estado de dominios                               |
 | Sincronización de transferencias      | Sincronización de estado de transferencia de dominios             |
-| Comprobar disponibilidad              | Comprobar si un dominio esta disponible                          |
+| Comprobar disponibilidad              | Comprobar si un dominio esta disponible                           |
 | Obtener sugerencias de dominios       | Obtener sugerencias de dominios para recomendaciones de usuario   |
 
 Para más información, documentación, soporte, y guías, visite [dev.dondominio.com/whmcs/docs/registrar/](https://dev.dondominio.com/whmcs/docs/registrar/)
+
+### 3. Módulo de Aprovisionamiento
+---
+
+Este módulo ofrece la posibilidad vender Certificados SSL usando la API de DonDominio y su gestión en la parte de cliente y administración.
+
+**Características**
+| Característica                        | Descripción                                                                   |
+|:--------------------------------------|:------------------------------------------------------------------------------|
+| Creación de productos                 | Crear productos de WHMCS a partir de Certificados SSL de DonDominio           |
+| Creación de certificados SSL          | Crear un certificado SSL al comprar un producto                               |
+| Re-emitir certificado                 | Re-emitir certificados válidos                                                |
+| Renovar certificado                   | Renovar certificados automáticamente                                          |
+| Cambiar método de validación          | Cambiar el método de validación de los nombres alternativos de un certificado |
+| Reenviar correo de validación         | Reenviar el correo de validación de los nombres alternativos de un certificado|
 
 ## Changelog
 

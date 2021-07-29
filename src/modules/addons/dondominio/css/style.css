@@ -81,6 +81,14 @@
   padding: 3px 5px;
 }
 
+.dd .mb-10{
+    margin-bottom: 10px;
+}
+
+.dd .align-top{
+    vertical-align: top;
+}
+
 .dd-popup-header {
   background-color: #ff9800;
   border-color: #ff9800;

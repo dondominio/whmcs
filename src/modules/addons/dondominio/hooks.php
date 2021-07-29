@@ -16,7 +16,10 @@ $trans = [
         'no_show' => 'No volver a mostrar',
         'actual_version' => 'Ultima versión!',
         'admin' => 'Administrar',
-        'check_changelog' => 'Consulta los cambios de la nueva versión'
+        'check_changelog' => 'Consulta los cambios de la nueva versión',
+        'incomplet_install' => 'Instalación incompleta',
+        'incomplet_install_body' => 'La instalación de los módulos de DonDominio está incompleta, ahora puedes instalar el módulo de Certificados SSL.',
+        'end_install' => 'Terminar la instalación',
     ],
     'english' => [
         'close' => 'Close',
@@ -27,6 +30,9 @@ $trans = [
         'actual_version' => 'Last version!',
         'admin' => 'Admin',
         'check_changelog' => 'Check the changes of the new version',
+        'incomplet_install' => 'Incomplete installation',
+        'incomplet_install_body' => 'The installation of MrDomain/DonDominio modules is incomplete, now you can install the SSL Certificates module.',
+        'end_install' => 'Finish the installation',
     ]
 ];
 

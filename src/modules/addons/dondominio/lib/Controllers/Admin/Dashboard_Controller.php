@@ -24,6 +24,9 @@ class Dashboard_Controller extends Controller
     const PRINT_MOREINFO = 'moreapiinfo';
     const UPDATE_MODULES = 'updatemodules';
     const TOGGLE_PREMIUM_DOMAINS = 'premiumdomains';
+    const INSTALL_SSL_PROVISIONING = 'installsslprovisioning';
+    const INSTALL_REGISTRAR = 'installregistrar';
+
 
     /**
      * Gets available actions for Controller
@@ -37,9 +40,11 @@ class Dashboard_Controller extends Controller
             static::VIEW_BALANCE => 'view_Balance',
             static::VIEW_BALANCEUPDATE => 'view_BalanceUpdate',
             static::VIEW_SIDEBAR => 'view_Sidebar',
-            static::PRINT_MOREINFO => 'print_MoreApiInfo',
-            static::UPDATE_MODULES => 'update_Modules',
-            static::TOGGLE_PREMIUM_DOMAINS => 'toggle_PremiumDomains'
+            static::PRINT_MOREINFO => 'action_PrintMoreApiInfo',
+            static::UPDATE_MODULES => 'action_UpdateModules',
+            static::TOGGLE_PREMIUM_DOMAINS => 'action_TogglePremiumDomains',
+            static::INSTALL_SSL_PROVISIONING => 'action_InstallSSLprovisioning',
+            static::INSTALL_REGISTRAR => 'action_InstallRegistrar',
         ];
     }
 
@@ -58,7 +63,7 @@ class Dashboard_Controller extends Controller
         $registrarConfig = [];
         $token = '';
 
-        if ($info['registrar']) {
+        if ($info['registrar']['success']) {
             $registrarConfig = $this->getRegistrarConfig();
         }
 
@@ -80,6 +85,9 @@ class Dashboard_Controller extends Controller
                 'active_registrar' => sprintf('configregistrars.php?action=activate&module=%s%s', $app->getName(), $token),
                 'registrar_config' => sprintf('configregistrars.php?action=save&module=%s', $app->getName()),
                 'toogle_premium_domains' => static::makeURL(static::TOGGLE_PREMIUM_DOMAINS),
+                'install_ssl_provisioning'=> static::makeURL(static::INSTALL_SSL_PROVISIONING),
+                'install_registrar'=> static::makeURL(static::INSTALL_REGISTRAR),
+                'reinstall'=> static::makeURL(static::UPDATE_MODULES, ['reinstall' => 1]),
             ],
             'registrar_config' => $registrarConfig,
         ];
@@ -174,6 +182,11 @@ class Dashboard_Controller extends Controller
                 'selected' => Domains_Controller::CONTROLLER_NAME === $controller
             ],
             [
+                'link' => SSL_Controller::makeURL(),
+                'title' => $app->getLang('menu_ssl'),
+                'selected' => SSL_Controller::CONTROLLER_NAME === $controller
+            ],
+            [
                 'link' => Whois_Controller::makeURL(),
                 'title' => $app->getLang('menu_whois'),
                 'selected' => Whois_Controller::CONTROLLER_NAME === $controller
@@ -192,7 +205,7 @@ class Dashboard_Controller extends Controller
      *
      * @return void
      */
-    public function print_MoreApiInfo()
+    public function action_PrintMoreApiInfo()
     {
         ob_start();
         $this->getApp()->getService('api')->printApiInfo();
@@ -205,16 +218,19 @@ class Dashboard_Controller extends Controller
     /**
      * Downloads and install latest version of Dondominio Modules
      *
-     * @return void
+     * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
      */
-    public function update_Modules()
+    public function action_UpdateModules()
     {
+        $isReinstall = $this->getRequest()->getParam('reinstall');
+        $message = $isReinstall ? 'modules_reinstalled_successfully' : 'modules_updated_successfully';
+
         try {
             $app = App::getInstance();
             $app->getService('utils')->updateModules();
 
             $this->getResponse()->addSuccess(
-                sprintf($this->getApp()->getLang('modules_updated_successfully'))
+                sprintf($this->getApp()->getLang($message))
             );
 
             $success = true;
@@ -238,7 +254,7 @@ class Dashboard_Controller extends Controller
      *
      * @return void
      */
-    public function toggle_PremiumDomains()
+    public function action_TogglePremiumDomains()
     {
         $app = $this->getApp();
         $whmcsService = $app->getService('whmcs');
@@ -260,6 +276,46 @@ class Dashboard_Controller extends Controller
 
         $response->setContentType(Response::CONTENT_JSON);
         $response->send(json_encode($data), true);
+    }
+
+    /**
+     * Install the SSL Provisioning Module
+     *
+     * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
+     */
+    public function action_InstallSSLprovisioning()
+    {
+        $app = $this->getApp();
+        $utilesService = $app->getService('utils');
+
+        try {
+            $utilesService->updateSSLProvisioningModule();
+            $this->getResponse()->addSuccess($app->getLang('ssl_provisioning_module_installed'));
+        } catch (\Exception $e){
+            $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
+        }
+
+        return $this->view_Index();
+    }
+
+    /**
+     * Install the Registrar Module
+     *
+     * @return \WHMCS\Module\Addon\Dondominio\Helpers\Template
+     */
+    public function action_InstallRegistrar()
+    {
+        $app = $this->getApp();
+        $utilesService = $app->getService('utils');
+
+        try {
+            $utilesService->updateRegistrar();
+            $this->getResponse()->addSuccess($app->getLang('registrar_module_installed'));
+        } catch (\Exception $e){
+            $this->getResponse()->addError($this->getApp()->getLang($e->getMessage()));
+        }
+
+        return $this->view_Index();
     }
 
     /**

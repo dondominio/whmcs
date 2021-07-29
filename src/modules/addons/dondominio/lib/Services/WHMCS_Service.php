@@ -143,6 +143,107 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
     }
 
     /**
+     * Retreives SSL Products queryBuilder from 'mod_dondominio_ssl_products`
+     *
+     * @param null|string $product_name Product Name
+     * @param null|bool $product_multi_domain If is Multi Domain
+     * @param null|bool $product_wildcard If is Wildvard
+     * @param null|bool $product_trial If is Trial
+     * @param null|bool $product_imported If product is imported in WHMCS
+     * @param null|string $product_validation_type Product validation type
+     *
+     * @return Illuminate\Database\Eloquent\Builder
+     */
+    protected function getSSLProductsQuery(array $filters = [])
+    {
+        $queryBuilder = \WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::select();
+
+        if (array_key_exists('product_name', $filters) && strlen($filters['product_name'])) {
+            $queryBuilder->where('product_name', 'LIKE', '%' . $filters['product_name'] . '%');
+        }
+
+        if (array_key_exists('product_multi_domain', $filters) && strlen($filters['product_multi_domain'])) {
+            $queryBuilder->where('is_multi_domain', '=', $filters['product_multi_domain']);
+        }
+
+        if (array_key_exists('product_wildcard', $filters) && strlen($filters['product_wildcard'])) {
+            $queryBuilder->where('is_wildcard', '=', $filters['product_wildcard']);
+        }
+
+        if (array_key_exists('product_simple', $filters) && $filters['product_simple']) {
+            $queryBuilder->where('is_wildcard', '=', 0);
+            $queryBuilder->where('is_multi_domain', '=', 0);
+        }
+
+        if (array_key_exists('product_trial', $filters)) {
+            $queryBuilder->where('is_trial', '=', $filters['product_trial']);
+        }
+
+        if (array_key_exists('available', $filters)) {
+            $queryBuilder->where('available', '=', (int) $filters['available']);
+        }
+
+        if (array_key_exists('product_imported', $filters) && $filters['product_imported']) {
+            $queryBuilder->join('tblproducts', 'tblproducts.id', '=', 'tblproducts_id', 'inner');
+
+            if (array_key_exists('whmcs_product_name', $filters) && $filters['whmcs_product_name']) {
+                $queryBuilder->where('tblproducts.name', 'LIKE', '%' . $filters['whmcs_product_name'] . '%');
+            }
+
+        }
+
+        if (array_key_exists('product_imported', $filters) && !$filters['product_imported']) {
+            $queryBuilder->join('tblproducts', 'tblproducts.id', '=', 'tblproducts_id', 'left');
+            $queryBuilder->where('tblproducts.id', '=', null);
+        }
+
+        if (array_key_exists('product_validation_type', $filters) && strlen($filters['product_validation_type'])){
+            $queryBuilder->where('validation_type', '=', $filters['product_validation_type']);
+        }
+
+        return $queryBuilder;
+    }
+
+    /**
+     * Retreives SSL Products cursor from 'mod_dondominio_ssl_products`
+     *
+     * @param array $filters filters for getSSLProductsQuery
+     * @param int $offset
+     * @param int $limit
+     * 
+     * @return \Illuminate\Database\Eloquent\Collection Collection of SSL Products objects containting domains info
+     */
+    public function getSSLProducts(array $filters = [], $offset = null, $limit = null)
+    {
+        $queryBuilder = $this->getSSLProductsQuery($filters);
+
+        if (!is_null($offset)) {
+            $queryBuilder->offset($offset);
+        }
+
+        if (!is_null($limit)) {
+            $queryBuilder->limit($limit);
+        }
+
+        $queryBuilder->orderBy('product_name', 'DESC');
+
+        return $queryBuilder->get();
+    }
+
+    /**
+     * Retreives SSL Products count from 'mod_dondominio_ssl_products`
+     *
+     * @param array $filters filters for getSSLProductsQuery
+     * 
+     * @return int
+     */
+    public function getSSLProductsTotal(array $filters = [])
+    {
+        return $this->getSSLProductsQuery($filters)->count();
+    }
+
+
+    /**
      * Retrieves count for `tbldomains`
      *
      * @param null|string $domain Domain
@@ -1168,6 +1269,39 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
         Capsule::table('tbldomainpricing')->insert($fields);
     }
 
+    /**
+     * Retrieve client custom fields from DDBB
+     *
+     * @return array
+     */
+    public function getCustomClientFields()
+    {
+        $customFieldsArray = [];
+        $customFields = Capsule::table('tblcustomfields')->where('type', 'client')->orderBy('fieldname')->get();
+
+        foreach ($customFields as $cf){
+            $customFieldsArray[$cf->id] = $cf->fieldname;
+        }
+
+        return $customFieldsArray;
+    }
+
+    /**
+     * Retrieve Vat Number CustomField ID
+     *
+     * @return int
+     */
+    public function getVatNumberID()
+    {
+        $vatNumber = Capsule::table('tblcustomfields')->where(['type' => 'client', 'fieldname' => 'Vat Number'])->first();
+
+        if (empty($vatNumber)){
+            return 0;
+        }
+
+        return $vatNumber->id;
+    }
+    
     /**
      * Change premium domains status
      *

@@ -361,6 +361,161 @@ class API_Service extends AbstractService implements APIService_Interface
         return $this->parseResponse($response, ['contactID' => $contactID]);
     }
 
+    /**
+     * Gets the SSL Products
+     *
+     * @see https://dev.dondominio.com/api/docs/api/#ssl-product-list-ssl-productlist
+     *
+     * @param int $page Offset where query starts
+     * @param int $pageLength Limit where query ends
+     *
+     * @return \Dondominio\API\Response\Response
+     */
+    public function getSSLProductList($page = null, $pageLength = null)
+    {
+        $params = [
+            'page' => $page,
+            'pageLength' => $pageLength,
+        ];
+
+        foreach ($params as $key => $param) {
+            if (is_null($param)) {
+                unset($params[$key]);
+            }
+        }
+
+        $response = $this->getApiConnection()->ssl_productList($params);
+
+        return $this->parseResponse($response, $params);
+    }
+
+    /**
+     * Gets the SSL Certificates
+     *
+     * @see https://dev.dondominio.com/api/docs/api/#ssl-list-ssl-list
+     *
+     * @param int $page Offset where query starts
+     * @param int $pageLength Limit where query ends
+     * @param array $filters Filters
+     *
+     * @return \Dondominio\API\Response\Response
+     */
+    public function getSSLCertificates($page = null, $pageLength = null, $filters = [])
+    {
+        $filters['page'] = $page;
+        $filters['pageLength'] = $pageLength;
+
+        foreach ($filters as $key => $param) {
+            if (is_null($param)) {
+                unset($filters[$key]);
+            }
+        }
+
+        $response = $this->getApiConnection()->ssl_list($filters);
+
+        return $this->parseResponse($response, $filters);
+    }
+
+    /**
+     * Gets the SSL Certificates
+     *
+     * @see https://dev.dondominio.com/api/docs/api/#ssl-list-ssl-list
+     *
+     * @param int $page Offset where query starts
+     * @param int $pageLength Limit where query ends
+     * @param array $filters Filters
+     *
+     * @return \Dondominio\API\Response\Response
+     */
+    public function getSSLCertificateInfo($certificateID, $infoType = 'ssldata')
+    {
+        $response = $this->getApiConnection()->ssl_getInfo($certificateID, ['infoType' => $infoType]);
+
+        return $this->parseResponse($response, ['certificateID' => $certificateID, 'infoType' => $infoType]);
+    }
+
+    /**
+     * Send a request to DonDominio API for the creation of a CSR Data
+     *
+     * @return \Dondominio\API\Response\Response
+     */
+    public function createCSRData(array $args): \Dondominio\API\Response\Response
+    {
+        $connection = $this->getApiConnection();
+        return $connection->ssl_csrCreate($args);
+    }
+
+    /**
+     * Send a request to DonDominio API for the renew of a certificate
+     *
+     * @param int $certificateID
+     * @param array $args
+     * 
+     * @return \Dondominio\API\Response\Response
+     */
+    public function renewCertificate(int $certificateID, array $args): \Dondominio\API\Response\Response
+    {
+        $connection = $this->getApiConnection();
+        return $connection->ssl_renew($certificateID, $args);
+    }
+
+    /**
+     * Send a request to DonDominio API for the reissue of a certificate
+     *
+     * @param int $certificateID
+     * @param array $args
+     * 
+     * @return \Dondominio\API\Response\Response
+     */
+    public function reissueCertificate(int $certificateID, array $args): \Dondominio\API\Response\Response
+    {
+        $connection = $this->getApiConnection();
+        return $connection->ssl_reissue($certificateID, $args);
+    }
+
+    /**
+     * Send a request to DonDominio API for resend the validation mail of a CommonName of a Certificate
+     *
+     * @param int $certificateID
+     * @param string $commonName
+     * 
+     * @return \Dondominio\API\Response\Response
+     */
+    public function resendValidationMail(int $certificateID, string $commonName): \Dondominio\API\Response\Response
+    {
+        $connection = $this->getApiConnection();
+        return $connection->ssl_resendValidationMail($certificateID, ['commonName' => $commonName]);
+    }
+
+    /**
+     * Send a request to DonDominio API for Changes validation method for a CommonName
+     *
+     * @param int $certificateID
+     * @param string $commonName
+     * @param string $validationMethod
+     * 
+     * @return \Dondominio\API\Response\Response
+     */
+    public function changeValidationName(int $certificateID, string $commonName, string $validationMethod): \Dondominio\API\Response\Response
+    {
+        $connection = $this->getApiConnection();
+        return $connection->ssl_changevalidationmethod($certificateID, [
+            'commonName' => $commonName,
+            'validationMethod' => $validationMethod
+        ]);
+    }
+
+    /**
+     * Send a request to DonDominio API for get the validation mails of a common name
+     *
+     * @return \Dondominio\API\Response\Response
+     */
+    public function getValidationEmails(string $commonName, bool $includeAlternativeMethods = false): \Dondominio\API\Response\Response
+    {
+        $connection = $this->getApiConnection();
+        return $connection->ssl_getValidationEmails($commonName, ['includeAlternativeMethods' => (int) $includeAlternativeMethods]);
+    }
+
     public function printApiInfo()
     {
         $this->getApiConnection()->info();

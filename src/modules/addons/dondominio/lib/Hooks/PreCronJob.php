@@ -10,6 +10,7 @@ class PreCronJob
     public function __invoke($params)
     {
         $app = App::getInstance($params);
+        $updatePices = $app->getService('settings')->getSetting('prices_autoupdate');
 
         // Sync with API
 
@@ -22,12 +23,14 @@ class PreCronJob
 
         try {
             $app->getService('pricing')->apiSync(false);
+            $app->getSSLService()->apiSync((bool) $updatePices);
+            $app->getSSLService()->updateCertificatesRenewDate();
         } catch (Exception $e) {
             // log Activity just in case
             logActivity($e);
         }
 
-        if ($app->getService('settings')->getSetting('prices_autoupdate') == 0) {
+        if ($updatePices == 0) {
             return;
         }
 

@@ -21,6 +21,8 @@
                             {$checks.version.message}
                             <br>
                             <a target="_blank" href="{$LANG.changelog_link}">{$LANG.new_version_changelog}</a>
+                            {else}
+                            <a data-toggle="tooltip" data-placement="top" title="{$LANG.reinstall_title}" class="btn btn-warning" href="{$links.reinstall}">{$LANG.reinstall}</a>
                             {/if}
                             {else}
                             <span class="text-danger">{$LANG.error}</span>
@@ -74,7 +76,7 @@
                     <tr>
                         <td colspan="3">{$LANG.modules_installed}</td>
                     </tr>
-                    <tr>
+                    <tr class="align-top">
                         <td>
                             <ul>
                                 <li>{$LANG.addon_module}</li>
@@ -83,14 +85,14 @@
                         <td>{$LANG.ok}</td>
                         <td></td>
                     </tr>
-                    <tr>
+                    <tr class="align-top">
                         <td>
                             <ul>
                                 <li>{$LANG.registrar_module}</li>
                             </ul>
                         </td>
                         <td>
-                            {if $checks.registrar eq true}
+                            {if $checks.registrar.success eq true}
                             {$LANG.ok}
                             {else}
                             <span class="text-danger">{$LANG.error}</span>
@@ -105,6 +107,29 @@
                             {else}
                             <a data-reload-link class="btn btn-success" href='{$links.active_registrar}'>{$LANG.active}</a>
                             {/if}
+                            {else}
+                            <a class="btn btn-success" href='{$links.install_registrar}'>{$LANG.install}</a>
+                            {/if}
+                        </td>
+                    </tr>
+                    <tr class="align-top">
+                        <td>
+                            <ul>
+                                <li>{$LANG.ssl_provisioning_module}</li>
+                            </ul>
+                        </td>
+                        <td>
+                            {if $checks.ssl_provisioning.success eq true}
+                            {$LANG.ok}
+                            {else}
+                            <span class="text-danger">{$LANG.error}</span>
+                            {/if}
+                        </td>
+                        <td>
+                            {$checks.ssl_provisioning.message}
+                            {if $checks.ssl_provisioning.success eq true}
+                            {else}
+                            <a class="btn btn-success" href='{$links.install_ssl_provisioning}'>{$LANG.install}</a>
                             {/if}
                         </td>
                     </tr>

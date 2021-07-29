@@ -104,6 +104,10 @@ class Response
         '3002' => \Dondominio\API\Exceptions\Contact\DataError::class,
         '3003' => \Dondominio\API\Exceptions\Contact\VerificationStatus::class,
 
+        '3500' => \Dondominio\API\Exceptions\User\NotExists::class,
+        '3501' => \Dondominio\API\Exceptions\User\CreateError::class,
+        '3502' => \Dondominio\API\Exceptions\User\UpdateError::class,
+
         '4001' => \Dondominio\API\Exceptions\Service\NotFound::class,
         '4002' => \Dondominio\API\Exceptions\Service\EntityNotFound::class,
         '4003' => \Dondominio\API\Exceptions\Service\EntityLimitReached::class,
@@ -114,6 +118,9 @@ class Response
         '4008' => \Dondominio\API\Exceptions\Service\UpgradeError::class,
         '4009' => \Dondominio\API\Exceptions\Service\RenewError::class,
         '4010' => \Dondominio\API\Exceptions\Service\ParkingUpdateError::class,
+
+        '5000' => \Dondominio\API\Exceptions\SSL\Error::class,
+        '5001' => \Dondominio\API\Exceptions\SSL\NotFound::class,
 
         '10001' => \Dondominio\API\Exceptions\Webconstructor_Error::class,
     ];

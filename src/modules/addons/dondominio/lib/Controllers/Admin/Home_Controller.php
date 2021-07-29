@@ -36,6 +36,7 @@ class Home_Controller extends Controller
     {
         $app = App::getInstance();
         $whmcs = $app->getService('whmcs');
+        $api = $app->getService('api');
         $appName = $app->getName();
 
         $domainFilters = ['registrar' => $appName];
@@ -45,51 +46,30 @@ class Home_Controller extends Controller
         $checkAPI = (bool) $this->getRequest()->getParam('check_api');
         $info = $app->getInformation($checkAPI);
 
+        try {
+            $certificateResponse = $api->getSSLCertificates(1, 1);
+            $totalCertificates = $certificateResponse->get('queryInfo')['total'];
+        } catch (\Exception $e){
+            $totalCertificates = 0;
+        }
+
         $params = [
             'new_version' => isset($info['version']['success']) ? !$info['version']['success'] : false,
             'conection_erro' => isset($info['api']['success']) ? !$info['api']['success'] : true,
             'total_domains' => $totalDomains,
             'total_tlds' => $totalTLDs,
+            'total_ssl' => $totalCertificates,
             'links' => [
                 'admin' => Dashboard_Controller::makeURL(),
                 'settings' => Settings_Controller::makeURL(),
                 'domains' => Domains_Controller::makeURL(Domains_Controller::VIEW_INDEX, $domainFilters),
                 'tlds' => DomainPricings_Controller::makeURL(DomainPricings_Controller::VIEW_INDEX, ['autoreg' => $appName]),
+                'ssl' => SSL_Controller::makeURL(SSL_Controller::VIEW_INDEX),
             ],
-            'nav' => static::getNavArray(),
             'print_nav' => false,
         ];
 
         return $this->view('index', $params);
-    }
-
-    /**
-     * Return array to mount the dashboard navbar
-     * 
-     * @return array
-     */
-    public static function getNavArray()
-    {
-        $app = App::getInstance();
-
-        return [
-            [
-                'title' => $app->getLang('menu_status'),
-                'link' => Dashboard_Controller::makeURL(),
-            ],
-            [
-                'title' => $app->getLang('menu_tlds_update'),
-                'link' => DomainPricings_Controller::makeURL(),
-            ],
-            [
-                'title' => $app->getLang('menu_domains'),
-                'link' => Domains_Controller::makeURL(),
-            ],
-            [
-                'title' => $app->getLang('menu_whois'),
-                'link' => Whois_Controller::makeURL(),
-            ],
-        ];
     }
     
 }

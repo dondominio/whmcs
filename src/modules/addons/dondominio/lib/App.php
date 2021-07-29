@@ -151,13 +151,16 @@ class App
                     $apiService = new API_Service([
                         'apiuser' => $this->getService('settings')->getSetting('api_username'),
                         'apipasswd' => base64_decode($this->getService('settings')->getSetting('api_password')),
-                        'userAgent' => ['DomainManagementAddonForWHMCS' => static::getVersion()]
+                        'userAgent' => ['DomainManagementAddonForWHMCS' => $this->getVersion()]
                     ]);
             
                     $this->setAPIService($apiService);
                 break;
                 case 'utils':
                     $this->setUtilsService(new Utils_Service());
+                break;
+                case 'ssl':
+                    return $this->getSSLService();
                 break;
                 default:
                     throw new Exception('[Fatal error] Service ' . $key . ' doesnt exists.');
@@ -274,6 +277,15 @@ class App
     public function setUtilsService(UtilsService_Interface $service)
     {
         $this->services['utils'] = $service;
+    }
+
+    public function getSSLService(): \WHMCS\Module\Addon\Dondominio\Services\Contracts\SSLService_Interface
+    {
+        if (!$this->services['ssl'] instanceof \WHMCS\Module\Addon\Dondominio\Services\SSL_Service){
+            $this->services['ssl'] = new \WHMCS\Module\Addon\Dondominio\Services\SSL_Service();
+        }
+
+        return $this->services['ssl'];
     }
 
     /**
@@ -530,6 +542,16 @@ class App
         } catch (Exception $e) {
             $checks['registrar']['success'] = false;
             $checks['registrar']['message'] = $this->getLang($e->getMessage());
+        }
+
+        // Find SSL Provisioning Module
+        try {
+            $this->getService('utils')->findSSLProvisioningModule();
+            $checks['ssl_provisioning']['success'] = true;
+            $checks['ssl_provisioning']['active'] = true;
+        } catch (Exception $e) {
+            $checks['ssl_provisioning']['success'] = false;
+            $checks['ssl_provisioning']['message'] = $this->getLang($e->getMessage());
         }
 
         return $checks;
