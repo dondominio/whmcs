@@ -7,7 +7,7 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.
 
 ## [Pendiente por lanzar]
 
-## [2.2.0] - 2021-07-27
+## [2.2.0] - 2021-07-29
 ### Añadido
 - Nuevo Módulo de Aprovisionamiento para la creación de productos dentro de WHMCS a partir de productos SSL de DonDominio.
 - Nuevo apartado para la gestión de los Certificados y Productos SSL.
