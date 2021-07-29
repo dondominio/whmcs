@@ -72,8 +72,7 @@ For more information, documentation, support, and guides, visit [dev.mrdomain.co
 ### 2. Registrar Module
 ---
 
-This is the WHMCS Registrar Module from MrDomain. Once installed on any WHMCS 5.x,
-6.x, or 7.x system, it will allow to register, renew, and transfer domains using the MrDomain
+This is the WHMCS Registrar Module from MrDomain. Once installed on any WHMCS 7.x or 8.x system, it will allow to register, renew, and transfer domains using the MrDomain
 API.
 
 The module also provides support for managing domain contacts.
@@ -118,6 +117,8 @@ This module offers the possibility to sell SSL Certificates using the MrDomain A
 | Renew certificate         | Automatically renew certificates                                      |
 | Change validation method  | Change the method of validating alternative names for a certificate   |
 | Resend validation email   | Resend the validation mail of the alternative names of a certificate  |
+
+For documentation, more information, support, and guides, visit: [dev.mrdomain.com/whmcs/docs/ssl/](dev.mrdomain.com/whmcs/docs/ssl/)
 
 ## Changelog
 
