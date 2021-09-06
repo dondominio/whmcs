@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.1] - 2021-09-06
+### Fixed
+- Fix get owner Contact Type by Ident Number.
+
 ## [2.2.0] - 2021-07-29
 ### Added
 - New Provisioning Module for creating products within WHMCS from MrDomain's SSL products.
