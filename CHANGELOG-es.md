@@ -7,6 +7,10 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.
 
 ## [Pendiente por lanzar]
 
+## [2.2.1] - 2021-09-06
+### Fixed
+- Fix detectar Tipo de Contacto según su Número de Identificación.
+
 ## [2.2.0] - 2021-07-29
 ### Añadido
 - Nuevo Módulo de Aprovisionamiento para la creación de productos dentro de WHMCS a partir de productos SSL de DonDominio.

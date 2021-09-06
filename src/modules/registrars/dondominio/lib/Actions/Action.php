@@ -142,7 +142,7 @@ class Action
 
         $adminContactIdentNumber = $this->getVATNumber();
 
-        $nif_letra = substr($adminContactIdentNumber, 0, 1);
+        $nif_letra = strtoupper(substr($adminContactIdentNumber, 0, 1));
 
         if ($nif_letra != 'X' && $nif_letra != 'Y' && $nif_letra != 'Z' && !is_numeric($nif_letra)) {
             $ownerContactType = 'organization';
