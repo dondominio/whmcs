@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.2] - 2021-09-07
+### Changed
+- Update additional fields for registrar module.
+- Add translations for `.es` additional fields.
+- Use WHMCS update temporaly path for update Modules.
+
 ## [2.2.1] - 2021-09-06
 ### Fixed
 - Fix get owner Contact Type by Ident Number.
