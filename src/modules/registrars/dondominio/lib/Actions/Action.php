@@ -6,6 +6,8 @@ use WHMCS\Module\Registrar\Dondominio\App;
 
 class Action
 {
+    const DNI_NIE_REGEX = '/^([0-9]{8}[A-Z])|[XYZ][0-9]{7}[A-Z]$/i';
+
     protected $app;
     protected $params;
     protected $domain;
@@ -63,14 +65,27 @@ class Action
         ];
     }
 
+    protected function getTLDAdditionalField( string $actualKey, string $oldKey )
+    {
+        if ( isset( $this->params['additionalfields'][$actualKey] ) ) {
+            return $this->params['additionalfields'][$actualKey];
+        }
+
+        if ( isset( $this->params['additionalfields'][$oldKey] ) ) {
+            return $this->params['additionalfields'][$oldKey];
+        }
+
+        return '';
+    }
+
     protected function getTldDataFromParams()
     {
         $fields = [];
 
         switch ($this->params['tld']) {
             case 'aero':
-                $fields['aeroId'] = $this->params['additionalfields']['ID'];
-                $fields['aeroPass'] = $this->params['additionalfields']['Password'];
+                $fields['aeroId'] = $this->getTLDAdditionalField('.AERO ID', 'ID');
+                $fields['aeroPass'] = $this->getTLDAdditionalField('.AERO Key', 'Password');
                 break;
             case 'cat':
             case 'pl':
@@ -87,12 +102,6 @@ class Action
                 break;
             case 'hk':
                 $fields['ownerDateOfBirth'] = $this->params['additionalfields']['Birthdate'];
-                break;
-            case 'jobs':
-                $fields['jobsOwnerWebsite'] = $this->params['additionalfields']['Owner Website'];
-                $fields['jobsAdminWebsite'] = $this->params['additionalfields']['Admin Contact Website'];
-                $fields['jobsContactWebsite'] = $this->params['additionalfields']['Tech Contact Website'];
-                $fields['jobsBillingWebsite'] = $this->params['additionalfields']['Billing Contact Website'];
                 break;
             case 'lawyer':
             case 'attorney':
@@ -114,15 +123,6 @@ class Action
                 $fields['ruIssuer'] = $this->params['additionalfields']['Issuer'];
                 $fields['ruIssuerDate'] = $this->params['additionalfields']['Issue Date'];
                 break;
-            case 'travel':
-                $fields['travelUIN'] = $this->params['additionalfields']['UIN'];
-                break;
-            case 'xxx':
-                $fields['xxxClass'] = $this->params['additionalfields']['Class'];
-                $fields['xxxName'] = $this->params['additionalfields']['Name'];
-                $fields['xxxEmail'] = $this->params['additionalfields']['Email'];
-                $fields['xxxId'] = $this->params['additionalfields']['Member Id'];
-                break;
             case 'law':
             case 'abogado':
                 $fields['lawaccid'] = $this->params['additionalfields']['Accreditation ID'];
@@ -141,13 +141,22 @@ class Action
         $fields = [];
 
         $adminContactIdentNumber = $this->getVATNumber();
+        $isIdividual = preg_match(static::DNI_NIE_REGEX, $adminContactIdentNumber);
+        $ownerContactType = $isIdividual ? 'individual' : 'organization';
 
-        $nif_letra = strtoupper(substr($adminContactIdentNumber, 0, 1));
+        if (isset($this->params['additionalfields']['OwnerType'])){
+            $ownerType = $this->params['additionalfields']['OwnerType'];
 
-        if ($nif_letra != 'X' && $nif_letra != 'Y' && $nif_letra != 'Z' && !is_numeric($nif_letra)) {
-            $ownerContactType = 'organization';
-        } else {
-            $ownerContactType = 'individual';
+            if (!$isIdividual && $ownerType === 'DNI') {
+                throw new \Exception('Invalid NIF for Individual or Self-Employed');
+            }
+
+            if ($isIdividual && $ownerType === 'CIF') {
+                throw new \Exception('Invalid CIF');
+            }
+
+            $ownerContactType = $ownerType === 'NONESCUSTOMER' ? 'individual' : $ownerContactType;
+            $ownerContactType = $ownerType === 'NONESCOMPANY' ? 'organization' : $ownerContactType;
         }
 
         // Owner Contact
@@ -178,9 +187,16 @@ class Action
 
         if (empty($this->params['adminContact'])) {
             if (array_key_exists('Administrative Document Number', $this->params['additionalfields'])) {
+                $isES = (isset($this->params['additionalfields']['AdminType']) ? $this->params['additionalfields']['AdminType'] : '') === 'DNI';
+
                 $adminContactType = 'individual';
                 $adminContactIdentNumber = $this->params['additionalfields']['Administrative Document Number'];
                 $adminContactOrgType = '';
+
+                if ($isES && !preg_match(static::DNI_NIE_REGEX, $adminContactIdentNumber)){
+                    throw new \Exception('Invalid DNI/NIE');
+                }
+
             } else {
                 $adminContactType = $ownerContactType;
                 $adminContactOrgType = static::mapOrgType($adminContactIdentNumber);
@@ -191,8 +207,6 @@ class Action
                 'adminContactFirstName' => $this->params['adminfirstname'],
                 'adminContactLastName' => $this->params['adminlastname'],
                 'adminContactIdentNumber' => $adminContactIdentNumber, 
-                'adminContactOrgName' => $this->params['companyname'],
-                'adminContactOrgType' => $adminContactOrgType,
                 'adminContactEmail' => $this->params['adminemail'],
                 'adminContactPhone' => $this->params['adminfullphonenumber'],
                 'adminContactAddress' => $this->params['adminaddress1'] . "\r\n" . $this->params['adminaddress2'],
@@ -201,6 +215,12 @@ class Action
                 'adminContactState' => $this->params['adminstate'],
                 'adminContactCountry' => $this->params['admincountry']
             ];
+
+            if ($adminContactType === 'organization'){
+                $adminContactFields['adminContactOrgName'] = $this->params['companyname'];
+                $adminContactFields['adminContactOrgType'] = $adminContactOrgType;
+            }
+
         }else{
             $adminContactFields = ['adminContactID' => $this->params['adminContact']];
         }
