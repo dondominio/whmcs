@@ -44,6 +44,12 @@ Finalmente, si ha escogido la instalación sencilla o ha decidido instalar el m�
 >
 >Así mismo, es posible que si instala módulos de otros registradores, estos campos dejen de funcionar.
 >Por favor, asegúrese de que si instala otros módulos, éstos no interfieren con este archivo.
+>
+>Para disponer de las traducciones del módulo registrador será necesario copiar los siguientes archivos dentro de la carpeta `/path/to/whmcs/lang/overrides`:
+>- `/path/to/whmcs/modules/registrars/dondominio/lang/overrides/spanish.php`
+>- `/path/to/whmcs/modules/registrars/dondominio/lang/overrides/english.php`
+>
+>Si ya existen estos archivos se deberá copiar el contenido de las traducciones de DonDominio al final de los archivos ya existentes.
 
 **\*Por favor, tenga en cuenta que todos los módulos comparten una biblioteca en común (DonDominio SDK) que está en la carpeta `src/includes/dondominio/sdk`.**
 

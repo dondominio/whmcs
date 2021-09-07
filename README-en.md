@@ -40,8 +40,11 @@ Finally, if you chose the easy installation or decided to install the registrar 
 >
 >If you are not sure how to proceed, please, contact our support team.
 >
->In addition, it's possible that if you install other registrar modules, this file wont' work.
->Please, be sure that if you install other registrar modules, these modules doesn't make any conflict.
+>To have the translations of the recorder module, it will be necessary to copy the following files into the folder `/path/to/whmcs/lang/overrides`:
+>- `/path/to/whmcs/modules/registrars/dondominio/lang/overrides/spanish.php`
+>- `/path/to/whmcs/modules/registrars/dondominio/lang/overrides/english.php`
+>
+>If these files already exist, the content of DonDominio/MrDomain's translations must be copied to the end of the existing files.
 
 **\*Please, note that all the modules share a common library (DonDominio SDK) that is `src/includes/dondominio/sdk` folder.**
 

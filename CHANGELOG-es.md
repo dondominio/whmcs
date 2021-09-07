@@ -7,6 +7,12 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.
 
 ## [Pendiente por lanzar]
 
+## [2.2.2] - 2021-09-07
+### Changed
+- Actualizar additional fields para módulo registrador.
+- Añadir traducciones para additional fields de `.es`.
+- Utilizar la ruta temporal de actualización de WHMCS para actualizar los módulos.
+  
 ## [2.2.1] - 2021-09-06
 ### Fixed
 - Fix detectar Tipo de Contacto según su Número de Identificación.
