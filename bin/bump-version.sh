@@ -30,12 +30,13 @@ readme=$DIR"/../README.md"
 readme_en=$DIR"/../README-en.md"
 addon_version=$DIR"/../src/modules/addons/dondominio/version.json"
 registrar_version=$DIR"/../src/modules/registrars/dondominio/version.json"
+provisioning_ssl_version=$DIR"/../src/modules/servers/dondominiossl/version.json"
 
 echo "Changing version..."
 
 last_version=$(php -r "\$obj = json_decode(utf8_encode(file_get_contents('$addon_version')));print \$obj->version;")
 
-sed -i "s/$last_version/$version/" $composer $readme $readme_en $addon_version $registrar_version
+sed -i "s/$last_version/$version/" $composer $readme $readme_en $addon_version $registrar_version $provisioning_ssl_version
 
 echo "Done"
 
@@ -44,7 +45,7 @@ echo "Changing release date..."
 last_date=$(php -r "\$obj = json_decode(utf8_encode(file_get_contents('$addon_version')));print \$obj->releaseDate;")
 today=$(date +"%Y-%m-%d")
 
-sed -i "s/$last_date/$today/" $addon_version $registrar_version
+sed -i "s/$last_date/$today/" $addon_version $registrar_version $provisioning_ssl_version
 
 echo "Done"
 
