@@ -258,7 +258,7 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
         // SAVE DOWNLOAD
 
         $extension = $method == 'zip' ? 'zip' : 'tar.gz';
-        $downloadPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'latest-version.' . $extension;
+        $downloadPath = $this->getTemporaryPath() . DIRECTORY_SEPARATOR . 'latest-version.' . $extension;
 
         if (!file_put_contents($downloadPath, $tarballContents)) {
             throw new Exception('couldnt_save_download');
@@ -277,7 +277,7 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
     protected function decompressFile($downloadPath, $method)
     {
         // Get name from /tmp
-        $folder = tempnam(sys_get_temp_dir(), '');
+        $folder = tempnam($this->getTemporaryPath(), '');
         unlink($folder);
 
         // Extract into /tmp
@@ -327,6 +327,18 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
         }
 
         return $element->getPathName() . DIRECTORY_SEPARATOR . 'src';
+    }
+
+    /**
+     * Get the WHMCS Temporary Path for update if this exists if not get the system tmp
+     *
+     * @return string
+     */
+    public function getTemporaryPath(): string
+    {
+        $tmp = \WHMCS\Config\Setting::getValue("UpdateTempPath");
+
+        return empty($tmp) ? sys_get_temp_dir() : $tmp;
     }
 
    /**
