@@ -7,6 +7,10 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.
 
 ## [Pendiente por lanzar]
 
+## [2.2.3] - 2021-11-02
+### fixed
+- OwnerContactType para clientes no Españoles.
+
 ## [2.2.2] - 2021-09-07
 ### Changed
 - Actualizar additional fields para módulo registrador.

@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.3] - 2021-11-02
+### fixed
+- OwnerContactType for non ES Clients.
+
 ## [2.2.2] - 2021-09-07
 ### Changed
 - Update additional fields for registrar module.
