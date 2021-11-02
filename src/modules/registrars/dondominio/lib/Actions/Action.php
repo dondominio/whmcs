@@ -141,17 +141,19 @@ class Action
         $fields = [];
 
         $adminContactIdentNumber = $this->getVATNumber();
-        $isIdividual = preg_match(static::DNI_NIE_REGEX, $adminContactIdentNumber);
+        $isDNI = preg_match(static::DNI_NIE_REGEX, $adminContactIdentNumber);
+        $isES = $this->params[ 'country' ] == 'ES';
+        $isIdividual = $isES ? $isDNI : !strlen($this->params['companyname']);
         $ownerContactType = $isIdividual ? 'individual' : 'organization';
 
         if (isset($this->params['additionalfields']['OwnerType'])){
             $ownerType = $this->params['additionalfields']['OwnerType'];
 
-            if (!$isIdividual && $ownerType === 'DNI') {
+            if ($isES && !$isDNI && $ownerType === 'DNI') {
                 throw new \Exception('Invalid NIF for Individual or Self-Employed');
             }
 
-            if ($isIdividual && $ownerType === 'CIF') {
+            if ($isES && $isDNI && $ownerType === 'CIF') {
                 throw new \Exception('Invalid CIF');
             }
 
