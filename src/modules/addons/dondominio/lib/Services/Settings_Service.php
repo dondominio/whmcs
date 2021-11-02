@@ -35,7 +35,7 @@ class Settings_Service extends AbstractService implements SettingsService_Interf
             return $dateTime;
         }
 
-        return new DateTime;
+        return new DateTime();
     }
 
 
