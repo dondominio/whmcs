@@ -7,6 +7,13 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.
 
 ## [Pendiente por lanzar]
 
+## [2.2.4] - 2022-01-25
+### Changed
+- Eliminar los campos adicionales para los dominios `.law` y `.abogado` al ya no ser necesarios.
+
+### fixed
+- Bug en sistema de actualización.
+
 ## [2.2.3] - 2021-11-02
 ### fixed
 - OwnerContactType para clientes no Españoles.
