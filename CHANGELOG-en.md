@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.4] - 2022-01-25
+### Changed
+- Remove the additional fields for the `.law` and `.abogado` domains as they are no longer needed.
+
+### fixed
+- Bug in update system.
+  
 ## [2.2.3] - 2021-11-02
 ### fixed
 - OwnerContactType for non ES Clients.

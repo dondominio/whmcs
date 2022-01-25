@@ -62,11 +62,12 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
         $versionUpdate->modify(sprintf('+%d hours', static::UPDATE_VERSION_HOUR_INTERVAL));
         $now = new DateTime();
 
-        if ($versionUpdate < $now){
+        if ($versionUpdate < $now) {
             try {
                 $latestVersion = $this->getLatestVersion();
                 $settingsService->setSetting('last_version', $latestVersion);
-            } catch (\Exception $e){}
+            } catch (\Exception $e) {
+            }
 
             $settingsService->setSetting('last_version_ts_update', new \DateTime());
         }
@@ -168,16 +169,16 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
             $versionName = sprintf('Version %s', $version);
             $releasesJson = @file_get_contents('https://api.github.com/repos/dondominio/whmcs/releases', false, $context);
             $releases = json_decode($releasesJson, true);
-        } catch (\Throwable $e){
+        } catch (\Throwable $e) {
             return $latest;
         }
 
-        foreach ($releases as $releas){
-            if (!isset($releas['name']) || !isset($releas['url'])){
+        foreach ($releases as $releas) {
+            if (!isset($releas['name']) || !isset($releas['url'])) {
                 continue;
             }
 
-            if ($releas['name'] === $versionName){
+            if ($releas['name'] === $versionName) {
                 return $releas['url'];
             }
         }
@@ -296,7 +297,7 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
                 }
 
                 $zip->close();
-            break;
+                break;
 
             case 'phar':
                 // ERROR: RecursiveDirectoryIterator::__construct(): Unable to find the wrapper "phar" - did you forget to enable it when you configured PHP?
@@ -312,11 +313,11 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
                 if (!$extracted) {
                     throw new Exception('unable_to_decompress');
                 }
-            break;
+                break;
 
             default:
                 throw new Exception('decompress_method_not_implemented');
-            break;
+                break;
         }
 
         $rdi = new \RecursiveDirectoryIterator($folder, \FilesystemIterator::SKIP_DOTS);
@@ -341,7 +342,7 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
         return empty($tmp) ? sys_get_temp_dir() : $tmp;
     }
 
-   /**
+    /**
      * Moves files to specified directories to install the modules
      *
      * @param string $downloadFolder Path where the installation folder is
@@ -363,14 +364,14 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
             static::buildPath(['modules', 'notifications']),
         ] : $baseFoldersPath;
 
-        foreach ($baseFoldersPath as $path){
+        foreach ($baseFoldersPath as $path) {
             $realPath = static::buildPath([$downloadFolder, $path]);
             $subFolders = scandir($realPath);
 
-            foreach ($subFolders as $subFolder){
-                $realSubPath = static::buildPath([$downloadFolder, $subFolder]);
+            foreach ($subFolders as $subFolder) {
+                $realSubPath = static::buildPath([$realPath, $subFolder]);
 
-                if (!in_array($subFolder, ['.', '..']) && !is_dir($realSubPath)){
+                if (!in_array($subFolder, ['.', '..']) && is_dir($realSubPath)) {
                     $modulesFoldersPath[] = static::buildPath([$path, $subFolder]);
                 }
             }
@@ -403,7 +404,7 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
      */
     protected function checkBaseFolders(array $baseFoldersPath): void
     {
-        foreach ($baseFoldersPath as $folder){
+        foreach ($baseFoldersPath as $folder) {
             $realPath = static::buildPath([ROOTDIR, $folder]);
 
             if (!file_exists($realPath)) {
@@ -487,8 +488,12 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
             if (!rename($source, $destination)) {
                 $error = error_get_last();
                 throw new Exception(
-                    sprintf('Error while copying %s into %s: %s. You MUST download the modules and copy them manually in WHMCS root folder.',
-                    $source, $destination, $error['message'])
+                    sprintf(
+                        'Error while copying %s into %s: %s. You MUST download the modules and copy them manually in WHMCS root folder.',
+                        $source,
+                        $destination,
+                        $error['message']
+                    )
                 );
             }
         }
@@ -504,7 +509,7 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
      */
     protected function deleteDirectories($modulesFoldersPath, $rnd)
     {
-         foreach ($modulesFoldersPath as $path) {
+        foreach ($modulesFoldersPath as $path) {
             $directory = static::buildPath([ROOTDIR, $path . '_' . $rnd]);
             $this->deleteDirectory($directory);
         }
@@ -533,16 +538,23 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
             if (!$this->deleteDirectory($destination)) {
                 $error = error_get_last();
                 throw new Exception(
-                    sprintf('Error while deleting %s: %s. You MUST download the modules and copy them manually in WHMCS root folder.',
-                    $destination, $error['message'])
+                    sprintf(
+                        'Error while deleting %s: %s. You MUST download the modules and copy them manually in WHMCS root folder.',
+                        $destination,
+                        $error['message']
+                    )
                 );
             }
 
             if (!rename($source, $destination)) {
                 $error = error_get_last();
                 throw new Exception(
-                    sprintf('Error while copying %s into %s: %s. You MUST download the modules and copy them manually in WHMCS root folder.',
-                    $source, $destination, $error['message'])
+                    sprintf(
+                        'Error while copying %s into %s: %s. You MUST download the modules and copy them manually in WHMCS root folder.',
+                        $source,
+                        $destination,
+                        $error['message']
+                    )
                 );
             }
         }
@@ -694,11 +706,10 @@ class Utils_Service extends AbstractService implements UtilsService_Interface
      */
     public function getWHMCSVersion()
     {
-        if(isset($GLOBALS['CONFIG']['Version'])){
+        if (isset($GLOBALS['CONFIG']['Version'])) {
             return $GLOBALS['CONFIG']['Version'];
         }
 
         return '';
     }
-
 }

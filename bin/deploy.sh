@@ -21,6 +21,11 @@ rm -Rf $WHMCS_DIR"/modules/registrars/dondominio"
 cp -R $DIR"/../src/modules/registrars/dondominio" $WHMCS_DIR"/modules/registrars/dondominio"
 echo "Done"
 
+echo "Deploying Provisioning module..."
+rm -Rf $WHMCS_DIR"/modules/servers/dondominiossl"
+cp -R $DIR"/../src/modules/servers/dondominiossl" $WHMCS_DIR"/modules/servers/dondominiossl"
+echo "Done"
+
 echo "Setting development settings"
 
 # Changing endpoint URL for development
