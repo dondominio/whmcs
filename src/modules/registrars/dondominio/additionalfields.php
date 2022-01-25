@@ -89,7 +89,7 @@ $additionaldomainfields['.es'][] = [
     'Remove' => true
 ];
 
-if ( array_key_exists( ".es", $additionaldomainfields ) ) {
+if (array_key_exists(".es", $additionaldomainfields)) {
     $additionaldomainfields[".com.es"] = $additionaldomainfields['.es'];
     $additionaldomainfields[".org.es"] = $additionaldomainfields['.es'];
     $additionaldomainfields[".nom.es"] = $additionaldomainfields['.es'];
@@ -243,46 +243,3 @@ $additionaldomainfields['.travel'][] = [
     'Name' => '.TRAVEL Usage Agreement',
     'Remove' => true
 ];
-
-// .LAW, .ABOGADO
-$additionaldomainfields['.law'][] = [
-    'Name'     => 'Accreditation ID',
-    'LangVar'  => 'law_accid',
-    'Type'     => 'text',
-    'Size'     => 50,
-    'Default'  => '',
-    'Required' => true
-];
-$additionaldomainfields['.law'][] = [
-    'Name'     => 'Accreditation Body',
-    'LangVar'  => 'law_accbody',
-    'Type'     => 'text',
-    'Size'     => 50,
-    'Default'  => '',
-    'Required' => true
-];
-$additionaldomainfields['.law'][] = [
-    'Name'     => 'Accreditation Year',
-    'LangVar'  => 'law_accyear',
-    'Type'     => 'text',
-    'Size'     => 50,
-    'Default'  => '',
-    'Required' => true
-];
-$additionaldomainfields['.law'][] = [
-    'Name'     => 'Country',
-    'LangVar'  => 'law_acccountry',
-    'Type'     => 'text',
-    'Size'     => 50,
-    'Default'  => '',
-    'Required' => true
-];
-$additionaldomainfields['.law'][] = [
-    'Name'     => 'State/Province',
-    'LangVar'  => 'law_accprovince',
-    'Type'     => 'text',
-    'Size'     => 50,
-    'Default'  => '',
-    'Required' => true
-];
-$additionaldomainfields['.abogado'] = $additionaldomainfields['.law'];
