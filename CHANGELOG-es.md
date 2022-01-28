@@ -7,6 +7,10 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.
 
 ## [Pendiente por lanzar]
 
+## [2.2.5] - 2022-01-28
+### fixed
+- Consulta para obtener precios de TLDs.
+
 ## [2.2.4] - 2022-01-25
 ### Changed
 - Eliminar los campos adicionales para los dominios `.law` y `.abogado` al ya no ser necesarios.
