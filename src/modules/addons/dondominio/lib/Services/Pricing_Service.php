@@ -20,7 +20,7 @@ class Pricing_Service extends AbstractService implements PricingService_Interfac
         // SELECT tld FROM mod_dondominio_pricing WHERE tld NOT IN (SELECT tld FROM mod_dondominio_watchlist) ORDER BY tld ASC
 
         return Pricing_Model::whereNotIn('tld', function ($query) {
-                $query->select('tld')->from((new Watchlist_Model)->getTable())->get();
+            $query->select('tld')->from((new Watchlist_Model)->getTable())->get();
         })->orderBy('tld', 'asc')->pluck('tld');
     }
 
@@ -32,7 +32,7 @@ class Pricing_Service extends AbstractService implements PricingService_Interfac
     public function findPricingsInDomainPricings()
     {
         return Pricing_Model::select()
-            ->whereRaw('tld IN (SELECT extension COLLATE utf8_unicode_ci FROM tbldomainpricing WHERE autoreg = "dondominio" AND extension = tld)')
+            ->whereRaw('tld IN (SELECT extension COLLATE utf8_unicode_ci FROM tbldomainpricing WHERE autoreg = "dondominio" AND extension COLLATE utf8_unicode_ci = tld)')
             ->get();
     }
 
@@ -57,13 +57,13 @@ class Pricing_Service extends AbstractService implements PricingService_Interfac
         $i = 1;
         $total = 0;
 
-        do{
+        do {
             $params = ['pageLength' => 100, 'page' => $i];
             $prices = $this->getApp()->getService('api')->getAccountZones($params);
 
             $pricesArray = array_merge($pricesArray, $prices->get("zones"));
 
-            $total = $prices->get( "queryInfo" )['total'];
+            $total = $prices->get("queryInfo")['total'];
 
             $i++;
         } while ($total > count($pricesArray));
