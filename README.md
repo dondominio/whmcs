@@ -16,7 +16,7 @@ Este proyecto contiene todos los módulos desarrollados entre DonDominio y WHMCS
 | Name      | Version       |
 |:----------|:--------------|
 | WHMCS     | >= 7.0        |
-| PHP       | >= 7.0        |
+| PHP       | >= 7.4        |
 | php-curl  | habilitado    |
 | php-json  | habilitado    |
 | php-zip   | habilitado    |

@@ -14,7 +14,7 @@ This project has all the developed integrations between MrDomain and WHMCS.
 | Name      | Version   |
 |:----------|:----------|
 | WHMCS     | >= 7.0    |
-| PHP       | >= 7.0    |
+| PHP       | >= 7.4    |
 | php-curl  | enabled   |
 | php-json  | enabled   |
 | php-zip   | enabled   |
