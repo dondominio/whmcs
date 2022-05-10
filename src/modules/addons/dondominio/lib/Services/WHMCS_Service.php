@@ -342,7 +342,7 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
                             id
                         FROM tblcustomfields
                         WHERE
-                            fieldname = ?
+                            fieldname COLLATE utf8_unicode_ci = ?
                     )
                 ) AS vatnumber
             FROM tbldomains D
