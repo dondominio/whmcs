@@ -7,6 +7,10 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.
 
 ## [Pendiente por lanzar]
 
+## [2.2.6] - 2022-05-10
+### fixed
+- Consulta para obtener información extra del dominio.
+
 ## [2.2.5] - 2022-01-28
 ### fixed
 - Consulta para obtener precios de TLDs.
