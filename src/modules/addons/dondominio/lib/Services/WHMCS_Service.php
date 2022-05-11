@@ -333,7 +333,7 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
         return Capsule::selectOne('
             SELECT *, (
                 SELECT
-                    value COLLATE utf8_unicode_ci
+                    value
                 FROM tblcustomfieldsvalues
                 WHERE
                     relid = C.id
@@ -342,7 +342,7 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
                             id
                         FROM tblcustomfields
                         WHERE
-                            fieldname COLLATE utf8_unicode_ci = ?
+                            fieldname = ?
                     )
                 ) AS vatnumber
             FROM tbldomains D
