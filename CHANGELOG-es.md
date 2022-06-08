@@ -7,6 +7,11 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.
 
 ## [Pendiente por lanzar]
 
+## [2.2.7] - 2022-06-08
+### fixed
+- Clase css de transferaway.
+- Poder asignar dominios como Transfer Away en Domain Sync de Registrador.
+
 ## [2.2.6] - 2022-05-10
 ### fixed
 - Consulta para obtener información extra del dominio.

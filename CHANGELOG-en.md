@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.7] - 2022-06-08
+### fixed
+- Transferaway css class
+- Being able to assign domains as Transfer Away in Registrar Domain Sync.
+
+
 ## [2.2.6] - 2022-05-10
 ### fixed
 - Query for obtain domain extended.
