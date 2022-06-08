@@ -452,6 +452,8 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
     }
 
     /**
+     * IMPORTANT!: When this function is modified, synchronize with WHMCS\Module\Registrar\Dondominio\Actions\Sync.
+     *
      * Downloads information from API and updates domains
      *
      * @param \WHMCS\Domain\Domain
