@@ -216,7 +216,7 @@
                     {assign var='status_class' value="fraud"}
                     {/if}
                     {if $domain.status eq 'Transferred Away'}
-                    {assign var='status_class' value="transferred-away"}
+                    {assign var='status_class' value="transferredaway"}
                     {/if}
                     {if $domain.status eq 'Grace'}
                     {assign var='status_class' value="grace"}
