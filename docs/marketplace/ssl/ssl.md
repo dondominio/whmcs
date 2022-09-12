@@ -30,7 +30,7 @@ Este módulo ofrece la posibilidad vender Certificados SSL usando la API de DonD
 - Cambiar método de validación: Cambiar el método de validación de los nombres alternativos de un certificado
 - Reenviar correo de validación: Reenviar el correo de validación de los nombres alternativos de un certificado
 
-Para más información, documentación, soporte, y guías, visite [dev.dondominio.com/whmcs/docs/ssl/](https://dev.dondominio.com/whmcs/docs/ssl/)
+Para más información, documentación, soporte, y guías, visite [dondominio.dev/whmcs/docs/ssl/](https://dondominio.dev/whmcs/docs/ssl/)
 
 # Requerimientos
 

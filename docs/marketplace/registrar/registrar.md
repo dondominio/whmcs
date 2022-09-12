@@ -62,7 +62,7 @@ permitirá registrar, renovar y transferir dominios, aparte de muchás utilidade
 - Comprobar disponibilidad: Comprobar si un dominio esta disponible
 - Obtener sugerencias de dominios: Obtener sugerencias de dominios para recomendaciones de usuario
 
-Para más información, documentación, soporte, y guías, visite [dev.dondominio.com/whmcs/docs/registrar/](https://dev.dondominio.com/whmcs/docs/registrar/)
+Para más información, documentación, soporte, y guías, visite [dondominio.dev/whmcs/docs/registrar/](https://dondominio.dev/whmcs/docs/registrar/)
 
 # Requerimientos
 

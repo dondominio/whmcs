@@ -1,7 +1,7 @@
 <?php
 /**
  * DonDominio/MrDomain Registrar Module for WHMCS
- * This module uses the {@see https://dev.dondominio.com/whmcs/docs/plugin/ DonDominio API}
+ * This module uses the {@see https://dondominio.dev/whmcs/docs/plugin/ DonDominio API}
  * to perform tasks like registering, transfering, and updating domains from
  * WHMCS.
  * @link https://github.com/dondominio/dondominiowhmcs

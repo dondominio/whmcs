@@ -40,7 +40,7 @@ Importe sus dominios directamente desde DonDominio, realice cambios masivos, añ
 - Sincronización: Sincronización cada día con DonDominio
 - Gestionar Certificados SSL: Gestionar los certificados SSL relacionados con tu cuenta API de DonDominio
 
-Para más información, documentación, soporte, y guías, visite [dev.dondominio.com/whmcs/docs/addon/](https://dev.dondominio.com/whmcs/docs/addon/)
+Para más información, documentación, soporte, y guías, visite [dondominio.dev/whmcs/docs/addon/](https://dondominio.dev/whmcs/docs/addon/)
 
 # Requerimientos
 

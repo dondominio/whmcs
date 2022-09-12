@@ -64,7 +64,7 @@ class API_Service extends AbstractService implements APIService_Interface
      * Performs a 'hello' action against API
      * Checks if connection is OK
      *
-     * @see https://dev.dondominio.com/api/docs/sdk-php/#tool-hello
+     * @see https://dondominio.dev/api/docs/sdk-php/#tool-hello
      *
      * @return \Dondominio\API\Response\Response
      */
@@ -78,7 +78,7 @@ class API_Service extends AbstractService implements APIService_Interface
     /**
      * Gets Domain Info
      *
-     * @see https://dev.dondominio.com/api/docs/sdk-php/#domain-getinfo
+     * @see https://dondominio.dev/api/docs/sdk-php/#domain-getinfo
      *
      * @param string $domain Domain name or Domain ID
      *
@@ -96,7 +96,7 @@ class API_Service extends AbstractService implements APIService_Interface
     /**
      * Gets Domains List
      *
-     * @see https://dev.dondominio.com/api/docs/sdk-php/#domain-getlist
+     * @see https://dondominio.dev/api/docs/sdk-php/#domain-getlist
      *
      * @param int $page Offset where query starts
      * @param int $pageLength Limit where query ends
@@ -131,7 +131,7 @@ class API_Service extends AbstractService implements APIService_Interface
     /**
      * Updates contact
      *
-     * @see https://dev.dondominio.com/api/docs/sdk-php/#domain-updatecontacts
+     * @see https://dondominio.dev/api/docs/sdk-php/#domain-updatecontacts
      *
      * @param string $domain Domain name or Domain ID
      * @param string $type Type of contact
@@ -150,7 +150,7 @@ class API_Service extends AbstractService implements APIService_Interface
     /**
      * Sends domain transfer petition
      *
-     * @see https://dev.dondominio.com/api/docs/sdk-php/#domain-transfer
+     * @see https://dondominio.dev/api/docs/sdk-php/#domain-transfer
      *
      * @param stdClass $extDomain Domain from DDBB
      * @param string $authCode Auth Code (EEP Code)
@@ -197,7 +197,7 @@ class API_Service extends AbstractService implements APIService_Interface
     /**
      * Checks domain
      *
-     * @see https://dev.dondominio.com/api/docs/sdk-php/#domain-check
+     * @see https://dondominio.dev/api/docs/sdk-php/#domain-check
      *
      * @param string $domain Domain Name or Domain ID
      *
@@ -214,7 +214,7 @@ class API_Service extends AbstractService implements APIService_Interface
     /**
      * Get Account zones for TLD
      *
-     * @see https://dev.dondominio.com/api/docs/sdk-php/#account-zones
+     * @see https://dondominio.dev/api/docs/sdk-php/#account-zones
      *
      * @param array $params Filters
      *
@@ -230,7 +230,7 @@ class API_Service extends AbstractService implements APIService_Interface
     /**
      * Get Account Info
      *
-     * @see https://dev.dondominio.com/api/docs/sdk-php/#info-account-info
+     * @see https://dondominio.dev/api/docs/sdk-php/#info-account-info
      *
      * @return \Dondominio\API\Response\Response
      */
@@ -244,7 +244,7 @@ class API_Service extends AbstractService implements APIService_Interface
     /**
      * Gets deleted domains list
      *
-     * @see https://dev.dondominio.com/api/docs/api/#list-deleted-domain-listdeleted
+     * @see https://dondominio.dev/api/docs/api/#list-deleted-domain-listdeleted
      *
      * @param int $page Offset where query starts
      * @param int $pageLength Limit where query ends
@@ -271,7 +271,7 @@ class API_Service extends AbstractService implements APIService_Interface
     /**
      * Gets history of a domain
      *
-     * @see https://dev.dondominio.com/api/docs/api/#get-history-domain-gethistory
+     * @see https://dondominio.dev/api/docs/api/#get-history-domain-gethistory
      *
      * @param string $domain Domain from which you want to obtain the history
      * @param int $page Offset where query starts
@@ -299,7 +299,7 @@ class API_Service extends AbstractService implements APIService_Interface
     /**
      * Gets the contacts of your account
      *
-     * @see https://dev.dondominio.com/api/docs/api/#list-contact-list
+     * @see https://dondominio.dev/api/docs/api/#list-contact-list
      *
      * @param int $page Offset where query starts
      * @param int $pageLength Limit where query ends
@@ -331,7 +331,7 @@ class API_Service extends AbstractService implements APIService_Interface
     /**
      * Gets the contacts of your account
      *
-     * @see https://dev.dondominio.com/api/docs/api/#get-info-contact-getinfo
+     * @see https://dondominio.dev/api/docs/api/#get-info-contact-getinfo
      *
      * @param int $contactID ID of contact
      * @param int $infoType Type of information
@@ -348,7 +348,7 @@ class API_Service extends AbstractService implements APIService_Interface
     /**
      *  Resend the contact details verification email
      *
-     * @see https://dev.dondominio.com/api/docs/api/#esend-verification-mail-contact-resendverificationmail
+     * @see https://dondominio.dev/api/docs/api/#esend-verification-mail-contact-resendverificationmail
      *
      * @param int $page Offset where query starts
      *
@@ -364,7 +364,7 @@ class API_Service extends AbstractService implements APIService_Interface
     /**
      * Gets the SSL Products
      *
-     * @see https://dev.dondominio.com/api/docs/api/#ssl-product-list-ssl-productlist
+     * @see https://dondominio.dev/api/docs/api/#ssl-product-list-ssl-productlist
      *
      * @param int $page Offset where query starts
      * @param int $pageLength Limit where query ends
@@ -392,7 +392,7 @@ class API_Service extends AbstractService implements APIService_Interface
     /**
      * Gets the SSL Certificates
      *
-     * @see https://dev.dondominio.com/api/docs/api/#ssl-list-ssl-list
+     * @see https://dondominio.dev/api/docs/api/#ssl-list-ssl-list
      *
      * @param int $page Offset where query starts
      * @param int $pageLength Limit where query ends
@@ -419,7 +419,7 @@ class API_Service extends AbstractService implements APIService_Interface
     /**
      * Gets the SSL Certificates
      *
-     * @see https://dev.dondominio.com/api/docs/api/#ssl-list-ssl-list
+     * @see https://dondominio.dev/api/docs/api/#ssl-list-ssl-list
      *
      * @param int $page Offset where query starts
      * @param int $pageLength Limit where query ends

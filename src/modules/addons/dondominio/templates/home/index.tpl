@@ -51,7 +51,7 @@
     <div class="col-sm-4">
         <div class="panel panel-default">
             <div class="panel-body">
-                <a href="https://dev.dondominio.com/whmcs/" class="btn btn-dd" target="_blank"><img
+                <a href="https://dondominio.dev/whmcs/" class="btn btn-dd" target="_blank"><img
                         src="https://www.dondominio.com/images/favicon_appletouch.png" class="absmiddle" width="16"
                         height="16"> {$LANG.home_documentation}</a>
                 <a href="https://github.com/dondominio/whmcs/" class="btn btn-transparent" target="_blank"><i

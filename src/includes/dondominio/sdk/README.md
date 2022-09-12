@@ -46,7 +46,7 @@ en cuestión de segundos.
 La [Wiki](https://github.com/dondominio/sdk-php/wiki/) contiene información sobre como empezar y prácticamente todo lo que puedas necesitar.
 
 Para más información, documentación, soporte y guías, visita
-[dev.dondominio.com/api/docs/sdk-php/](https://dev.dondominio.com/api/docs/sdk-php/).
+[dondominio.dev/api/docs/sdk-php/](https://dondominio.dev/api/docs/sdk-php/).
 
 # Código de ejemplo
 

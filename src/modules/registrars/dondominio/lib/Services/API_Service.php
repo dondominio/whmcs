@@ -304,7 +304,7 @@ class API_Service implements APIService_Interface
     /**
      * Get Domain Suggestions
      *
-     * @see https://dev.dondominio.com/api/docs/sdk-php/#tool-domainsuggests
+     * @see https://dondominio.dev/api/docs/sdk-php/#tool-domainsuggests
      *
      * @param string $query Text to check suggestions
      * @param string $language Language suggestions
