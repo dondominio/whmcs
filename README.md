@@ -73,7 +73,7 @@ Importe sus dominios directamente desde DonDominio, realice cambios masivos, añ
 | Sincronización                | Sincronización cada día con DonDominio                                        |
 | Gestionar Certificados SSL    | Gestionar los certificados SSL relacionados con tu cuenta API de DonDominio   |
 
-Para más información, documentación, soporte, y guías, visite [dondominio.dev/whmcs/docs/addon/](https://dondominio.dev/whmcs/docs/addon/)
+Para más información, documentación, soporte, y guías, visite [dondominio.dev/es/whmcs/docs/addon/](https://dondominio.dev/es/whmcs/docs/addon/)
 
 ### 2. Módulo de Registrador
 ---
@@ -105,7 +105,7 @@ permitirá registrar, renovar y transferir dominios, aparte de muchás utilidade
 | Comprobar disponibilidad              | Comprobar si un dominio esta disponible                           |
 | Obtener sugerencias de dominios       | Obtener sugerencias de dominios para recomendaciones de usuario   |
 
-Para más información, documentación, soporte, y guías, visite [dondominio.dev/whmcs/docs/registrar/](https://dondominio.dev/whmcs/docs/registrar/)
+Para más información, documentación, soporte, y guías, visite [dondominio.dev/es/whmcs/docs/registrar/](https://dondominio.dev/es/whmcs/docs/registrar/)
 
 ### 3. Módulo de Aprovisionamiento
 ---
@@ -122,7 +122,7 @@ Este módulo ofrece la posibilidad vender Certificados SSL usando la API de DonD
 | Cambiar método de validación          | Cambiar el método de validación de los nombres alternativos de un certificado |
 | Reenviar correo de validación         | Reenviar el correo de validación de los nombres alternativos de un certificado|
 
-Para más información, documentación, soporte, y guías, visite [dondominio.dev/whmcs/docs/ssl/](https://dondominio.dev/whmcs/docs/ssl/)
+Para más información, documentación, soporte, y guías, visite [dondominio.dev/es/whmcs/docs/ssl/](https://dondominio.dev/es/whmcs/docs/ssl/)
 
 ## Changelog
 
