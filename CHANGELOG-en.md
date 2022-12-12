@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.8] - 2022-12-12
+### fixed
+- Update SDK.
+
 ## [2.2.7] - 2022-06-08
 ### fixed
 - Transferaway css class
