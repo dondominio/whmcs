@@ -1163,20 +1163,10 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
         $domains = Domain::select('id', 'domain')->get();
 
         foreach ($domains as $domain) {
-            $cname_components = explode('.', $domain->domain);
-            $last_component = count($cname_components) - 1;
-            $tld = $cname_components[$last_component];
-
-            $affectedRows += Capsule::update("
-                UPDATE tbldomains SET recurringamount = (
-                    SELECT msetupfee FROM tblpricing 
-                    WHERE type = 'domainrenew' 
-                    AND currency IN (SELECT id FROM tblcurrencies WHERE code = 'EUR')
-                    AND relid IN (SELECT id FROM tbldomainpricing WHERE extension = '." . $tld . "')
-                    LIMIT 1
-                )
-                WHERE id = $domain->id
-            ");
+            $this->doLocalAPICall("UpdateClientDomain", [
+                "domainid" => $domain->id,
+                "autorecalc" => true,
+            ]);
         }
 
         return $affectedRows;
