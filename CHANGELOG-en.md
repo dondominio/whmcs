@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.11] - 2023-03-03
+### fixed
+- getProductList SSL.
+
 ## [2.2.10] - 2023-02-20
 ### fixed
 - Use localAPI UpdateClientDomain.
