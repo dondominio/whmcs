@@ -4,7 +4,7 @@ namespace WHMCS\Module\Server\Dondominiossl\Services;
 
 class API_Service implements \WHMCS\Module\Server\Dondominiossl\Services\Contracts\APIService_Interface
 {
-    const SSL_MODULE_NAME = 'dondominiossl';
+    public const SSL_MODULE_NAME = 'dondominiossl';
 
     protected $api;
 
@@ -67,7 +67,7 @@ class API_Service implements \WHMCS\Module\Server\Dondominiossl\Services\Contrac
         try {
             $response = $connection->ssl_productList($args);
             $this->logResponse($response, $args);
-            $products = json_decode($response->getResponseData(), true);
+            $products = $response->getResponseData();
         } catch (\Exception $e) {
             return [];
         }
