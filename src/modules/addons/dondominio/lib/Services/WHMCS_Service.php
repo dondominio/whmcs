@@ -28,7 +28,7 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
      *
      * @throws Exception if success went wrong
      */
-    public function doLocalAPICall($command, array $values, $adminUser = null)
+    public function doLocalAPICall($command, array $values, $adminUser = null, bool $throwException = true)
     {
         if (!function_exists('localAPI')) {
             throw new Exception('Function localAPI not found. Are you sure you using WHMCS?');
@@ -36,11 +36,11 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
 
         $response = localAPI($command, $values, $adminUser);
 
-        if (!array_key_exists('result', $response)) {
+        if (!array_key_exists('result', $response) && $throwException) {
             throw new Exception('[LOCAL API ERROR] Function localAPI invalid response.');
         }
 
-        if ($response['result'] == 'error') {
+        if ($response['result'] == 'error' && $throwException) {
             throw new Exception(
                 '[LOCAL API ERROR] ' .
                 (array_key_exists('message', $response) ? $response['message'] : 'Something went wrong with localAPI')
@@ -1166,7 +1166,7 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
             $this->doLocalAPICall("UpdateClientDomain", [
                 "domainid" => $domain->id,
                 "autorecalc" => true,
-            ]);
+            ],null, false);
         }
 
         return $affectedRows;
