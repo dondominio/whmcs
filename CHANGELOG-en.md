@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.13] - 2023-03-31
+### fixed
+- PHP8 TypeError.
+
 ## [2.2.12] - 2023-03-14
 ### fixed
 - UpdateClientDomain Error.
