@@ -955,7 +955,7 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
                     $register[$i - 1] = $register_price * $i;
                 }
             } else {
-                $register[$term - 1] = $register_price * $term;
+                $register[(int) $term - 1] = $register_price * (int) $term;
             }
         }
 
@@ -970,7 +970,7 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
                     $transfer[$i - 1] = $transfer_price * $i;
                 }
             }else{
-                $transfer[$term - 1] = $transfer_price * $term;
+                $transfer[(int) $term - 1] = $transfer_price * (int) $term;
             }
         }
 
@@ -985,7 +985,7 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
                     $renew[$i - 1] = $renew_price * $i;
                 }
             }else{
-                $renew[$term - 1] = $renew_price * $term;
+                $renew[(int) $term - 1] = $renew_price * (int) $term;
             }
         }
 
