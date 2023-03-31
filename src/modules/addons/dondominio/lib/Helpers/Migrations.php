@@ -45,7 +45,7 @@ class Migrations
             // mod_dondominio_tld_settings
 
             if (!Capsule::schema()->hasTable(TldSettings_Model::getTableName())) {
-                Capsule::schema()->create(TldSettings_Model::getTableName(), function($table) {
+                Capsule::schema()->create(TldSettings_Model::getTableName(), function ($table) {
                     $table->integer('id', true)->autoIncrement();
                     $table->string('tld', 64)->unique('unique_tld');
                     $table->tinyInteger('ignore');
@@ -62,7 +62,7 @@ class Migrations
             // mod_dondominio_settings
 
             if (!Capsule::schema()->hasTable(Settings_Model::getTableName())) {
-                Capsule::schema()->create(Settings_Model::getTableName(), function($table) {
+                Capsule::schema()->create(Settings_Model::getTableName(), function ($table) {
                     $table->string('key', 32)->primary();
                     $table->string('value', 255)->nullable();
                 });
@@ -74,6 +74,48 @@ class Migrations
                 Capsule::schema()->create(Watchlist_Model::getTableName(), function ($table) {
                     $table->integer('id', true)->autoIncrement();
                     $table->string('tld', 64);
+                });
+            }
+
+            // mod_dondominio_ssl_products
+
+            if (!Capsule::schema()->hasTable('mod_dondominio_ssl_products')) {
+                $priceIncrementsType = \WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::getPriceIncrementTypes();
+                $priceIncrementsTypeNone = \WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::PRICE_INCREMENT_TYPE_NONE;
+
+                Capsule::schema()->create('mod_dondominio_ssl_products', function ($table) use ($priceIncrementsType, $priceIncrementsTypeNone) {
+                    $table->integer('dd_product_id');
+                    $table->primary('dd_product_id');
+                    $table->integer('tblproducts_id')->default(0);
+                    $table->string('product_name', 255)->default('');
+                    $table->string('brand_name', 255)->default('');
+                    $table->string('validation_type', 255)->default('');
+                    $table->tinyInteger('is_multi_domain')->default(0);
+                    $table->tinyInteger('is_wildcard')->default(0);
+                    $table->tinyInteger('is_trial')->default(0);
+                    $table->integer('num_domains')->default(1);
+                    $table->integer('key_length')->default(0);
+                    $table->string('encryption', 255)->default('');
+                    $table->decimal('price_create')->default(0);
+                    $table->decimal('price_renew')->default(0);
+                    $table->integer('trial_period')->default(0);
+                    $table->integer('san_max_domains')->default(0);
+                    $table->decimal('san_price')->default(0);
+                    $table->decimal('price_create_increment')->default(0);
+                    $table->enum('price_create_increment_type', $priceIncrementsType)->default($priceIncrementsTypeNone);
+                    $table->tinyInteger('available')->default(1);
+                });
+            }
+
+            // mod_dondominio_ssl_certificate_orders
+
+            if (!Capsule::schema()->hasTable('mod_dondominio_ssl_certificate_orders')) {
+                Capsule::schema()->create('mod_dondominio_ssl_certificate_orders', function ($table) {
+                    $table->integer('certificate_id');
+                    $table->primary('certificate_id');
+                    $table->integer('tblhosting_id')->default(0);
+                    $table->integer('dd_product_id')->default(0);
+                    $table->tinyInteger('renew_date_flag')->default(0);
                 });
             }
 
@@ -146,11 +188,11 @@ class Migrations
             if (version_compare($version, '1.1', '<')) {
                 static::upgrade11();
             }
-        
+
             if (version_compare($version, '1.2', '<')) {
                 static::upgrade12();
             }
-        
+
             if (version_compare($version, '1.6', '<')) {
                 static::upgrade16();
             }
@@ -171,6 +213,9 @@ class Migrations
             if (version_compare($version, '2.2.0', '<')) {
                 static::upgrade220();
             }
+            if (version_compare($version, '2.2.14', '<')) {
+                static::upgrade220();
+            }
         } catch (Exception $e) {
             logModuleCall(App::NAME, __FUNCTION__, '', $e->getMessage());
 
@@ -188,7 +233,7 @@ class Migrations
     protected static function upgrade11()
     {
         if (!Capsule::schema()->hasColumn('mod_dondominio_pricing', 'authcode_required')) {
-            Capsule::schema()->table('mod_dondominio_pricing', function($table) {
+            Capsule::schema()->table('mod_dondominio_pricing', function ($table) {
                 $table->tinyInteger('authcode_required')->nullable();
             });
         }
@@ -204,7 +249,7 @@ class Migrations
     protected static function upgrade12()
     {
         if (!Capsule::schema()->hasTable('mod_dondominio_tld_settings')) {
-            Capsule::schema()->create('mod_dondominio_tld_settings', function($table) {
+            Capsule::schema()->create('mod_dondominio_tld_settings', function ($table) {
                 $table->integer('id', true)->autoIncrement();
                 $table->string('tld', 64)->unique('unique_tld');
                 $table->tinyInteger('ignore');
@@ -229,7 +274,7 @@ class Migrations
     protected static function upgrade16()
     {
         if (!Capsule::schema()->hasColumn('mod_dondominio_tld_settings', 'ignore')) {
-            Capsule::schema()->table('mod_dondominio_tld_settings', function($table) {
+            Capsule::schema()->table('mod_dondominio_tld_settings', function ($table) {
                 $table->tinyInteger('ignore');
             });
         }
@@ -335,11 +380,10 @@ class Migrations
     protected static function upgrade220()
     {
         if (!Capsule::schema()->hasTable('mod_dondominio_ssl_products')) {
-
             $priceIncrementsType = \WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::getPriceIncrementTypes();
             $priceIncrementsTypeNone = \WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::PRICE_INCREMENT_TYPE_NONE;
 
-            Capsule::schema()->create('mod_dondominio_ssl_products', function($table) use ($priceIncrementsType, $priceIncrementsTypeNone) {
+            Capsule::schema()->create('mod_dondominio_ssl_products', function ($table) use ($priceIncrementsType, $priceIncrementsTypeNone) {
                 $table->integer('dd_product_id');
                 $table->primary('dd_product_id');
                 $table->integer('tblproducts_id')->default(0);
@@ -364,7 +408,7 @@ class Migrations
         }
 
         if (!Capsule::schema()->hasTable('mod_dondominio_ssl_certificate_orders')) {
-            Capsule::schema()->create('mod_dondominio_ssl_certificate_orders', function($table) {
+            Capsule::schema()->create('mod_dondominio_ssl_certificate_orders', function ($table) {
                 $table->integer('certificate_id');
                 $table->primary('certificate_id');
                 $table->integer('tblhosting_id')->default(0);
