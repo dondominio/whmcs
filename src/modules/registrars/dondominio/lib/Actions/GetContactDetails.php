@@ -24,6 +24,10 @@ class GetContactDetails extends Action
             $result['Tech'] = static::filterContactFromResponse($response->get('contactTech'));
         }
 
+        if (empty($this->params['billingContact']) || $this->params['allowBillingContactUpdate'] === 'on') {
+            $result['Billing'] = static::filterContactFromResponse($response->get('contactBilling'));
+        }
+
         if (count($result) == 0) {
             throw new Exception('Contact modification is disabled. Contact support for more information.');
         }
