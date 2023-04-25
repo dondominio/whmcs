@@ -21,6 +21,9 @@ class SaveContactDetails extends Action
         // Filter tech contact
         $fields = array_merge($fields, $this->getContactTypeDataFromParams('Tech', 'tech'));
 
+        // Filter billing contact
+        $fields = array_merge($fields, $this->getContactTypeDataFromParams('Billing', 'billing'));
+
         $response = $this->app->getService('api')->updateContactDetails($this->domain, $fields);
 
         if (count($response) == 0) {

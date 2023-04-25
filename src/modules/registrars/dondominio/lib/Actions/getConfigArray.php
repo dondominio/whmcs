@@ -105,6 +105,11 @@ class getConfigArray extends Action
                 "Size" => "20",
                 "Description" => "Override Billing contact information provided by customer"
             ],
+            "allowBillingContactUpdate" => [
+                "FriendlyName" => " ",
+                "Type" => "yesno",
+                "Description" => "Allow customers to modify Tech contact information"
+            ],
             //Double-block
             "blockAll" => [
                 "FriendlyName" => "Lock modifications",

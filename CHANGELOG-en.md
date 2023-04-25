@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.15] - 2023-04-25
+### fixed
+- Billing contact in GetContactDetails.
+
 ## [2.2.14] - 2023-03-31
 ### fixed
 - Migrations.
