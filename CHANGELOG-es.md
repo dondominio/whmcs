@@ -7,6 +7,10 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.
 
 ## [Pendiente por lanzar]
 
+## [2.2.16] - 2023-07-13
+### Change
+- Actualizar SDK.
+
 ## [2.2.15] - 2023-04-25
 ### fixed
 - Contacto de Facturación en GetContactDetails.
