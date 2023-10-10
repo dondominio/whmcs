@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.17] - 2023-10-10
+### Change
+- Delete Intended Use for `.PL`.
+
 ## [2.2.16] - 2023-07-13
 ### Change
 - Update SDK.
