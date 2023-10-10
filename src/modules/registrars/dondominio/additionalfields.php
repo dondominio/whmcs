@@ -97,7 +97,7 @@ if (array_key_exists(".es", $additionaldomainfields)) {
     $additionaldomainfields[".edu.es"] = $additionaldomainfields['.es'];
 }
 
-// .BARCELONA, .CAT, .PL, .SCOT, .EUS, .GAL, .QUEBEC
+// .BARCELONA, .CAT, .SCOT, .EUS, .GAL, .QUEBEC
 $additionaldomainfields['.barcelona'][] = [
     'Name'     => 'Intended Use',
     'LangVar'  => 'barcelona_intendeduse',
@@ -109,14 +109,6 @@ $additionaldomainfields['.barcelona'][] = [
 $additionaldomainfields['.cat'][] = [
     'Name'     => 'Intended Use',
     'LangVar'  => 'cat_intendeduse',
-    'Type'     => 'text',
-    'Size'     => 50,
-    'Default'  => '',
-    'Required' => true
-];
-$additionaldomainfields['.pl'][] = [
-    'Name'     => 'Intended Use',
-    'LangVar'  => 'pl_intendeduse',
     'Type'     => 'text',
     'Size'     => 50,
     'Default'  => '',
