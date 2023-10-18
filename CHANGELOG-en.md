@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.18] - 2023-10-18
+### Change
+- Delete additional fields for `.jobs, lawyer, .attorney, .dentist, .airforce, .army, .navy , ltda`.
+
 ## [2.2.17] - 2023-10-10
 ### Change
 - Delete Intended Use for `.PL`.
