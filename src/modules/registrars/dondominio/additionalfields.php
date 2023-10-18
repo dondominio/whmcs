@@ -32,25 +32,25 @@
  */
 
 // .ES
-$additionaldomainfields[".es"][] = [
-    "Name"    => "OwnerType",
-    "LangVar" => "estldowneridtype",
-    "Type"    => "dropdown",
-    "Options" => [
-        "DNI|Particular o Autónomo (DNI/NIF/NIE)",
-        "CIF|Sociedad (CIF)",
-        "NONESCUSTOMER|Non-ES customer (National ID Card or Passport)",
-        "NONESCOMPANY|Non-ES company (Company tax ID)",
+$additionaldomainfields['.es'][] = [
+    'Name'    => 'OwnerType',
+    'LangVar' => 'estldowneridtype',
+    'Type'    => 'dropdown',
+    'Options' => [
+        'DNI|Particular o Autónomo (DNI/NIF/NIE)',
+        'CIF|Sociedad (CIF)',
+        'NONESCUSTOMER|Non-ES customer (National ID Card or Passport)',
+        'NONESCOMPANY|Non-ES company (Company tax ID)',
     ]
 ];
 
-$additionaldomainfields[".es"][] = [
-    "Name"     => "ID Form Number",
-    "LangVar"  => "estldidformnum",
-    "Type"     => "text",
-    "Size"     => "30",
-    "Default"  => "",
-    "Required" => true
+$additionaldomainfields['.es'][] = [
+    'Name'     => 'ID Form Number',
+    'LangVar'  => 'estldidformnum',
+    'Type'     => 'text',
+    'Size'     => '30',
+    'Default'  => '',
+    'Required' => true
 ];
 
 $additionaldomainfields['.es'][] = [
@@ -62,26 +62,26 @@ $additionaldomainfields['.es'][] = [
     'Required' => true
 ];
 
-$additionaldomainfields[".es"][] = [
-    "Name"    => "AdminType",
-    "LangVar" => "estldadminidtype",
-    "Type"    => "dropdown",
-    "Options" => [
-        "DNI|Particular o Autónomo (DNI/NIF/NIE)",
-        "NONES|Non-ES customer (National ID Card or Passport)"
+$additionaldomainfields['.es'][] = [
+    'Name'    => 'AdminType',
+    'LangVar' => 'estldadminidtype',
+    'Type'    => 'dropdown',
+    'Options' => [
+        'DNI|Particular o Autónomo (DNI/NIF/NIE)',
+        'NONES|Non-ES customer (National ID Card or Passport)'
     ]
 ];
 
-$additionaldomainfields[".es"][] = [
-    "Name"    => "Info",
-    "LangVar" => "es_info",
-    "Type"    => "display",
-    "Default" =>
-    "<strong>INFORMACION SOBRE LOS CONTACTOS</strong>
+$additionaldomainfields['.es'][] = [
+    'Name'    => 'Info',
+    'LangVar' => 'es_info',
+    'Type'    => 'display',
+    'Default' =>
+    '<strong>INFORMACION SOBRE LOS CONTACTOS</strong>
         <ul>
             <li><strong>TITULAR</strong>: El contacto TITULAR si puede ser registrado con el CIF de una empresa.</li>
             <li><strong>ADMINISTRATIVO</strong>: Si el contacto administrativo reside en España, este deberá ser una persona física, no una empresa</li>
-        </ul>"
+        </ul>'
 ];
 
 $additionaldomainfields['.es'][] = [
@@ -89,12 +89,12 @@ $additionaldomainfields['.es'][] = [
     'Remove' => true
 ];
 
-if (array_key_exists(".es", $additionaldomainfields)) {
-    $additionaldomainfields[".com.es"] = $additionaldomainfields['.es'];
-    $additionaldomainfields[".org.es"] = $additionaldomainfields['.es'];
-    $additionaldomainfields[".nom.es"] = $additionaldomainfields['.es'];
-    $additionaldomainfields[".gob.es"] = $additionaldomainfields['.es'];
-    $additionaldomainfields[".edu.es"] = $additionaldomainfields['.es'];
+if (array_key_exists('.es', $additionaldomainfields)) {
+    $additionaldomainfields['.com.es'] = $additionaldomainfields['.es'];
+    $additionaldomainfields['.org.es'] = $additionaldomainfields['.es'];
+    $additionaldomainfields['.nom.es'] = $additionaldomainfields['.es'];
+    $additionaldomainfields['.gob.es'] = $additionaldomainfields['.es'];
+    $additionaldomainfields['.edu.es'] = $additionaldomainfields['.es'];
 }
 
 // .BARCELONA, .CAT, .SCOT, .EUS, .GAL, .QUEBEC
@@ -147,46 +147,6 @@ $additionaldomainfields['.hk'][] = [
     'Size'     => 16,
     'Default'  => '1900-01-01',
     'Required' => true
-];
-
-// .JOBS
-$additionaldomainfields['.jobs'][] = [
-    'Name'   => 'Website',
-    "Remove" => true
-];
-
-// .LAWYER, .ATTORNEY, .DENTIST, .AIRFORCE, .ARMY, .NAVY
-$contactInfoField = [
-    'Name'     => 'Contact Info',
-    'LangVar'  => 'lawyer_contactinfo',
-    'Type'     => 'text',
-    'Size'     => 50,
-    'Default'  => '',
-    'Required' => true
-];
-$additionaldomainfields['.lawyer'][]   = $contactInfoField;
-$additionaldomainfields['.attorney'][] = $contactInfoField;
-$additionaldomainfields['.dentist'][]  = $contactInfoField;
-$additionaldomainfields['.airforce'][] = $contactInfoField;
-$additionaldomainfields['.army'][]     = $contactInfoField;
-$additionaldomainfields['.navy'][]     = $contactInfoField;
-
-// .LTDA
-$additionaldomainfields['.ltda'][] = [
-    'Name'     => 'Authority',
-    'LangVar'  => 'ltda_authority',
-    'Type'     => 'text',
-    'Size'     => 50,
-    'Default'  => '',
-    'Required' => false
-];
-$additionaldomainfields['.ltda'][] = [
-    'Name'     => 'License Number',
-    'LangVar'  => 'ltda_license',
-    'Type'     => 'text',
-    'Size'     => 50,
-    'Default'  => '',
-    'Required' => false
 ];
 
 // .RU
