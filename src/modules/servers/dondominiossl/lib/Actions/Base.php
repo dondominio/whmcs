@@ -2,7 +2,6 @@
 
 namespace WHMCS\Module\Server\Dondominiossl\Actions;
 
-
 abstract class Base
 {
     protected array $params = [];
@@ -20,11 +19,11 @@ abstract class Base
         $this->setCustomFields();
     }
 
-    public abstract function execute(): string;
+    abstract public function execute(): string;
 
     /**
      * Set the customfields with consistent keys
-     * 
+     *
      * @return void
      */
     protected function setCustomFields(): void
@@ -45,7 +44,7 @@ abstract class Base
 
     /**
      * Get the certificate ID in Custom Fields of the order
-     * 
+     *
      * @return object|null
      */
     protected function getCertificateIDCustomFieldValue()
@@ -66,7 +65,7 @@ abstract class Base
 
     /**
      * Returns the customer's VAT Number
-     * 
+     *
      * @return string
      */
     protected function getVATNumber(): string
@@ -84,7 +83,7 @@ abstract class Base
 
     /**
      * Get years period of the product
-     * 
+     *
      * @return int
      */
     protected function getPeriod(): int
@@ -103,16 +102,19 @@ abstract class Base
 
     /**
      * Get base args for the create and renew requests
-     * 
+     *
      * @return array
      */
     protected function getArgs(): array
     {
+        $companyname = $this->params['clientsdetails']['companyname'];
+
         return [
             'period' => $this->getPeriod(),
-            'adminContactType' => 'individual',
+            'adminContactType' => strlen($companyname) > 0 ? 'organization' : 'individual',
             'adminContactFirstName' => $this->params['clientsdetails']['firstname'],
             'adminContactLastName' => $this->params['clientsdetails']['lastname'],
+            'adminContactOrgName' => $companyname,
             'adminContactIdentNumber' => $this->getVATNumber(),
             'adminContactEmail' => $this->params['clientsdetails']['email'],
             'adminContactPhone' => $this->params['clientsdetails']['phonenumberformatted'],
@@ -126,7 +128,7 @@ abstract class Base
 
     /**
      * Check that the necessary parameters are seted
-     * 
+     *
      * @throws Exception if one parameter is not set
      *
      * @return void
@@ -159,7 +161,6 @@ abstract class Base
             'configoption1' => 'Product ID not found',
             'configoption2' => 'VAT Number not found',
             'clientsdetails' => [
-                'companyname' => 'User Company Name not found',
                 'countrycode' => 'User Country Code not found',
                 'state' => 'User State not found',
                 'city' => 'User City not found',
@@ -179,8 +180,8 @@ abstract class Base
      * Returns the customer's address
      *
      * @throws Exception if the address is no found
-     * 
-     * 
+     *
+     *
      * @return string
      */
     protected function getAddress(): string
@@ -197,7 +198,7 @@ abstract class Base
 
     /**
      * Make a request to DonDominio API to get Certificate Info
-     * 
+     *
      * @throws Exception if the CSR Data creation is not successful
      *
      * @return \Dondominio\API\Response\Response
@@ -210,7 +211,7 @@ abstract class Base
 
     /**
      * Reset the certificate renew flag
-     * 
+     *
      * @return void
      */
     protected function resetCertificateRenew(int $certificateID): void
@@ -219,7 +220,7 @@ abstract class Base
             'certificate_id' => $certificateID
         ])->first();
 
-        if (is_object($certificate)){
+        if (is_object($certificate)) {
             $certificate->renew_date_flag = 0;
             $certificate->save();
         }

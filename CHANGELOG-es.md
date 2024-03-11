@@ -7,6 +7,10 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.
 
 ## [Pendiente por lanzar]
 
+## [2.2.19] - 2024-03-11
+### ficex
+- `adminContactType` en dondominiossl
+
 ## [2.2.18] - 2023-10-18
 ### Change
 - Eliminar campos adicionales para `.jobs, lawyer, .attorney, .dentist, .airforce, .army, .navy , ltda`.
