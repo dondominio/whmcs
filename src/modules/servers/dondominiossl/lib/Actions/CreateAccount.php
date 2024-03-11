@@ -2,7 +2,6 @@
 
 namespace WHMCS\Module\Server\Dondominiossl\Actions;
 
-
 class CreateAccount extends \WHMCS\Module\Server\Dondominiossl\Actions\Base
 {
     protected string $fieldAltName = \WHMCS\Module\Addon\Dondominio\Models\SSLProduct_Model::CUSTOM_FIELD_ALT_NAME;
@@ -53,17 +52,21 @@ class CreateAccount extends \WHMCS\Module\Server\Dondominiossl\Actions\Base
 
     /**
      * Make a request to DonDominio API for the creation of a CSR Data
-     * 
+     *
      * @throws Exception if the CSR Data creation is not successful
      *
      * @return \Dondominio\API\Response\Response
      */
     protected function createCSRData(): \Dondominio\API\Response\Response
     {
+        $companyName = $this->params['clientsdetails']['companyname'];
+        $hasCompanyName = strlen($companyName) > 0;
+        $commonName = $this->params['customfields'][$this->fieldCommonName];
+
         $args = [
-            'commonName' => $this->params['customfields'][$this->fieldCommonName],
-            'organizationName' => $this->params['clientsdetails']['companyname'],
-            'organizationalUnitName' => $this->params['clientsdetails']['companyname'],
+            'commonName' => $commonName,
+            'organizationName' => $hasCompanyName ? $companyName : $commonName,
+            'organizationalUnitName' => $hasCompanyName ? $companyName : $commonName,
             'countryName' => $this->params['clientsdetails']['countrycode'],
             'stateOrProvinceName' => $this->params['clientsdetails']['state'],
             'localityName' => $this->params['clientsdetails']['city'],
@@ -77,7 +80,7 @@ class CreateAccount extends \WHMCS\Module\Server\Dondominiossl\Actions\Base
      * Add alternative names to args
      *
      * @param array $args args for create
-     * 
+     *
      * @return void
      */
     protected function addAltNames(array &$args): void
@@ -101,5 +104,4 @@ class CreateAccount extends \WHMCS\Module\Server\Dondominiossl\Actions\Base
             $altNameCount++;
         }
     }
-
 }
