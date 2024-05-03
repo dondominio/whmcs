@@ -55,6 +55,11 @@ class getConfigArray extends Action
                 "Options" => "," . implode(",", $customFields),
                 "Description" => "Custom field containing the VAT Number for your customers"
             ],
+            'useTaxID' => [
+                'FriendlyName' => 'Use tax ID',
+                'Type' => 'yesno',
+                'Description' => 'Use Tax ID as VAT Number'
+            ],
             //FOACONTACT	
             "foacontact" => [	
                 "FriendlyName" => "FOA Contact",	
