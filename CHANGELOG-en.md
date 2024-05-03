@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.20] - 2024-05-03
+### Changed
+- Use `Tax ID` as `Vat Number` registrar option.
+
 ## [2.2.19] - 2024-03-11
 ### fixed
 - `adminContactType` in dondominiossl
