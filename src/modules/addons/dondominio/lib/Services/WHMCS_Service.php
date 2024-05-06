@@ -299,6 +299,20 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
         if (!empty($extDomain->vatnumber)) {
             return $extDomain;
         }
+
+        $useTaxID = Capsule::selectOne('
+            SELECT * FROM `tblregistrars`
+            WHERE `tblregistrars`.`registrar` = "dondominio"
+            AND `tblregistrars`.`setting` = "useTaxID"
+        ')->value;
+
+        if (!empty($useTaxID) && function_exists('decrypt')) {
+            $useTaxIDMode = decrypt($useTaxID);
+            if ($useTaxIDMode === 'on' && $extDomain->tax_id !== '') {
+                $extDomain->vatnumber = $extDomain->tax_id;
+                return $extDomain;
+            }
+        }
         
         $registrarFileName = Capsule::selectOne('
             SELECT * FROM `tblregistrars`

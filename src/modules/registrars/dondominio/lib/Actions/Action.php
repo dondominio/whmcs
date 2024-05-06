@@ -296,6 +296,10 @@ class Action
         // Search by Custom Field
 
         if (empty($vatNumber) && !empty($this->params['vat'])) {
+            if ($this->params['useTaxID'] && array_key_exists('tax_id', $this->params) && is_string($this->params['tax_id']) && $this->params['tax_id'] !== '' ) {
+                return $this->params['tax_id'];
+            }
+
             $vatNumberCustomField = $this->app->getService('whmcs')->getCustomFieldByFieldName($this->params['vat']);
 
             // Try to find custom field through old select version
