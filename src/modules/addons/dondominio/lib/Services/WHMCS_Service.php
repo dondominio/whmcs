@@ -299,6 +299,24 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
         if (!empty($extDomain->vatnumber)) {
             return $extDomain;
         }
+
+        $useTaxID = Capsule::selectOne('
+            SELECT * FROM `tblregistrars`
+            WHERE `tblregistrars`.`registrar` = "dondominio"
+            AND `tblregistrars`.`setting` = "useTaxID"
+        ')->value;
+
+        if (!empty($useTaxID) && function_exists('decrypt')) {
+            $useTaxIDMode = decrypt($useTaxID);
+            if ($useTaxIDMode === 'on') {
+                $tax_id = $this->getTaxIDFromDomain($id);
+
+                if ($tax_id->tax_id !== "") {
+                    $extDomain->vatnumber = $tax_id->tax_id;
+                    return $extDomain;
+                }
+            }
+        }
         
         $registrarFileName = Capsule::selectOne('
             SELECT * FROM `tblregistrars`
@@ -316,6 +334,26 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
         }
 
         return $extDomain;
+    }
+
+    /**
+     * Finds client tax_id from domain
+     *
+     * @see Illuminate\Database\Connection:selectOne()
+     *
+     * @param string $id Domain ID
+     *
+     * @return mixed|null
+     */
+    protected function getTaxIDFromDomain($id)
+    {
+        return Capsule::selectOne('
+            SELECT C.tax_id
+            FROM tbldomains D
+            LEFT JOIN tblclients C ON C.id = D.userid
+            WHERE D.id = ?',
+            [$id]
+        );
     }
 
     /**
