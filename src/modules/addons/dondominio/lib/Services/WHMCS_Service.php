@@ -308,7 +308,7 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
 
         if (!empty($useTaxID) && function_exists('decrypt')) {
             $useTaxIDMode = decrypt($useTaxID);
-            if ($useTaxIDMode === 'on' && $extDomain->tax_id) {
+            if ($useTaxIDMode === 'on' && $extDomain->tax_id !== '') {
                 $extDomain->vatnumber = $extDomain->tax_id;
                 return $extDomain;
             }
