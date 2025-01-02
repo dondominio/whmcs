@@ -476,7 +476,7 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
      */
     public function syncDomain(Domain $domain)
     {
-        $status = 'Pending';
+        $status = $domain->status;
 
         try {
             $info = $this->getApp()->getService('api')->getDomainInfo($domain->domain);
@@ -502,6 +502,14 @@ class WHMCS_Service extends AbstractService implements WHMCSService_Interface
             ],
             'Redemption' => [
                 'expired-redemption',
+            ],
+            'Pending Transfer' => [
+                'transfer-init',
+                'transfer-pending',
+            ],
+            'Cancelled' => [
+                'transfer-cancel',
+                'register-cancel',
             ]
         ];
 
