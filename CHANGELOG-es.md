@@ -11,13 +11,9 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.
 ### fixed
 - Addon Domain Sync
 
-## [2.2.20] - 2024-05-06
-### fixed
-- Comparación Tax ID
-
-### feat
-- Optimizar modo TaxID
-- Usar modo Tax ID en transferencias
+## [2.2.20] - 2024-05-03
+### Changed
+- Opción para utilizar `Tax ID` como `Vat Number` en opciones del registrador.
 
 ## [2.2.19] - 2024-03-11
 ### fixed
