@@ -7,6 +7,18 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.
 
 ## [Pendiente por lanzar]
 
+## [2.2.21] - 2025-01-02
+### fixed
+- Addon Domain Sync
+
+## [2.2.20] - 2024-05-06
+### fixed
+- Comparación Tax ID
+
+### feat
+- Optimizar modo TaxID
+- Usar modo Tax ID en transferencias
+
 ## [2.2.19] - 2024-03-11
 ### fixed
 - `adminContactType` en dondominiossl
