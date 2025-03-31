@@ -22,6 +22,8 @@ class RenewDomain extends Action
             if ($e->getCode() == 1100) {
                 throw new Exception('Error renewing domain. Please, try again later.', $e->getCode(), $e);
             }
+
+            throw $e;
         }
     }
 }
