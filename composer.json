@@ -1,7 +1,7 @@
 {
     "name": "dondominio/whmcs",
     "description": "DonDominio - WHCMCS Modules Integration",
-    "version": "2.2.21",
+    "version": "2.2.22",
     "license": "LGPL-3.0-only",
     "type": "project",
     "minimum-stability": "dev",
