@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.22] - 2025-03-31
+### fixed
+- Throw Exception RenewDomain
+
 ## [2.2.21] - 2025-01-02
 ### fixed
 - Addon Domain Sync

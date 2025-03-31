@@ -7,6 +7,11 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.
 
 ## [Pendiente por lanzar]
 
+## [2.2.22] - 2025-03-31
+### fixed
+- Throw Exception RenewDomain
+
+
 ## [2.2.21] - 2025-01-02
 ### fixed
 - Addon Domain Sync
