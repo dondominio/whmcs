@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.23] - 2025-06-26
+### fixed
+- SaveContactDetails count bug
+
 ## [2.2.22] - 2025-03-31
 ### fixed
 - Throw Exception RenewDomain
