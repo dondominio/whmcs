@@ -24,11 +24,7 @@ class SaveContactDetails extends Action
         // Filter billing contact
         $fields = array_merge($fields, $this->getContactTypeDataFromParams('Billing', 'billing'));
 
-        $response = $this->app->getService('api')->updateContactDetails($this->domain, $fields);
-
-        if (count($response) == 0) {
-            throw new Exception('Contact modification is disabled. Contact support for more information.');
-        }
+        $this->app->getService('api')->updateContactDetails($this->domain, $fields);
     }
 
     protected function getContactTypeDataFromParams($key, $type)
