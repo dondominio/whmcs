@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.24] - 2026-03-25
+### fixed
+- Change `csrKey` to `keyData` in the API response `/ssl/csrcreate/`
+
 ## [2.2.23] - 2025-06-26
 ### fixed
 - SaveContactDetails count bug

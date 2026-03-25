@@ -29,7 +29,7 @@ class CreateAccount extends \WHMCS\Module\Server\Dondominiossl\Actions\Base
 
             $args = $this->getArgs();
             $args['csrData'] = $csrResponse->get('csrData');
-            $args['keyData'] = $csrResponse->get('csrKey');
+            $args['keyData'] = $csrResponse->get('keyData');
 
             $this->addAltNames($args);
 

@@ -474,7 +474,7 @@ class SSL_Controller extends Controller
             $csrResponse = $apiService->createCSRData($CSRArgs);
 
             $renewArgs['csrData'] = $csrResponse->get('csrData');
-            $renewArgs['keyData'] = $csrResponse->get('csrKey');
+            $renewArgs['keyData'] = $csrResponse->get('keyData');
 
             $apiService->renewCertificate($certificateID, $renewArgs);
             $this->getResponse()->addSuccess($app->getLang('ssl_success_renew'));
@@ -572,7 +572,7 @@ class SSL_Controller extends Controller
 
             $reissueArgs = [
                 'csrData' => $csrResponse->get('csrData'),
-                'keyData' => $csrResponse->get('csrKey'),
+                'keyData' => $csrResponse->get('keyData'),
             ];
 
             $altNamesFiltred = [];

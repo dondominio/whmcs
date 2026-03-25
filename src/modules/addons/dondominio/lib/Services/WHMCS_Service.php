@@ -9,8 +9,6 @@ use WHMCS\Module\Addon\Dondominio\Services\Contracts\WHMCSService_Interface;
 use WHMCS\Module\Addon\Dondominio\Models\Pricing_Model;
 use Exception;
 
-use function PHPUnit\Framework\isEmpty;
-
 class WHMCS_Service extends AbstractService implements WHMCSService_Interface
 {
 
