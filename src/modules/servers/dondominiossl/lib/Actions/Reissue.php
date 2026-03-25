@@ -64,7 +64,7 @@ class Reissue extends \WHMCS\Module\Server\Dondominiossl\Actions\Base
 
             $args = [
                 'csrData' => $csrResponse->get('csrData'),
-                'keyData' => $csrResponse->get('csrKey'),
+                'keyData' => $csrResponse->get('keyData'),
                 'validationMethod' => $this->validationMethod,
             ];
 
